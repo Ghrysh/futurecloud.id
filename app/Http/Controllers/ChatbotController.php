@@ -117,4 +117,9 @@ class ChatbotController extends Controller
             'lead_id' => $lead->id
         ]);
     }
+
+    public function getHistory(Request $request)
+    {
+        return response()->json([]);
+    }
 }

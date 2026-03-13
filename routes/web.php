@@ -63,6 +63,7 @@ Route::post('/contact', [ContactController::class, 'send'])->name('contact.send'
 
 // --- CHATBOT ---
 Route::post('/chatbot/send', [ChatbotController::class, 'processChat']);
+Route::get('/chatbot/history', [ChatbotController::class, 'getHistory']);
 
 // --- DOMAIN & HOSTING (UPDATED) ---
 Route::post('/domain-check', [DomainCheckController::class, 'check'])->name('domain.check');
