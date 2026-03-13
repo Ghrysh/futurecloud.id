@@ -383,43 +383,52 @@
                 this.$nextTick(() => this.scrollToBottom());
 
                 try {
+                    const tokenMeta = document.querySelector('meta[name="csrf-token"]');
+                    const csrfToken = tokenMeta ? tokenMeta.content : '';
+
                     let res = await fetch('/chatbot/send', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken
                         },
                         body: JSON.stringify({ 
-                            message: msgText, 
+                            message: msgText,
+                            topic: 'Umum',
+                            is_followup: false,
+                            chat_history: this.messages,
                             lead_id: this.leadId
                         })
                     });
                     
                     let data = await res.json();
 
+                    if (!res.ok) {
+                        throw new Error(data.message || 'Terjadi kesalahan di server.');
+                    }
+
                     if(data.lead_id) this.leadId = data.lead_id;
 
                     setTimeout(() => {
                         this.isTyping = false;
-                        
                         this.messages.push({ 
                             sender: 'bot', 
                             message: data.reply || data.response, 
                             time: this.getCurrentTime()
                         });
-                        
                         this.playNotification();
                         
-                        if (!this.isOpen) this.unreadCount++;
-                        
+                        if (!this.isOpen) this.unreadCount++; 
                         this.$nextTick(() => this.scrollToBottom());
                     }, 800);
 
                 } catch (e) {
+                    console.error('Terdapat error pada Chatbot:', e);
                     this.isTyping = false;
                     this.messages.push({ 
                         sender: 'bot', 
-                        message: 'Maaf, jaringan sedang bermasalah.',
+                        message: 'Sistem merespon: ' + e.message,
                         time: this.getCurrentTime()
                     });
                     this.$nextTick(() => this.scrollToBottom());
