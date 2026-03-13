@@ -3,147 +3,118 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\ChatbotResponse;
-use App\Models\ChatSession;
-use App\Models\ChatMessage;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Auth;
+use App\Models\ChatbotKnowledge;
+use App\Models\ChatbotLead;
 
 class ChatbotController extends Controller
 {
-    /**
-     * Logic inti untuk mengenali user.
-     * Mengatasi masalah history hilang saat login atau pindah halaman.
-     */
-    private function getChatSession()
+    public function processChat(Request $request)
     {
-        $sessionId = Session::getId();
-        $user = Auth::user();
+        $topic = $request->topic ?? 'Umum'; 
+        $message = strtolower(trim($request->message));
+        
+        $slangDict = [
+            'gmn' => 'bagaimana', 'gimana' => 'bagaimana', 'bgmn' => 'bagaimana',
+            'brp' => 'berapa', 'klo' => 'kalau', 'kalo' => 'kalau',
+            'bikin' => 'buat', 'bs' => 'bisa', 'gk' => 'tidak', 'ga' => 'tidak',
+            'tdk' => 'tidak', 'dgn' => 'dengan', 'yg' => 'yang', 'utk' => 'untuk',
+            'makasih' => 'terimakasih', 'trims' => 'terimakasih', 'thx' => 'terimakasih',
+            'pw' => 'password', 'pass' => 'password', 'loginnya' => 'login'
+        ];
 
-        if ($user) {
-            // 1. JIKA USER LOGIN:
-            // Cari history lama berdasarkan ID User, lalu update session_id ke yang baru.
-            // Ini memastikan chat lama muncul kembali meski session browser berubah.
-            return ChatSession::updateOrCreate(
-                ['user_id' => $user->id], 
-                [
-                    'session_id' => $sessionId, 
-                    'user_name' => $user->name
-                ]
-            );
-        } else {
-            // 2. JIKA GUEST:
-            // Cari berdasarkan Session ID browser saat ini.
-            return ChatSession::firstOrCreate(
-                ['session_id' => $sessionId],
-                ['user_name' => 'Guest']
-            );
+        $cleanMessage = preg_replace('/[^\w\s]/', '', $message);
+        $words = explode(' ', $cleanMessage);
+        foreach($words as &$w) {
+            if(isset($slangDict[$w])) $w = $slangDict[$w];
         }
-    }
+        $cleanMessage = implode(' ', $words);
 
-    /**
-     * Menangani pengiriman pesan dari user dan memberikan balasan otomatis.
-     */
-    public function sendMessage(Request $request)
-    {
-        // 1. Ambil & Bersihkan Input
-        $messageInput = strip_tags($request->input('message'));
+        $realIp = $request->ip();
+        if ($request->hasHeader('X-Forwarded-For')) {
+            $ips = explode(',', $request->header('X-Forwarded-For'));
+            $realIp = trim($ips[0]);
+        }
 
-        // 2. Dapatkan Sesi Chat yang Valid (Menggunakan fungsi helper di atas)
-        $chatSession = $this->getChatSession();
+        $lead = null;
+        if ($request->lead_id) {
+            $lead = ChatbotLead::find($request->lead_id);
+        }
 
-        // 3. Simpan Pesan User ke Database
-        ChatMessage::create([
-            'chat_session_id' => $chatSession->id,
-            'message' => $messageInput,
-            'sender' => 'user'
-        ]);
+        if ($request->is_autoclose) {
+            if ($lead) {
+                $contactInfo = auth()->check() ? auth()->user()->email : 'Diakhiri Otomatis (Guest)';
+                $lead->update([
+                    'contact_info' => $contactInfo,
+                    'chat_history' => json_encode($request->chat_history)
+                ]);
+            }
+            return response()->json(['success' => true]);
+        }
 
-        // 4. LOGIKA PINTAR (Scoring System)
-        // Mencari jawaban terbaik berdasarkan bobot kecocokan keyword
-        $knowledge = ChatbotResponse::all();
+        if (!$lead) {
+            $lead = ChatbotLead::create([
+                'user_id' => auth()->id(),
+                'ip_address' => $realIp, 
+                'topic_context' => $topic,
+                'contact_info' => '-', 
+                'chat_history' => json_encode($request->chat_history),
+                'last_message' => $message
+            ]);
+        } else {
+            // Update row yang sudah ada
+            $lead->update([
+                'chat_history' => json_encode($request->chat_history),
+                'last_message' => $message
+            ]);
+        }
+
+        if ($request->is_followup) {
+            $lead->update(['contact_info' => $message]);
+            return response()->json([
+                'reply' => 'Terima kasih! Tim ScanYuk akan segera menindaklanjuti kendala Anda melalui kontak tersebut. Sesi chat ini Mimin tutup ya! 👋',
+                'is_finished' => true,
+                'lead_id' => $lead->id
+            ]);
+        }
+
+        $knowledges = ChatbotKnowledge::whereIn('topic', [$topic, 'Umum'])->get();
         $bestMatch = null;
         $highestScore = 0;
 
-        // Normalisasi input user (lowercase)
-        $inputLower = strtolower($messageInput);
-
-        foreach ($knowledge as $item) {
-            // Pecah keyword dari database
-            $keywords = array_map('trim', explode(',', strtolower($item->keyword)));
+        foreach ($knowledges as $k) {
+            $keywords = json_decode($k->keywords, true);
             $score = 0;
 
-            foreach ($keywords as $keyword) {
-                if (empty($keyword)) continue;
-
-                // A. Exact Match (Skor Tinggi: 10 + Panjang Keyword)
-                if (str_contains($inputLower, $keyword)) {
-                    $score += 10 + strlen($keyword);
-                }
-
-                // B. Partial Match per Kata (Skor Rendah: 2)
-                $words = explode(' ', $keyword);
-                foreach ($words as $word) {
-                    if (strlen($word) > 3 && str_contains($inputLower, $word)) {
-                        $score += 2;
+            foreach ($keywords as $kw) {
+                $kw = strtolower(trim($kw));
+                
+                if (str_contains($cleanMessage, $kw)) {
+                    $score += strlen($kw) * 2; 
+                } else {
+                    $kwWords = explode(' ', $kw);
+                    foreach($kwWords as $kww) {
+                        foreach($words as $userWord) {
+                            if (strlen($userWord) > 3 && levenshtein($userWord, $kww) <= 1) {
+                                $score += 2;
+                            }
+                        }
                     }
                 }
             }
 
-            // Update jawaban jika skor lebih tinggi ditemukan
             if ($score > $highestScore) {
                 $highestScore = $score;
-                $bestMatch = $item;
+                $bestMatch = $k;
             }
         }
 
-        // 5. Tentukan Jawaban Akhir
-        if ($bestMatch && $highestScore >= 5) {
-            $botAnswer = $bestMatch->answer;
-        } else {
-            // Fallback jika bot bingung
-            $botAnswer = "Maaf, saya kurang paham maksudnya. ??<br>Bisa coba gunakan kata kunci lain seperti <b>'Harga Domain'</b>, <b>'Cara jadi Partner'</b>, atau <b>'Masuk Client Area'</b>?";
-        }
+        $reply = $highestScore > 0 
+            ? $bestMatch->response 
+            : "Maaf, kata tersebut sedikit kurang jelas untuk topik <b>".$topic."</b> ini. Bisa dijelaskan dengan kata kunci yang lebih sederhana?";
 
-        // 6. Personalisasi (Ganti placeholder {name} dengan nama user)
-        $userName = Auth::check() ? Auth::user()->name : 'Guest';
-        $botAnswer = str_replace('{name}', "<b>$userName</b>", $botAnswer);
-
-        // 7. Simpan Jawaban Bot ke Database
-        $botMessage = ChatMessage::create([
-            'chat_session_id' => $chatSession->id,
-            'message' => $botAnswer,
-            'sender' => 'bot'
-        ]);
-
-        // 8. Kirim Response JSON (Termasuk Waktu)
         return response()->json([
-            'reply' => $botAnswer,
-            'time'  => $botMessage->created_at->format('H:i')
+            'reply' => $reply,
+            'lead_id' => $lead->id
         ]);
-    }
-
-    /**
-     * Mengambil riwayat chat saat halaman di-load.
-     */
-    public function getHistory()
-    {
-        // Panggil helper yang sama agar data konsisten
-        $session = $this->getChatSession();
-
-        if ($session) {
-            // Mapping data agar format waktunya sesuai (H:i)
-            $messages = $session->messages->map(function ($msg) {
-                return [
-                    'sender'  => $msg->sender,
-                    'message' => $msg->message,
-                    'time'    => $msg->created_at->format('H:i')
-                ];
-            });
-            return response()->json($messages);
-        }
-
-        return response()->json([]);
     }
 }

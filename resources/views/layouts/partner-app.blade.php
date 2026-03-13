@@ -181,6 +181,13 @@
 
         {{-- PANGGIL CHATBOT --}}
     <x-chatbot />
-
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/sys-ping/v1?path=' + encodeURIComponent(window.location.pathname), {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            }).catch(err => console.error('Tracking failed'));
+        });
+    </script>
 </body>
 </html>

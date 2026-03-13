@@ -3,54 +3,87 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\ChatbotResponse;
-use App\Models\ChatSession;
+use App\Models\ChatbotKnowledge;
+use App\Models\ChatbotLead;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ChatbotAdminController extends Controller
 {
-    // 1. Halaman Kelola Jawaban (Knowledge Base)
     public function index()
     {
-        $responses = ChatbotResponse::latest()->get();
-        return view('admin.chatbot.index', compact('responses'));
+        $knowledges = ChatbotKnowledge::latest()->get();
+        return view('admin.chatbot.index', compact('knowledges'));
     }
 
     public function store(Request $request)
     {
-        ChatbotResponse::create($request->validate([
-            'keyword' => 'required',
-            'answer' => 'required'
-        ]));
+        $request->validate([
+            'topic' => 'required',
+            'intent_name' => 'required',
+            'keywords' => 'required',
+            'response' => 'required'
+        ]);
+
+        $keywordsArray = array_map('trim', explode(',', strtolower($request->keywords)));
+
+        ChatbotKnowledge::create([
+            'topic' => $request->topic,
+            'intent_name' => Str::slug($request->intent_name, '_'),
+            'keywords' => json_encode($keywordsArray),
+            'response' => $request->response
+        ]);
+
         return back()->with('success', 'Respon bot ditambahkan');
     }
 
     public function update(Request $request, $id)
-{
-    $request->validate([
-        'keyword' => 'required',
-        'answer' => 'required',
-    ]);
+    {
+        $request->validate([
+            'topic' => 'required',
+            'intent_name' => 'required',
+            'keywords' => 'required',
+            'response' => 'required'
+        ]);
 
-    $response = \App\Models\ChatbotResponse::findOrFail($id);
-    $response->update([
-        'keyword' => $request->keyword,
-        'answer' => $request->answer
-    ]);
+        $knowledge = ChatbotKnowledge::findOrFail($id);
+        $keywordsArray = array_map('trim', explode(',', strtolower($request->keywords)));
+        
+        $knowledge->update([
+            'topic' => $request->topic,
+            'intent_name' => Str::slug($request->intent_name, '_'),
+            'keywords' => json_encode($keywordsArray),
+            'response' => $request->response
+        ]);
 
-    return back()->with('success', 'Respon berhasil diperbarui');
-}
+        return back()->with('success', 'Respon berhasil diperbarui');
+    }
 
     public function destroy($id)
     {
-        ChatbotResponse::destroy($id);
+        ChatbotKnowledge::findOrFail($id)->delete();
         return back()->with('success', 'Deleted');
     }
 
-    // 2. Halaman History Chat User
     public function history()
     {
-        $sessions = ChatSession::with('messages')->latest()->get();
-        return view('admin.chatbot.history', compact('sessions'));
+        $leads = ChatbotLead::latest()->get();
+        return view('admin.chatbot.history', compact('leads'));
+    }
+
+    public function toggleLeadStatus($id)
+    {
+        $lead = ChatbotLead::findOrFail($id);
+        $lead->status = $lead->status === 'pending' ? 'contacted' : 'pending';
+        $lead->save();
+        return back()->with('success', 'Status follow up diperbarui!');
+    }
+
+    public function getLeadHistory($id)
+    {
+        $lead = ChatbotLead::findOrFail($id);
+        return response()->json([
+            'history' => json_decode($lead->chat_history, true) ?? []
+        ]);
     }
 }

@@ -62,8 +62,7 @@ Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
 
 // --- CHATBOT ---
-Route::post('/chatbot/send', [ChatbotController::class, 'sendMessage']);
-Route::get('/chatbot/history', [ChatbotController::class, 'getHistory']);
+Route::post('/chatbot/send', [ChatbotController::class, 'processChat']);
 
 // --- DOMAIN & HOSTING (UPDATED) ---
 Route::post('/domain-check', [DomainCheckController::class, 'check'])->name('domain.check');
@@ -202,6 +201,9 @@ Route::prefix('admin')->middleware('auth:admin')->name('admin.')->group(function
     Route::delete('/chatbot/responses/{id}', [ChatbotAdminController::class, 'destroy'])->name('chatbot.destroy');
     Route::get('/chatbot/history', [ChatbotAdminController::class, 'history'])->name('chatbot.history');
 
+    Route::patch('/chatbot/leads/{id}/status', [ChatbotAdminController::class, 'toggleLeadStatus'])->name('chatbot.lead.status');
+    Route::get('/chatbot/leads/{id}/history', [ChatbotAdminController::class, 'getLeadHistory'])->name('chatbot.lead.history');
+
     Route::resource('products', AdminProductController::class);
 
     Route::post('/order-items/{id}/update-config', [AdminOrderController::class, 'updateItemConfig'])
@@ -234,6 +236,46 @@ Route::prefix('admin')->middleware('auth:admin')->name('admin.')->group(function
         Route::delete('/delete-image', 'destroyImage')->name('delete_image');
         Route::patch('/reorder-image', 'reorderImage')->name('reorder_image');
     });
+});
+
+Route::get('/sys-ping/v1', function (\Illuminate\Http\Request $request) {
+    if (!session()->has('tracked_session')) {
+        session(['tracked_session' => true]);
+        session()->save(); 
+    }
+    $sessionId = session()->getId(); 
+
+    $ip = $request->header('X-Forwarded-For', $request->ip());
+    if (strpos($ip, ',') !== false) {
+        $ip = trim(explode(',', $ip)[0]);
+    }
+
+    $path = $request->query('path', '/');
+    $date = now()->toDateString();
+
+    $log = \App\Models\VisitorLog::firstOrCreate(
+        ['session_id' => $sessionId, 'date' => $date],
+        ['ip_address' => $ip, 'page_journey' => []]
+    );
+
+    // Bypass IP Docker internal
+    if ($log->ip_address === '172.19.0.1' || $log->ip_address === '127.0.0.1') {
+        $log->ip_address = $ip;
+    }
+
+    $journey = $log->page_journey ?? [];
+    
+    $lastVisit = end($journey);
+    if (!$lastVisit || $lastVisit['path'] !== $path) {
+        $journey[] = [
+            'path' => $path, 
+            'time' => now()->format('H:i')
+        ];
+        $log->page_journey = $journey;
+        $log->save();
+    }
+
+    return response()->json(['success' => true]);
 });
 
 require __DIR__ . '/auth.php';

@@ -381,72 +381,60 @@
             },
 
             async sendMessage() {
-                if (!this.userInput.trim()) return;
-                
-                const text = this.userInput.trim();
-                const currentTime = this.getCurrentTime();
+                let msgText = this.newMessage.trim();
+                if (!msgText) return;
 
-                this.userInput = '';
-                
-                // Add user message
-                this.messages.push({ 
-                    sender: 'user', 
-                    message: text, 
-                    time: currentTime 
-                });
-                
-                this.$nextTick(() => this.scrollToBottom());
+                this.messages.push({ sender: 'user', text: msgText });
+                this.lastUserMessage = msgText;
+                this.newMessage = '';
                 this.isTyping = true;
+                this.saveState();
+                this.scrollToBottom();
 
                 try {
-                    const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-                    const res = await fetch('/chatbot/send', {
+                    let res = await fetch('/api/chatbot/send', {
                         method: 'POST',
-                        headers: { 
-                            'Content-Type': 'application/json', 
-                            'X-CSRF-TOKEN': token 
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                         },
-                        body: JSON.stringify({ message: text })
+                        body: JSON.stringify({ 
+                            message: msgText, 
+                            topic: this.selectedTopic, 
+                            is_followup: this.followUpMode,
+                            last_chat: this.lastUserMessage,
+                            chat_history: this.messages,
+                            lead_id: this.leadId
+                        })
                     });
+                    
+                    let data = await res.json();
 
-                    if (!res.ok) throw new Error('Network response was not ok');
-                    const data = await res.json();
+                    if(data.lead_id) this.leadId = data.lead_id;
 
-                    // Simulate typing delay
                     setTimeout(() => {
                         this.isTyping = false;
-                        
-                        // Add bot message with current time
-                        this.messages.push({ 
-                            sender: 'bot', 
-                            message: data.reply,
-                            time: this.getCurrentTime()
-                        });
-                        
-                        // Play notification sound
+                        this.messages.push({ sender: 'bot', text: data.reply });
                         this.playNotification();
-                        
-                        this.$nextTick(() => this.scrollToBottom());
-                        
-                        // Increase unread count if chat is closed
-                        if (!this.isOpen) {
-                            this.unreadCount++;
+
+                        if (data.is_finished) {
+                            this.isFinished = true;
+                            this.followUpMode = false;
                         }
+                        
+                        if (!this.isOpen) this.unread++;
+                        
+                        this.saveState();
+                        this.scrollToBottom();
                     }, 800);
-                    
-                } catch (error) {
-                    console.error('Chat error:', error);
+
+                } catch (e) {
                     this.isTyping = false;
-                    
-                    this.messages.push({ 
-                        sender: 'bot', 
-                        message: "⚠️ Maaf, terjadi gangguan koneksi. Silakan coba lagi.", 
-                        time: this.getCurrentTime() 
-                    });
-                    
-                    this.$nextTick(() => this.scrollToBottom());
+                    this.messages.push({ sender: 'bot', text: 'Maaf, jaringan sedang bermasalah.' });
+                    this.saveState();
+                    this.scrollToBottom();
                 }
-            },
+            }
 
             playNotification() {
                 // Panggil fungsi suara notifikasi

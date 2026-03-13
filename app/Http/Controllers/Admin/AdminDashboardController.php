@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Hash;
 use App\Notifications\SaasApprovedNotification;
 use App\Notifications\SaasRejectedNotification;
 use App\Models\User;
+use App\Models\VisitorLog;
+use Carbon\Carbon;
 
 class AdminDashboardController extends Controller
 {
@@ -25,7 +27,22 @@ class AdminDashboardController extends Controller
         // List 5 pending terbaru
         $recentPending = SaasProduct::where('status', 'pending')->latest()->take(5)->get();
 
-        return view('admin.dashboard', compact('stats', 'recentPending'));
+        $chartLabels = [];
+        $chartValues = [];
+
+        for ($i = 6; $i >= 0; $i--) {
+            $date = Carbon::today()->subDays($i);
+            $chartLabels[] = $date->format('d M');
+            $chartValues[] = VisitorLog::whereDate('date', $date)->count();
+        }
+
+        $chartData = [
+            'labels' => $chartLabels,
+            'values' => $chartValues,
+            'labelName' => 'Pengunjung'
+        ];
+
+        return view('admin.dashboard', compact('stats', 'recentPending', 'chartData'));
     }
 
     // 1. HALAMAN LIST SAAS
