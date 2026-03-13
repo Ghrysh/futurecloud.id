@@ -179,7 +179,6 @@
 </div>
 
 <style>
-    /* Styling Khusus Respon Bot */
     .bot-content b, .bot-content strong {
         color: #2563eb;
         font-weight: 700;
@@ -222,7 +221,6 @@
         margin-bottom: 0.5rem;
     }
 
-    /* Animation & Scrollbar */
     @keyframes fade-in {
         from { opacity: 0; transform: translateY(12px); }
         to { opacity: 1; transform: translateY(0); }
@@ -230,8 +228,7 @@
     .animate-fade-in { 
         animation: fade-in 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
     }
-    
-    /* Scrollbar Styling */
+
     #chat-scroll-area::-webkit-scrollbar { 
         width: 6px; 
     }
@@ -248,13 +245,11 @@
     #chat-scroll-area::-webkit-scrollbar-thumb:hover { 
         background: #94a3b8; 
     }
-    
-    /* Safe area for mobile notch/home indicator */
+
     .pb-safe { 
         padding-bottom: max(16px, env(safe-area-inset-bottom)); 
     }
 
-    /* Better bounce animation for typing indicator */
     @keyframes bounce {
         0%, 100% { transform: translateY(0); }
         50% { transform: translateY(-8px); }
@@ -273,25 +268,22 @@
             isTyping: false,
             unreadCount: 0,
             notificationSound: null,
+            leadId: null,
 
             init() {
-                // Initialize Audio - Suara notifikasi seperti iPhone (tri-tone style)
-                // Menggunakan Web Audio API untuk membuat suara yang mirip notif iOS
+                // Initialize Audio
                 this.createNotificationSound();
                 this.initChat();
             },
 
             createNotificationSound() {
-                // Buat AudioContext untuk generate suara notifikasi
                 try {
                     const AudioContext = window.AudioContext || window.webkitAudioContext;
                     const audioCtx = new AudioContext();
                     
                     this.playNotificationSound = () => {
-                        // Buat tiga nada (tri-tone seperti iPhone)
                         const now = audioCtx.currentTime;
                         
-                        // Tone 1 (E5 - 659.25 Hz)
                         const osc1 = audioCtx.createOscillator();
                         const gain1 = audioCtx.createGain();
                         osc1.connect(gain1);
@@ -303,7 +295,6 @@
                         osc1.start(now);
                         osc1.stop(now + 0.15);
                         
-                        // Tone 2 (C#5 - 554.37 Hz)
                         const osc2 = audioCtx.createOscillator();
                         const gain2 = audioCtx.createGain();
                         osc2.connect(gain2);
@@ -316,7 +307,6 @@
                         osc2.start(now + 0.08);
                         osc2.stop(now + 0.23);
                         
-                        // Tone 3 (F#4 - 369.99 Hz) 
                         const osc3 = audioCtx.createOscillator();
                         const gain3 = audioCtx.createGain();
                         osc3.connect(gain3);
@@ -331,7 +321,6 @@
                     };
                 } catch (e) {
                     console.log('Web Audio API not supported');
-                    // Fallback ke audio file jika Web Audio API tidak support
                     this.notificationSound = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBgoOFhoeJi42PkZKUlZeZmpydn6Gio6SlpqeoqaqrrK2ur7CxsrO0tba3uLm6u7y9vr/AwcLDxMXGx8jJysvMzc7P0NHS09TV1tfY2drb3N3e3+Dh4uPk5ebn6Onq6+zt7u/w8fLz9PX29/j5+vv8/f7/AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4vMDEyMzQ1Njc4OTo7PD0+P0BBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWltcXV5fYGFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6e3x9fn+AgYKDhIWGh4iJiouMjY6PkJGSk5SVlpeYmZqbnJ2en6ChoqOkpaanqKmqq6ytrq+wsbKztLW2t7i5uru8vb6/wMHCw8TFxsfIycrLzM3Oz9DR0tPU1dbX2Nna29zd3t/g4eLj5OXm5+jp6uvs7e7v8PHy8/T19vf4+fr7/P3+/w==');
                     this.notificationSound.volume = 0.4;
                     this.playNotificationSound = () => {
@@ -343,7 +332,6 @@
                 }
             },
 
-            // Function untuk mendapatkan waktu lokal user (format 24 jam)
             getCurrentTime() {
                 const now = new Date();
                 const hours = String(now.getHours()).padStart(2, '0');
@@ -381,18 +369,21 @@
             },
 
             async sendMessage() {
-                let msgText = this.newMessage.trim();
+                let msgText = this.userInput.trim();
                 if (!msgText) return;
 
-                this.messages.push({ sender: 'user', text: msgText });
-                this.lastUserMessage = msgText;
-                this.newMessage = '';
+                this.messages.push({ 
+                    sender: 'user', 
+                    message: msgText,
+                    time: this.getCurrentTime()
+                });
+                
+                this.userInput = '';
                 this.isTyping = true;
-                this.saveState();
-                this.scrollToBottom();
+                this.$nextTick(() => this.scrollToBottom());
 
                 try {
-                    let res = await fetch('/api/chatbot/send', {
+                    let res = await fetch('/chatbot/send', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -400,10 +391,6 @@
                         },
                         body: JSON.stringify({ 
                             message: msgText, 
-                            topic: this.selectedTopic, 
-                            is_followup: this.followUpMode,
-                            last_chat: this.lastUserMessage,
-                            chat_history: this.messages,
                             lead_id: this.leadId
                         })
                     });
@@ -414,30 +401,32 @@
 
                     setTimeout(() => {
                         this.isTyping = false;
-                        this.messages.push({ sender: 'bot', text: data.reply });
+                        
+                        this.messages.push({ 
+                            sender: 'bot', 
+                            message: data.reply || data.response, 
+                            time: this.getCurrentTime()
+                        });
+                        
                         this.playNotification();
-
-                        if (data.is_finished) {
-                            this.isFinished = true;
-                            this.followUpMode = false;
-                        }
                         
-                        if (!this.isOpen) this.unread++;
+                        if (!this.isOpen) this.unreadCount++;
                         
-                        this.saveState();
-                        this.scrollToBottom();
+                        this.$nextTick(() => this.scrollToBottom());
                     }, 800);
 
                 } catch (e) {
                     this.isTyping = false;
-                    this.messages.push({ sender: 'bot', text: 'Maaf, jaringan sedang bermasalah.' });
-                    this.saveState();
-                    this.scrollToBottom();
+                    this.messages.push({ 
+                        sender: 'bot', 
+                        message: 'Maaf, jaringan sedang bermasalah.',
+                        time: this.getCurrentTime()
+                    });
+                    this.$nextTick(() => this.scrollToBottom());
                 }
-            }
+            },
 
             playNotification() {
-                // Panggil fungsi suara notifikasi
                 if (this.playNotificationSound) {
                     this.playNotificationSound();
                 }
@@ -446,7 +435,6 @@
             scrollToBottom() {
                 const el = document.getElementById('chat-scroll-area');
                 if (el) {
-                    // Smooth scroll to bottom
                     el.scrollTo({
                         top: el.scrollHeight,
                         behavior: 'smooth'
