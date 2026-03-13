@@ -9,17 +9,13 @@ use Illuminate\Support\Facades\Auth;
 
 class ChatbotController extends Controller
 {
-    // Mengambil topik dari database secara dinamis
     public function initChat(Request $request)
     {
         $topics = ChatbotKnowledge::select('topic')->distinct()->pluck('topic');
         if ($topics->isEmpty()) {
             $topics = collect(['Umum', 'Layanan Cloud', 'Bantuan Teknis']);
         }
-        
-        return response()->json([
-            'topics' => $topics
-        ]);
+        return response()->json(['topics' => $topics]);
     }
 
     public function processChat(Request $request)
@@ -36,6 +32,7 @@ class ChatbotController extends Controller
 
         // Cari atau buat session realtime
         $lead = ChatbotLead::find($request->lead_id);
+        
         if (!$lead) {
             $lead = ChatbotLead::create([
                 'user_id' => $userId,
@@ -43,7 +40,8 @@ class ChatbotController extends Controller
                 'topic_context' => $topic,
                 'chat_history' => json_encode($request->chat_history),
                 'last_message' => $request->message,
-                'status' => 'pending' // pending = chat sedang berlangsung / belum difollowup
+                'status' => 'pending'
+                // NOTE: contact_info sengaja TIDAK dimasukkan agar di DB kosong (null)
             ]);
         } else {
             $lead->update([
@@ -53,26 +51,24 @@ class ChatbotController extends Controller
             ]);
         }
 
-        // Jika user baru klik salah satu Topik
         if ($isInit) {
             return response()->json([
-                'reply' => "Baik, ada yang bisa Mimin bantu mengenai **{$topic}**?",
+                'reply' => "Baik, ada yang bisa Mimin bantu mengenai {$topic}?",
                 'lead_id' => $lead->id
             ]);
         }
 
-        // Jika user mengklik "Akhiri & Hubungi CS"
         if ($isAskingContact) {
             return response()->json([
-                'reply' => 'Baik Kak, percakapan ini akan kami teruskan ke Customer Service. **Silakan ketik Email atau Nomor Telepon** Kakak di bawah agar bisa kami hubungi secepatnya:',
+                'reply' => 'Baik Kak, percakapan ini akan kami teruskan ke Customer Service. Silakan ketik Email atau Nomor Telepon Kakak di bawah agar bisa kami hubungi secepatnya:',
                 'lead_id' => $lead->id
             ]);
         }
 
-        // Jika user mengirimkan Kontak (Selesai Chat)
+        // HANYA saat user mengirim kontak, kolom contact_info akan diisi
         if ($isSubmittingContact) {
             $lead->update([
-                'contact_info' => $request->message // Menyimpan email/telp ke DB
+                'contact_info' => $request->message 
             ]);
             return response()->json([
                 'reply' => 'Terima kasih! Kontak Kakak telah kami catat. Tim Customer Service kami akan segera menghubungi Anda. Percakapan ini telah diakhiri. 👋',
@@ -108,7 +104,6 @@ class ChatbotController extends Controller
 
             foreach ($keywords as $kw) {
                 $kw = strtolower(trim($kw));
-                
                 if (str_contains($cleanMessage, $kw)) {
                     $score += strlen($kw) * 2; 
                 } else {
@@ -122,7 +117,6 @@ class ChatbotController extends Controller
                     }
                 }
             }
-
             if ($score > $highestScore) {
                 $highestScore = $score;
                 $bestMatch = $k;

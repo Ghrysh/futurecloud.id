@@ -26,9 +26,16 @@
                     </p>
                 </div>
             </div>
-            <button @click="closeChat()" class="text-white hover:text-blue-200 transition-colors bg-white/10 hover:bg-white/20 p-1.5 rounded-lg relative z-10">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-            </button>
+            
+            <div class="flex items-center relative z-10 gap-1.5">
+                <button @click="resetChat()" title="Mulai Chat Baru" class="text-white hover:text-blue-200 transition-colors bg-white/10 hover:bg-white/20 px-2 py-1.5 rounded-lg flex items-center gap-1 text-[11px] font-medium border border-white/10">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                    New
+                </button>
+                <button @click="closeChat()" class="text-white hover:text-blue-200 transition-colors bg-white/10 hover:bg-white/20 p-1.5 rounded-lg border border-white/10">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
         </div>
 
         <div id="chat-scroll-area" class="flex-1 p-4 overflow-y-auto bg-slate-50 space-y-4 relative">
@@ -111,7 +118,7 @@
                 </button>
             </div>
             <div x-show="isFinished" class="text-center text-xs text-slate-500 py-2 bg-slate-50 rounded-lg">
-                Sesi selesai & Kontak tercatat. Reload halaman untuk chat ulang.
+                Sesi selesai. Klik tombol <b>New</b> di atas untuk chat ulang.
             </div>
         </div>
     </div>
@@ -146,7 +153,6 @@ document.addEventListener('alpine:init', () => {
             this.createNotificationSound();
 
             try {
-                // Tarik Topik dari DB via API Controller yang baru dibuat
                 let res = await fetch('/chatbot/init');
                 let data = await res.json();
                 this.dynamicTopics = data.topics;
@@ -201,6 +207,18 @@ document.addEventListener('alpine:init', () => {
 
         closeChat() { this.isOpen = false; },
 
+        // --- FUNGSI NEW CHAT ---
+        resetChat() {
+            this.messages = [];
+            this.selectedTopic = 'Umum';
+            this.showTopics = true;
+            this.leadId = null; // Agar DB membuat riwayat/baris baru di backend
+            this.isFinished = false;
+            this.askingContact = false;
+            sessionStorage.removeItem('chatbotState');
+            this.scrollToBottom();
+        },
+
         async setTopic(topic) {
             this.selectedTopic = topic;
             this.showTopics = false;
@@ -239,10 +257,9 @@ document.addEventListener('alpine:init', () => {
             } catch (e) { this.isTyping = false; }
         },
 
-        // Trigger awal klik tombol Hubungi CS
         async askContact() {
             this.messages.push({ sender: 'user', text: 'Akhiri & Hubungi CS', time: this.getCurrentTime() });
-            this.askingContact = true; // Set state meminta kontak
+            this.askingContact = true;
             this.isTyping = true;
             this.scrollToBottom();
 
@@ -258,7 +275,7 @@ document.addEventListener('alpine:init', () => {
                         topic: this.selectedTopic,
                         chat_history: this.messages,
                         lead_id: this.leadId,
-                        asking_contact: true // Beritahu backend
+                        asking_contact: true
                     })
                 });
                 
@@ -282,7 +299,6 @@ document.addEventListener('alpine:init', () => {
             this.isTyping = true;
             this.scrollToBottom();
 
-            // Atur payload, kalau askingContact true, maka ini proses submit email
             let payload = {
                 message: msgText, 
                 topic: this.selectedTopic, 
@@ -311,7 +327,6 @@ document.addEventListener('alpine:init', () => {
                     if(this.playNotificationSound) this.playNotificationSound();
                     if (!this.isOpen) this.unread++;
 
-                    // Kunci chat jika status is_finished datang dari backend
                     if (data.is_finished) {
                         this.isFinished = true;
                         this.askingContact = false;
