@@ -9,50 +9,79 @@ use Illuminate\Support\Facades\Auth;
 
 class ChatbotController extends Controller
 {
+    // Mengambil topik dari database secara dinamis
+    public function initChat(Request $request)
+    {
+        $topics = ChatbotKnowledge::select('topic')->distinct()->pluck('topic');
+        if ($topics->isEmpty()) {
+            $topics = collect(['Umum', 'Layanan Cloud', 'Bantuan Teknis']);
+        }
+        
+        return response()->json([
+            'topics' => $topics
+        ]);
+    }
+
     public function processChat(Request $request)
     {
         $topic = $request->topic ?? 'Umum'; 
         $message = strtolower(trim($request->message));
+        
         $isInit = $request->is_init ?? false;
-        $isFinished = $request->is_finished ?? false;
+        $isAskingContact = $request->asking_contact ?? false;
+        $isSubmittingContact = $request->submitting_contact ?? false;
         
         $realIp = $request->ip();
-        // Jika user tidak login, statusnya Guest beserta IP
-        $contactInfo = Auth::check() ? Auth::user()->email : 'Guest - ' . $realIp;
         $userId = Auth::check() ? Auth::id() : null;
 
-        // OTOMATIS CREATE/UPDATE KE DATABASE AGAR ADMIN BISA PANTAU REALTIME
-        $lead = ChatbotLead::updateOrCreate(
-            ['id' => $request->lead_id],
-            [
+        // Cari atau buat session realtime
+        $lead = ChatbotLead::find($request->lead_id);
+        if (!$lead) {
+            $lead = ChatbotLead::create([
                 'user_id' => $userId,
                 'ip_address' => $realIp,
                 'topic_context' => $topic,
-                'contact_info' => $contactInfo,
                 'chat_history' => json_encode($request->chat_history),
                 'last_message' => $request->message,
-                'status' => $isFinished ? 'contacted' : 'pending' 
-            ]
-        );
+                'status' => 'pending' // pending = chat sedang berlangsung / belum difollowup
+            ]);
+        } else {
+            $lead->update([
+                'chat_history' => json_encode($request->chat_history),
+                'last_message' => $request->message,
+                'topic_context' => $topic
+            ]);
+        }
 
-        // Jika ini request awal saat klik tombol topik
+        // Jika user baru klik salah satu Topik
         if ($isInit) {
             return response()->json([
-                'reply' => "Baik, ada yang bisa saya bantu mengenai **{$topic}**?",
+                'reply' => "Baik, ada yang bisa Mimin bantu mengenai **{$topic}**?",
                 'lead_id' => $lead->id
             ]);
         }
 
-        // Jika user klik Akhiri & Hubungi CS
-        if ($isFinished) {
+        // Jika user mengklik "Akhiri & Hubungi CS"
+        if ($isAskingContact) {
             return response()->json([
-                'reply' => 'Baik Kak, percakapan ini telah diteruskan ke Customer Service kami. Mohon tunggu sebentar, tim kami akan segera membalas pesan ini atau menghubungi Kakak.',
+                'reply' => 'Baik Kak, percakapan ini akan kami teruskan ke Customer Service. **Silakan ketik Email atau Nomor Telepon** Kakak di bawah agar bisa kami hubungi secepatnya:',
+                'lead_id' => $lead->id
+            ]);
+        }
+
+        // Jika user mengirimkan Kontak (Selesai Chat)
+        if ($isSubmittingContact) {
+            $lead->update([
+                'contact_info' => $request->message // Menyimpan email/telp ke DB
+            ]);
+            return response()->json([
+                'reply' => 'Terima kasih! Kontak Kakak telah kami catat. Tim Customer Service kami akan segera menghubungi Anda. Percakapan ini telah diakhiri. 👋',
                 'is_finished' => true,
                 'lead_id' => $lead->id
             ]);
         }
 
-        // === LOGIKA PENCOCOKAN KATA (SAMA SEPERTI SCANYUK) ===
+        // === LOGIKA PENCOCOKAN KATA (UMUM) ===
         $slangDict = [
             'gmn' => 'bagaimana', 'gimana' => 'bagaimana', 'bgmn' => 'bagaimana',
             'brp' => 'berapa', 'klo' => 'kalau', 'kalo' => 'kalau',
@@ -102,7 +131,7 @@ class ChatbotController extends Controller
 
         $reply = $highestScore > 0 
             ? $bestMatch->response 
-            : "Maaf, pertanyaan Kakak kurang jelas untuk topik **".$topic."**. Boleh dijelaskan dengan kata kunci yang lebih spesifik?";
+            : "Maaf, pertanyaan Kakak kurang jelas. Boleh dijelaskan dengan kata kunci yang lebih spesifik?";
 
         return response()->json([
             'reply' => $reply,

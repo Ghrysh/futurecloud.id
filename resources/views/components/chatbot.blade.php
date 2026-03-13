@@ -42,10 +42,11 @@
                         <p class="mb-2">Halo {{ Auth::check() ? Auth::user()->name : 'Kak' }}! 👋 Ada yang bisa Mimin bantu hari ini?</p>
                         <p class="font-medium text-slate-800 mb-2">Pilih salah satu topik di bawah ya:</p>
                         <div class="flex flex-col gap-2">
-                            <button @click="setTopic('Layanan Cloud')" class="text-left px-3 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl transition-colors border border-blue-100 font-medium">☁️ Layanan Cloud</button>
-                            <button @click="setTopic('Domain & SSL')" class="text-left px-3 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl transition-colors border border-blue-100 font-medium">🌐 Domain & SSL</button>
-                            <button @click="setTopic('Bantuan Teknis')" class="text-left px-3 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl transition-colors border border-blue-100 font-medium">🛠️ Bantuan Teknis</button>
-                            <button @click="setTopic('Lainnya')" class="text-left px-3 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl transition-colors border border-blue-100 font-medium">📝 Lainnya / Pertanyaan Umum</button>
+                            <template x-for="t in dynamicTopics" :key="t">
+                                <button @click="setTopic(t)" class="text-left px-3 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl transition-colors border border-blue-100 font-medium break-words">
+                                    💬 <span x-text="t"></span>
+                                </button>
+                            </template>
                         </div>
                     </div>
                 </div>
@@ -53,13 +54,11 @@
 
             <template x-for="(msg, index) in messages" :key="index">
                 <div :class="msg.sender === 'user' ? 'flex items-end justify-end gap-2' : 'flex items-start gap-2'">
-                    
                     <template x-if="msg.sender === 'bot'">
                         <div class="w-7 h-7 bg-gradient-to-tr from-blue-500 to-indigo-500 rounded-full flex-shrink-0 flex items-center justify-center shadow-md">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd" /></svg>
                         </div>
                     </template>
-
                     <div class="flex flex-col" :class="msg.sender === 'user' ? 'items-end max-w-[85%]' : 'items-start max-w-[85%]'">
                         <div x-html="msg.text" 
                             :class="msg.sender === 'user' ? 'bg-blue-600 text-white rounded-2xl rounded-tr-sm shadow-md' : 'bg-white border border-blue-100 text-slate-700 rounded-2xl rounded-tl-sm shadow-sm'"
@@ -67,14 +66,13 @@
                         </div>
                         <span class="text-[10px] text-slate-400 mt-1 px-1 font-medium" x-text="msg.time"></span>
 
-                        <template x-if="msg.sender === 'bot' && index === messages.length - 1 && !isFinished">
+                        <template x-if="msg.sender === 'bot' && index === messages.length - 1 && !isFinished && !askingContact">
                             <div class="flex flex-wrap gap-2 mt-2 mb-2">
                                 <button @click="showTopics = true; scrollToBottom();" class="text-[11px] bg-blue-50 text-blue-600 border border-blue-200 hover:bg-blue-100 px-3 py-1.5 rounded-full transition-all font-medium">Ubah Topik</button>
-                                <button @click="endChat()" class="text-[11px] bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 px-3 py-1.5 rounded-full transition-all font-medium">Akhiri & Hubungi CS</button>
+                                <button @click="askContact()" class="text-[11px] bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 px-3 py-1.5 rounded-full transition-all font-medium">Akhiri & Hubungi CS</button>
                             </div>
                         </template>
                     </div>
-
                 </div>
             </template>
 
@@ -92,10 +90,11 @@
             <div x-show="showTopics && messages.length > 0" class="mt-4 bg-white border border-blue-100 rounded-2xl p-3 shadow-sm text-[13px] text-slate-700 leading-relaxed">
                 <p class="font-medium text-slate-800 mb-2">Pilih topik baru:</p>
                 <div class="flex flex-col gap-2">
-                    <button @click="setTopic('Layanan Cloud')" class="text-left px-3 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl transition-colors border border-blue-100 font-medium">☁️ Layanan Cloud</button>
-                    <button @click="setTopic('Domain & SSL')" class="text-left px-3 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl transition-colors border border-blue-100 font-medium">🌐 Domain & SSL</button>
-                    <button @click="setTopic('Bantuan Teknis')" class="text-left px-3 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl transition-colors border border-blue-100 font-medium">🛠️ Bantuan Teknis</button>
-                    <button @click="setTopic('Lainnya')" class="text-left px-3 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl transition-colors border border-blue-100 font-medium">📝 Lainnya / Pertanyaan Umum</button>
+                    <template x-for="t in dynamicTopics" :key="t">
+                        <button @click="setTopic(t)" class="text-left px-3 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl transition-colors border border-blue-100 font-medium break-words">
+                            💬 <span x-text="t"></span>
+                        </button>
+                    </template>
                 </div>
             </div>
         </div>
@@ -104,7 +103,7 @@
             <div x-show="!isFinished" class="flex gap-2">
                 <input type="text" x-model="userInput" @keydown.enter="sendMessage()" 
                     :disabled="showTopics"
-                    :placeholder="showTopics ? 'Pilih topik di atas dulu...' : 'Ketik pesan...'" 
+                    :placeholder="askingContact ? 'Ketik Email / No Telepon Anda...' : (showTopics ? 'Pilih topik di atas dulu...' : 'Ketik pesan...')" 
                     class="w-full bg-slate-50 border border-slate-200 text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all disabled:opacity-50">
                 <button @click="sendMessage()" :disabled="!userInput.trim() || showTopics" 
                     class="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white w-11 h-11 flex items-center justify-center rounded-xl flex-shrink-0 transition-colors shadow-md">
@@ -112,7 +111,7 @@
                 </button>
             </div>
             <div x-show="isFinished" class="text-center text-xs text-slate-500 py-2 bg-slate-50 rounded-lg">
-                Percakapan telah dialihkan ke CS. Reload halaman untuk chat ulang.
+                Sesi selesai & Kontak tercatat. Reload halaman untuk chat ulang.
             </div>
         </div>
     </div>
@@ -125,13 +124,15 @@ document.addEventListener('alpine:init', () => {
         unread: 0,
         isTyping: false,
         showTopics: true,
+        dynamicTopics: [],
         selectedTopic: 'Umum',
         messages: [],
         userInput: '',
         leadId: null,
         isFinished: false,
+        askingContact: false,
 
-        init() {
+        async init() {
             let saved = sessionStorage.getItem('chatbotState');
             if (saved) {
                 let state = JSON.parse(saved);
@@ -140,8 +141,18 @@ document.addEventListener('alpine:init', () => {
                 this.showTopics = state.showTopics;
                 this.leadId = state.leadId;
                 this.isFinished = state.isFinished || false;
+                this.askingContact = state.askingContact || false;
             }
             this.createNotificationSound();
+
+            try {
+                // Tarik Topik dari DB via API Controller yang baru dibuat
+                let res = await fetch('/chatbot/init');
+                let data = await res.json();
+                this.dynamicTopics = data.topics;
+            } catch(e) {
+                this.dynamicTopics = ['Layanan Cloud', 'Domain & SSL', 'Lainnya'];
+            }
         },
 
         createNotificationSound() {
@@ -161,9 +172,7 @@ document.addEventListener('alpine:init', () => {
                     osc.start(now);
                     osc.stop(now + 0.15);
                 };
-            } catch (e) {
-                console.log('Audio error');
-            }
+            } catch (e) { }
         },
 
         getCurrentTime() {
@@ -177,7 +186,8 @@ document.addEventListener('alpine:init', () => {
                 selectedTopic: this.selectedTopic,
                 showTopics: this.showTopics,
                 leadId: this.leadId,
-                isFinished: this.isFinished
+                isFinished: this.isFinished,
+                askingContact: this.askingContact
             }));
         },
 
@@ -189,20 +199,17 @@ document.addEventListener('alpine:init', () => {
             }
         },
 
-        closeChat() {
-            this.isOpen = false;
-        },
+        closeChat() { this.isOpen = false; },
 
         async setTopic(topic) {
             this.selectedTopic = topic;
             this.showTopics = false;
-            this.messages.push({ sender: 'user', text: `Memilih topik: ${topic}`, time: this.getCurrentTime() });
+            this.messages.push({ sender: 'user', text: `Topik dipilih: ${topic}`, time: this.getCurrentTime() });
             
             this.isTyping = true;
             this.scrollToBottom();
 
             try {
-                // Ping server agar Real-time admin monitoring berjalan sejak awal klik topik
                 let res = await fetch('/chatbot/send', {
                     method: 'POST',
                     headers: {
@@ -229,15 +236,13 @@ document.addEventListener('alpine:init', () => {
                     this.saveState();
                     this.scrollToBottom();
                 }, 800);
-
-            } catch (e) {
-                this.isTyping = false;
-            }
+            } catch (e) { this.isTyping = false; }
         },
 
-        async endChat() {
+        // Trigger awal klik tombol Hubungi CS
+        async askContact() {
             this.messages.push({ sender: 'user', text: 'Akhiri & Hubungi CS', time: this.getCurrentTime() });
-            this.isFinished = true;
+            this.askingContact = true; // Set state meminta kontak
             this.isTyping = true;
             this.scrollToBottom();
 
@@ -253,12 +258,11 @@ document.addEventListener('alpine:init', () => {
                         topic: this.selectedTopic,
                         chat_history: this.messages,
                         lead_id: this.leadId,
-                        is_finished: true
+                        asking_contact: true // Beritahu backend
                     })
                 });
                 
                 let data = await res.json();
-
                 setTimeout(() => {
                     this.isTyping = false;
                     this.messages.push({ sender: 'bot', text: data.reply, time: this.getCurrentTime() });
@@ -266,9 +270,7 @@ document.addEventListener('alpine:init', () => {
                     this.saveState();
                     this.scrollToBottom();
                 }, 800);
-            } catch (e) {
-                this.isTyping = false;
-            }
+            } catch (e) { this.isTyping = false; }
         },
 
         async sendMessage() {
@@ -280,6 +282,15 @@ document.addEventListener('alpine:init', () => {
             this.isTyping = true;
             this.scrollToBottom();
 
+            // Atur payload, kalau askingContact true, maka ini proses submit email
+            let payload = {
+                message: msgText, 
+                topic: this.selectedTopic, 
+                chat_history: this.messages,
+                lead_id: this.leadId
+            };
+            if (this.askingContact) payload.submitting_contact = true;
+
             try {
                 let res = await fetch('/chatbot/send', {
                     method: 'POST',
@@ -287,12 +298,7 @@ document.addEventListener('alpine:init', () => {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                     },
-                    body: JSON.stringify({ 
-                        message: msgText, 
-                        topic: this.selectedTopic, 
-                        chat_history: this.messages,
-                        lead_id: this.leadId
-                    })
+                    body: JSON.stringify(payload)
                 });
                 
                 let data = await res.json();
@@ -304,6 +310,12 @@ document.addEventListener('alpine:init', () => {
                     
                     if(this.playNotificationSound) this.playNotificationSound();
                     if (!this.isOpen) this.unread++;
+
+                    // Kunci chat jika status is_finished datang dari backend
+                    if (data.is_finished) {
+                        this.isFinished = true;
+                        this.askingContact = false;
+                    }
                     
                     this.saveState();
                     this.scrollToBottom();

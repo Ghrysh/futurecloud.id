@@ -62,6 +62,7 @@ Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
 
 // --- CHATBOT ---
+Route::get('/chatbot/init', [ChatbotController::class, 'initChat']);
 Route::post('/chatbot/send', [ChatbotController::class, 'processChat']);
 Route::get('/chatbot/history', [ChatbotController::class, 'getHistory']);
 

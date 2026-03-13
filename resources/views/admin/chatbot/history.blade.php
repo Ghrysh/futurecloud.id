@@ -18,9 +18,9 @@
                 <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
                     <tr>
                         <th class="px-4 py-3 sm:px-6 sm:py-3 font-bold whitespace-nowrap">Waktu Mulai</th>
-                        <th class="px-4 py-3 sm:px-6 sm:py-3 font-bold">Kontak / IP</th>
-                        <th class="hidden sm:table-cell px-4 py-3 sm:px-6 sm:py-3 font-bold">Topik Terakhir</th>
-                        <th class="hidden md:table-cell px-4 py-3 sm:px-6 sm:py-3 font-bold">Pesan Terakhir</th>
+                        <th class="px-4 py-3 sm:px-6 sm:py-3 font-bold">IP Address</th>
+                        <th class="hidden sm:table-cell px-4 py-3 sm:px-6 sm:py-3 font-bold">Topik</th>
+                        <th class="hidden md:table-cell px-4 py-3 sm:px-6 sm:py-3 font-bold">Kontak Info (Email/No.Hp)</th>
                         <th class="px-4 py-3 sm:px-6 sm:py-3 font-bold text-center">Status</th>
                         <th class="px-4 py-3 sm:px-6 sm:py-3 text-right font-bold">Aksi</th>
                     </tr>
@@ -33,30 +33,50 @@
                             <span class="text-[10px]">{{ $lead->created_at->diffForHumans() }}</span>
                         </td>
                         <td class="px-4 py-3 sm:px-6 sm:py-4">
-                            <div class="font-bold text-gray-800 text-xs sm:text-sm">{{ $lead->contact_info ?: 'Anonim' }}</div>
-                            <div class="text-[10px] sm:text-xs text-gray-400">IP: {{ $lead->ip_address }}</div>
+                            <div class="font-bold text-gray-800 text-xs sm:text-sm">{{ $lead->ip_address }}</div>
                         </td>
                         <td class="hidden sm:table-cell px-4 py-3 sm:px-6 sm:py-4 text-gray-500 text-xs sm:text-sm">
                             <span class="bg-gray-100 px-2 py-1 rounded text-xs">{{ $lead->topic_context ?? 'Umum' }}</span>
                         </td>
-                        <td class="hidden md:table-cell px-4 py-3 sm:px-6 sm:py-4 text-gray-500 truncate max-w-[150px] text-xs sm:text-sm">
-                            {{ $lead->last_message ?? '-' }}
+                        <td class="hidden md:table-cell px-4 py-3 sm:px-6 sm:py-4 text-blue-600 font-bold text-xs sm:text-sm">
+                            {{ $lead->contact_info ?? '-' }}
                         </td>
                         <td class="px-4 py-3 sm:px-6 sm:py-4 text-center">
-                            <form action="{{ route('admin.chatbot.lead.status', $lead->id) }}" method="POST" class="inline">
-                                @csrf
-                                @method('PATCH')
-                                <button type="submit" 
-                                    class="px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-bold transition {{ $lead->status === 'contacted' ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-orange-100 text-orange-700 hover:bg-orange-200' }}">
-                                    {{ $lead->status === 'contacted' ? 'Sudah Dihubungi' : 'Pending' }}
-                                </button>
-                            </form>
+                            @if(empty($lead->contact_info))
+                                <span class="px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-bold bg-blue-100 text-blue-700 shadow-sm border border-blue-200">
+                                    Chat Berlangsung
+                                </span>
+                            @else
+                                <span class="px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-bold bg-gray-200 text-gray-700 shadow-sm border border-gray-300">
+                                    Chat Berakhir
+                                </span>
+                            @endif
                         </td>
                         <td class="px-4 py-3 sm:px-6 sm:py-4 text-right">
-                            <button @click="fetchChatHistory({{ $lead->id }}, '{{ addslashes($lead->contact_info ?: $lead->ip_address) }}')"
-                                    class="inline-flex items-center gap-1 text-blue-600 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 px-2 py-1.5 sm:px-3 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-bold transition whitespace-nowrap">
-                                <i class="ri-eye-line"></i> <span class="hidden sm:inline">Lihat Chat</span><span class="sm:hidden">Lihat</span>
-                            </button>
+                            <div class="flex justify-end items-center gap-2">
+                                <button @click="fetchChatHistory({{ $lead->id }}, '{{ addslashes($lead->ip_address) }}')"
+                                        class="inline-flex items-center gap-1 text-blue-600 bg-blue-50 hover:bg-blue-100 px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-bold transition whitespace-nowrap">
+                                    <i class="ri-eye-line"></i> <span class="hidden sm:inline">Lihat Chat</span>
+                                </button>
+                                
+                                @if(!empty($lead->contact_info))
+                                    @if($lead->status === 'contacted')
+                                        <button disabled 
+                                            class="inline-flex items-center gap-1 px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-bold transition bg-green-100 text-green-700 cursor-not-allowed">
+                                            <i class="ri-check-line"></i> Sudah Dihubungi
+                                        </button>
+                                    @else
+                                        <form action="{{ route('admin.chatbot.lead.status', $lead->id) }}" method="POST" class="inline">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" 
+                                                class="inline-flex items-center gap-1 px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-bold transition bg-orange-500 hover:bg-orange-600 text-white shadow-sm shadow-orange-500/50">
+                                                Tandai Dihubungi
+                                            </button>
+                                        </form>
+                                    @endif
+                                @endif
+                            </div>
                         </td>
                     </tr>
                     @empty
@@ -105,7 +125,7 @@
                                 <div class="max-w-[85%] sm:max-w-[80%]">
                                     <div class="flex items-center gap-2 mb-1" :class="msg.sender === 'user' ? 'justify-end' : 'justify-start'">
                                         <span class="text-[10px] font-bold text-gray-500" 
-                                            x-text="msg.sender === 'user' ? activeUser : 'FutureBot'"></span>
+                                            x-text="msg.sender === 'user' ? 'Visitor' : 'FutureBot'"></span>
                                     </div>
             
                                     <div :class="msg.sender === 'user' 
@@ -140,7 +160,7 @@
             activeUser: '',
 
             async fetchChatHistory(leadId, userName) {
-                this.activeUser = userName;
+                this.activeUser = 'IP: ' + userName;
                 this.isOpen = true;
                 this.isLoading = true;
                 this.activeMessages = [];
