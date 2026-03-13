@@ -1,0 +1,8 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background: bg-blue-50 (#eff6ff) dengan rounded corners -->
+    <rect width="64" height="64" rx="12" fill="#eff6ff"/>
+    
+    <!-- Icon: ri-cloud-fill text-blue-600 (#2563eb) -->
+    <!-- Posisi sudah ditengah (Centered) -->
+    <path d="M17.5 29C17.5 22.9249 22.4249 18 28.5 18C33.7645 18 38.1698 21.6934 39.2568 26.6385C39.7996 26.5478 40.3601 26.5 40.9286 26.5C45.8991 26.5 49.9286 30.5294 49.9286 35.5C49.9286 40.4706 45.8991 44.5 40.9286 44.5H19.0714C14.8908 44.5 11.5 41.1092 11.5 36.9286C11.5 32.9693 14.5416 29.7212 18.4137 29.3957C18.1256 29.2982 17.8197 29.2393 17.5 29.2393V29Z" fill="#2563eb"/>
+</svg>

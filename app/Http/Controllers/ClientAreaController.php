@@ -1,0 +1,194 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Order;      // Model Invoice/Order Baru
+use App\Models\OrderItem;  // Model Layanan/Subscription Baru
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Barryvdh\DomPDF\Facade\Pdf;
+
+class ClientAreaController extends Controller implements HasMiddleware
+{
+    /**
+     * Download Invoice PDF
+     */
+    public function downloadInvoice($id)
+    {
+        // Cari Order berdasarkan ID dan pastikan milik user yang login
+        $order = Order::where('user_id', Auth::id())->findOrFail($id);
+        $user = Auth::user();
+
+        // Load view PDF. Pastikan file resources/views/pdf/invoice.blade.php sudah disesuaikan dengan variabel $order
+        // Kita passing variable 'invoice' agar view lama tetap jalan (alias $order)
+        $pdf = Pdf::loadView('pdf.invoice', ['invoice' => $order, 'user' => $user]);
+
+        $pdf->setPaper('a4', 'portrait');
+
+        return $pdf->download('Invoice-' . $order->invoice_number . '.pdf');
+    }
+    
+    /**
+     * Middleware Static (Laravel 11 Style)
+     * Menghitung jumlah layanan untuk sidebar (Counter Badge)
+     */
+    public static function middleware(): array
+    {
+        return [
+            function ($request, $next) {
+                $userId = Auth::id();
+
+                if ($userId) {
+                    // Ambil semua item yang ordernya milik user ini
+                    $items = OrderItem::whereHas('order', function($q) use ($userId) {
+                        $q->where('user_id', $userId);
+                    })->get();
+
+                    $counts = [
+                        'products'  => $items->count(),
+                        'domain'    => $items->where('type', 'domain')->count(),
+                        'hosting'   => $items->where('type', 'hosting')->count(),
+                        'email'     => $items->where('type', 'email')->count(),
+                        'vps'       => $items->where('type', 'vps')->count(),
+                        'saas'      => $items->where('type', 'saas')->count(),
+                        'ssl'       => $items->where('type', 'ssl')->count(),
+                        'aws'       => $items->where('type', 'aws')->count(),
+                        'license'   => $items->where('type', 'license')->count(),
+                        'others'    => $items->where('type', 'others')->count(),
+                    ];
+
+                    View::share('sidebarCounts', $counts);
+                }
+
+                return $next($request);
+            }
+        ];
+    }
+
+    // --- HALAMAN DASHBOARD UTAMA ---
+    public function index()
+    {
+        $userId = Auth::id();
+        
+        // Hitung Layanan Aktif (Status Order = Paid)
+        $activeServices = OrderItem::whereHas('order', function($q) use ($userId) {
+            $q->where('user_id', $userId)->whereIn('status', ['paid', 'active']);
+        })->where('type', '!=', 'domain')->count();
+
+        // Hitung Domain Aktif
+        $totalDomains = OrderItem::whereHas('order', function($q) use ($userId) {
+            $q->where('user_id', $userId)->whereIn('status', ['paid', 'active']);
+        })->where('type', 'domain')->count();
+
+        // Hitung Invoice Belum Bayar
+        $unpaidInvoices = Order::where('user_id', $userId)->where('status', 'pending')->count();
+        
+        $openTickets = 0; // Placeholder tiket
+
+        return view('dashboard.index', compact('activeServices', 'totalDomains', 'unpaidInvoices', 'openTickets'));
+    }
+
+    // --- HALAMAN LIST INVOICE ---
+    public function invoices()
+    {
+        // Tambahkan with('items') agar efisien (Eager Loading)
+        $invoices = Order::where('user_id', Auth::id())
+                         ->with('items') 
+                         ->latest()
+                         ->get();
+                         
+        return view('dashboard.invoices', compact('invoices'));
+    }
+
+    public function profile()
+    {
+        return view('dashboard.profile');
+    }
+
+    /**
+     * MENAMPILKAN LIST PRODUK (DENGAN SEARCH, FILTER, & PAGINATION)
+     */
+    public function showProduct(Request $request, $type)
+    {
+        // 1. Judul Halaman
+        $titles = [
+            'products'  => 'Semua Produk',
+            'domain'    => 'List Domain',
+            'hosting'   => 'Web Hosting',
+            'email'     => 'Email Corporate',
+            'vps'       => 'Virtual Private Server',
+            'saas'      => 'Aplikasi SaaS',
+            'dedicated' => 'Dedicated Server',
+            'ssl'       => 'SSL Certificates',
+            'aws'       => 'Amazon Web Services',
+            'license'   => 'Lisensi Software',
+            'others'    => 'Layanan Lainnya'
+        ];
+        
+        $title = $titles[$type] ?? 'Layanan';
+
+        // 2. Query Dasar (OrderItem milik User)
+        $query = OrderItem::whereHas('order', function($q) {
+            $q->where('user_id', Auth::id());
+        });
+
+        // Filter Type
+        if ($type !== 'products') {
+            $query->where('type', $type);
+        }
+
+        // 3. Fitur Search (Update: Cari di product_name ATAU JSON configuration)
+        if ($request->has('search') && $request->search != null) {
+            $keyword = $request->search;
+            $query->where(function($q) use ($keyword) {
+                $q->where('product_name', 'like', "%{$keyword}%")
+                  ->orWhere('configuration', 'like', "%{$keyword}%"); // Cari IP/Domain di JSON
+            });
+        }
+
+        // 4. Fitur Filter Status (Cek Status Parent Order)
+        if ($request->has('status') && $request->status != 'all' && $request->status != null) {
+            $status = $request->status;
+            $query->whereHas('order', function($q) use ($status) {
+                // Mapping status UI ke Database
+                if ($status == 'active') $q->whereIn('status', ['paid', 'active']);
+                else $q->where('status', $status);
+            });
+        }
+
+        // 5. Pagination
+        $perPage = $request->input('per_page', 10);
+
+        // Eager load 'order' agar tidak query berulang di view
+        $services = $query->with('order')
+                          ->latest()
+                          ->paginate($perPage)
+                          ->withQueryString(); 
+
+        // --- AJAX Handler untuk Live Search ---
+        if ($request->ajax()) {
+            return view('dashboard.partials.services-list', compact('services'))->render();
+        }
+        
+        return view('dashboard.services', compact('title', 'type', 'services'));
+    }
+
+    /**
+     * HALAMAN MANAGE (DETAIL PRODUK)
+     */
+    public function manage($id)
+    {
+        // Cari produk (OrderItem) berdasarkan ID
+        $service = OrderItem::whereHas('order', function($q) {
+                                $q->where('user_id', Auth::id());
+                            })
+                            ->findOrFail($id);
+
+        $title = "Kelola Layanan - " . $service->product_name;
+
+        // View ini akan menampilkan detail Username/Password/IP dari kolom configuration
+        return view('dashboard.manage', compact('title', 'service'));
+    }
+}
