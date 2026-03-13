@@ -170,4 +170,57 @@ class AdminDashboardController extends Controller
 
         return redirect()->route('admin.partners.index')->with('success', 'Permintaan partner ditolak.');
     }
+
+    public function monitoring(Request $request)
+    {
+        $filter = $request->query('filter', 'today');
+        $query = VisitorLog::query();
+        $now = Carbon::now();
+        
+        $chartLabels = [];
+        $chartValues = [];
+
+        if ($filter == 'today') {
+            $query->whereDate('date', $now->toDateString());
+            $totalVisitors = $query->count();
+            for ($i = 6; $i >= 0; $i--) {
+                $date = Carbon::today()->subDays($i);
+                $chartLabels[] = $date->format('d M');
+                $chartValues[] = VisitorLog::whereDate('date', $date)->count();
+            }
+        } elseif ($filter == 'week') {
+            $query->whereBetween('date', [$now->copy()->startOfWeek()->toDateString(), $now->copy()->endOfWeek()->toDateString()]);
+            $totalVisitors = $query->count();
+            for ($i = 6; $i >= 0; $i--) {
+                $date = Carbon::today()->subDays($i);
+                $chartLabels[] = $date->format('d M');
+                $chartValues[] = VisitorLog::whereDate('date', $date)->count();
+            }
+        } elseif ($filter == 'month') {
+            $query->whereMonth('date', $now->month)->whereYear('date', $now->year);
+            $totalVisitors = $query->count();
+            for ($i = 1; $i <= $now->daysInMonth; $i++) {
+                $date = Carbon::createFromDate($now->year, $now->month, $i);
+                $chartLabels[] = ($i % 5 == 0 || $i == 1) ? $date->format('d M') : '';
+                $chartValues[] = VisitorLog::whereDate('date', $date)->count();
+            }
+        } elseif ($filter == 'year') {
+            $query->whereYear('date', $now->year);
+            $totalVisitors = $query->count();
+            for ($i = 1; $i <= 12; $i++) {
+                $chartLabels[] = Carbon::create()->month($i)->format('M');
+                $chartValues[] = VisitorLog::whereMonth('date', $i)->whereYear('date', $now->year)->count();
+            }
+        }
+
+        $chartData = [
+            'labels' => $chartLabels,
+            'values' => $chartValues,
+            'labelName' => 'Total Pengunjung'
+        ];
+
+        $visitorLogs = $query->latest('updated_at')->paginate(15);
+
+        return view('admin.monitoring', compact('filter', 'totalVisitors', 'chartData', 'visitorLogs'));
+    }
 }

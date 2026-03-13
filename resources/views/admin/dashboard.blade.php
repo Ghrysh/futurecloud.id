@@ -108,45 +108,4 @@
         </div>
 
     </div>
-
-    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 mb-8">
-        <h3 class="text-lg font-bold text-slate-800 mb-4">Statistik Pengunjung</h3>
-        <div class="h-[300px] w-full relative">
-            <canvas id="trafficChart"></canvas>
-        </div>
-    </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const chartData = @json($chartData);
-        const ctx = document.getElementById('trafficChart');
-        
-        if (ctx) {
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: chartData.labels,
-                    datasets: [{
-                        label: chartData.labelName,
-                        data: chartData.values,
-                        borderColor: '#0ea5e9',
-                        backgroundColor: 'rgba(14, 165, 233, 0.1)',
-                        borderWidth: 3,
-                        fill: true,
-                        tension: 0.4,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { beginAtZero: true, ticks: { stepSize: 1 } },
-                        x: { grid: { display: false } }
-                    }
-                }
-            });
-        }
-    });
-</script>
 @endsection

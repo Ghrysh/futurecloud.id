@@ -173,6 +173,8 @@ Route::prefix('admin')->middleware('auth:admin')->name('admin.')->group(function
     Route::post('/logout', [AdminLoginController::class, 'logout'])->name('logout');
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
+    Route::get('/monitoring', [AdminDashboardController::class, 'monitoring'])->name('monitoring');
+
     // SAAS MANAGEMENT
     Route::get('/saas-management', [AdminSaasController::class, 'saasIndex'])->name('saas.index');
     Route::get('/saas/create', [AdminSaasController::class, 'create'])->name('saas.create'); // Baru

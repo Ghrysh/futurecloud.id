@@ -89,6 +89,12 @@
                     <span class="font-medium text-sm">Dashboard</span>
                 </a>
 
+                <a href="{{ route('admin.monitoring') }}"
+                    class="flex items-center px-3 py-2.5 rounded-lg transition group mt-1 {{ request()->routeIs('admin.monitoring') ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                    <i class="ri-line-chart-line text-xl mr-3 {{ request()->routeIs('admin.monitoring') ? 'text-white' : 'text-slate-400 group-hover:text-white' }}"></i>
+                    <span class="font-medium text-sm">Monitoring</span>
+                </a>
+
                 <p class="px-3 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 mt-6">Management</p>
 
                 <a href="{{ route('admin.orders.index') }}"
