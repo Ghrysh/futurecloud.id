@@ -55,6 +55,18 @@ Route::view('/services', 'services')->name('services');
 Route::view('/solutions', 'solutions')->name('solutions');
 Route::view('/about-us', 'about-us')->name('about-us');
 
+Route::get('/terms', function () {
+    return view('terms');
+})->name('terms');
+
+Route::get('/refund-policy', function () {
+    return view('refund-policy');
+})->name('refund-policy');
+
+Route::get('/faq', function () {
+    return view('faq');
+})->name('faq');
+
 // UPDATED: Menggunakan ProductController agar data DB muncul
 Route::get('/catalog', [ProductController::class, 'catalog'])->name('catalog');
 

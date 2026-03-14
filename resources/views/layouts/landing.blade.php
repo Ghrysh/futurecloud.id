@@ -78,6 +78,9 @@
                         <li><a href="{{ url('/contact') }}"
                                 class="hover:text-blue-600 transition-colors {{ request()->is('contact') ? 'text-blue-600' : '' }}">Contact</a>
                         </li>
+                        <li><a href="{{ url('/faq') }}"
+                                class="hover:text-blue-600 transition-colors {{ request()->is('faq') ? 'text-blue-600' : '' }}">FAQ</a>
+                        </li>
                         </li>
                     </ul>
                 </div>
@@ -417,8 +420,10 @@
                 <a href="{{ url('about-us') }}"
                     class="block px-3 py-3 rounded-md text-base font-medium {{ request()->is('about-us') ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50' }}">About
                     Us</a>
-                <a href="{{ url('/#contact') }}"
+                <a href="{{ url('/contact') }}"
                     class="block px-3 py-3 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50">Contact</a>
+                <a href="{{ url('/faq') }}"
+                    class="block px-3 py-3 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50">FAQ</a>
             </div>
         </div>
     </nav>
@@ -478,6 +483,7 @@
                     <ul class="space-y-3 text-sm text-gray-600">
                         <li><a href="{{ url('/portfolio') }}" class="hover:text-blue-600">Documentation</a></li>
                         <li><a href="{{ url('/contact') }}" class="hover:text-blue-600">Help Center</a></li>
+                        <li><a href="{{ url('/faq') }}" class="hover:text-blue-600">FAQ</a></li>
                     </ul>
                 </div>
             </div>
@@ -485,8 +491,8 @@
                 class="border-t mt-16 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-600">
                 <p>© 2025 FutureCloud.id. All rights reserved.</p>
                 <div class="flex space-x-6 mt-4 md:mt-0">
-                    <a href="#" class="hover:text-blue-600">Privacy Policy</a>
-                    <a href="#" class="hover:text-blue-600">Terms of Service</a>
+                    <a href="{{ url('/refund-policy') }}" class="hover:text-blue-600">Privacy Policy</a>
+                    <a href="{{ url('/terms') }}" class="hover:text-blue-600">Terms of Service</a>
                 </div>
             </div>
         </div>
