@@ -1,4 +1,6 @@
-@extends('layouts.app') 
+@extends('layouts.landing')
+@section('title', 'Refund Policy')
+
 @section('content')
 <main class="bg-slate-50 min-h-screen font-['Inter'] pb-24">
     

@@ -491,7 +491,7 @@
                 class="border-t mt-16 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-600">
                 <p>© 2025 FutureCloud.id. All rights reserved.</p>
                 <div class="flex space-x-6 mt-4 md:mt-0">
-                    <a href="{{ url('/refund-policy') }}" class="hover:text-blue-600">Privacy Policy</a>
+                    <a href="{{ url('/refund-policy') }}" class="hover:text-blue-600">Refund Policy</a>
                     <a href="{{ url('/terms') }}" class="hover:text-blue-600">Terms of Service</a>
                 </div>
             </div>

@@ -1,4 +1,6 @@
-@extends('layouts.app') 
+@extends('layouts.landing')
+@section('title', 'FAQ')
+
 @section('content')
 <main class="bg-slate-50 min-h-screen pb-24">
     
