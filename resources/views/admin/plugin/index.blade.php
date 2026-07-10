@@ -38,10 +38,14 @@
                                 <div class="flex items-center gap-4">
                                     @php
                                         $imgSrc = $app->thumbnail;
-                                        if (!Str::startsWith($imgSrc, 'http') && !Str::startsWith($imgSrc, 'assets')) {
-                                            $imgSrc = asset('storage/' . $imgSrc);
-                                        } else {
+                                        if (Str::startsWith($imgSrc, 'http')) {
+                                            // do nothing, already absolute
+                                        } elseif (Str::startsWith($imgSrc, 'assets/')) {
                                             $imgSrc = asset($imgSrc);
+                                        } elseif (Str::startsWith($imgSrc, 'storage/')) {
+                                            $imgSrc = asset($imgSrc);
+                                        } else {
+                                            $imgSrc = asset('storage/' . $imgSrc);
                                         }
                                     @endphp
                                     <img src="{{ $imgSrc }}"

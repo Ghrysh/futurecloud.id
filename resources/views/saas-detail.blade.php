@@ -110,7 +110,19 @@
 
                         {{-- Image Thumbnail --}}
                         <div class="h-36 md:h-52 w-full bg-gray-100 relative overflow-hidden">
-                            <img src="{{ $app->thumbnail_url }}" alt="{{ $app->name }}" class="card-img w-full h-full object-cover transition-transform duration-500 ease-out">
+                            @php
+                                $imgSrc = $app->thumbnail;
+                                if (Str::startsWith($imgSrc, 'http')) {
+                                    // do nothing
+                                } elseif (Str::startsWith($imgSrc, 'assets/')) {
+                                    $imgSrc = asset($imgSrc);
+                                } elseif (Str::startsWith($imgSrc, 'storage/')) {
+                                    $imgSrc = asset($imgSrc);
+                                } else {
+                                    $imgSrc = asset('storage/' . $imgSrc);
+                                }
+                            @endphp
+                            <img src="{{ $imgSrc }}" alt="{{ $app->name }}" class="card-img w-full h-full object-cover transition-transform duration-500 ease-out">
                             
                             {{-- Badge Category --}}
                             <span class="absolute top-3 right-3 bg-white/95 backdrop-blur text-gray-800 text-[10px] md:text-xs font-bold px-3 py-1 rounded-full shadow-sm border border-gray-100">
@@ -191,7 +203,19 @@
 
                             {{-- Image Thumbnail --}}
                             <div class="h-36 md:h-52 w-full bg-gray-100 relative overflow-hidden">
-                                <img src="{{ $plugin->thumbnail_url }}" alt="{{ $plugin->name }}" class="card-img w-full h-full object-cover transition-transform duration-500 ease-out">
+                                @php
+                                    $pImgSrc = $plugin->thumbnail;
+                                    if (Str::startsWith($pImgSrc, 'http')) {
+                                        // do nothing
+                                    } elseif (Str::startsWith($pImgSrc, 'assets/')) {
+                                        $pImgSrc = asset($pImgSrc);
+                                    } elseif (Str::startsWith($pImgSrc, 'storage/')) {
+                                        $pImgSrc = asset($pImgSrc);
+                                    } else {
+                                        $pImgSrc = asset('storage/' . $pImgSrc);
+                                    }
+                                @endphp
+                                <img src="{{ $pImgSrc }}" alt="{{ $plugin->name }}" class="card-img w-full h-full object-cover transition-transform duration-500 ease-out">
                                 
                                 {{-- Badge Category --}}
                                 <span class="absolute top-3 right-3 bg-white/95 backdrop-blur text-gray-800 text-[10px] md:text-xs font-bold px-3 py-1 rounded-full shadow-sm border border-gray-100">
