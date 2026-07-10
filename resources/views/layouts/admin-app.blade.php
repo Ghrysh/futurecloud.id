@@ -118,6 +118,22 @@
                     <span class="font-medium text-sm">Kelola SaaS App</span>
                 </a>
 
+                <!-- MENU PLUGIN -->
+                <a href="{{ route('admin.plugin.index') }}"
+                    class="flex items-center px-3 py-2.5 rounded-lg transition group {{ request()->routeIs('admin.plugin.index', 'admin.plugin.create', 'admin.plugin.edit') ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                    <i
+                        class="ri-plug-line text-xl mr-3 {{ request()->routeIs('admin.plugin.index', 'admin.plugin.create', 'admin.plugin.edit') ? 'text-white' : 'text-slate-400 group-hover:text-white' }}"></i>
+                    <span class="font-medium text-sm">Kelola Plugin</span>
+                </a>
+
+                <a href="{{ route('admin.plugin.customers') }}"
+                    class="flex items-center px-3 py-2.5 rounded-lg transition group {{ request()->routeIs('admin.plugin.customers') ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                    <i
+                        class="ri-group-line text-xl mr-3 {{ request()->routeIs('admin.plugin.customers') ? 'text-white' : 'text-slate-400 group-hover:text-white' }}"></i>
+                    <span class="font-medium text-sm">Plugin Customer</span>
+                </a>
+                <!-- END MENU PLUGIN -->
+
                 {{-- MENU BARU: PORTOFOLIO --}}
                 <a href="{{ route('admin.portfolios.index') }}"
                     class="flex items-center px-3 py-2.5 rounded-lg transition group {{ request()->routeIs('admin.portfolios.*') ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">

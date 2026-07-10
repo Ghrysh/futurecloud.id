@@ -50,17 +50,17 @@
                     <div>
                         <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Tagline</label>
                         <input type="text" name="tagline" value="{{ old('tagline', $hero->tagline ?? 'Next-Generation Cloud Platform') }}" 
-                               class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                               class="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-gray-700">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Judul Utama</label>
                         <input type="text" name="title" value="{{ old('title', $hero->title ?? 'Future-Ready Cloud') }}" 
-                               class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                               class="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-gray-700">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Sub Judul</label>
                         <textarea name="subtitle" rows="4" 
-                                  class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">{{ old('subtitle', $hero->subtitle ?? 'Empower your business with cutting‑edge cloud technology.') }}</textarea>
+                                  class="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-gray-700">{{ old('subtitle', $hero->subtitle ?? 'Empower your business with cutting‑edge cloud technology.') }}</textarea>
                     </div>
                     <button type="submit" class="w-full bg-blue-600 text-white py-2.5 rounded-lg font-bold hover:bg-blue-700 transition text-sm sm:text-base">
                         Simpan Teks

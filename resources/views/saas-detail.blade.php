@@ -63,7 +63,7 @@
 
             {{-- Filter Kategori --}}
             <div class="mt-10 flex flex-wrap justify-center gap-3 px-2" id="category-filter-container">
-                @php $categories = ['All', 'Security', 'Productivity', 'Marketing', 'Sales', 'HR', 'Finance']; @endphp
+                @php $categories = ['All', 'Security', 'Productivity', 'Marketing', 'Sales', 'HR', 'Finance', 'Plugin']; @endphp
                 @foreach ($categories as $index => $cat)
                     <button class="category-btn px-5 py-2 rounded-full text-sm font-medium border border-blue-500/30 hover:bg-blue-600 hover:text-white hover:border-transparent transition backdrop-blur-sm cursor-pointer
                         {{ $index === 0 ? 'bg-blue-600 text-white shadow-md border-transparent' : 'text-blue-200 bg-blue-900/30' }}"
@@ -154,7 +154,7 @@
                                 <div>
                                     <p class="text-[10px] text-gray-400 font-medium uppercase tracking-wide">Mulai dari</p>
                                     <p class="text-blue-600 font-bold text-sm md:text-lg">
-                                        Rp {{ number_format($app->price, 0, ',', '.') }}<span class="text-xs font-normal text-gray-400">/bln</span>
+                                        Rp {{ number_format($app->price, 0, ',', '.') }}<span class="text-xs font-normal text-gray-400">{{ $app->cycle == 'monthly' ? '/bln' : ($app->cycle == 'annually' ? '/thn' : '') }}</span>
                                     </p>
                                 </div>
                                 <span class="bg-gray-50 hover:bg-blue-600 hover:text-white text-blue-600 border border-blue-100 text-xs md:text-sm font-bold px-4 py-2 rounded-lg transition-colors duration-300">
@@ -171,6 +171,83 @@
                     Lihat Semua Aplikasi
                 </button>
             </div>
+
+            {{-- PLUGIN SECTION --}}
+            @if(isset($plugins) && $plugins->count() > 0)
+            <div class="mt-20">
+                <div class="flex flex-col sm:flex-row justify-between items-end mb-10 gap-4 px-2">
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-900">Plugin</h2>
+                        <p class="text-gray-500 mt-2">Tingkatkan performa bisnis Anda dengan plugin unggulan kami.</p>
+                    </div>
+                </div>
+
+                <div id="plugin-grid" class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
+                    @foreach ($plugins as $plugin)
+                        <div onclick="window.location='{{ route('saas.show', $plugin->slug) }}'"
+                            class="saas-card bg-white rounded-2xl border border-gray-200 overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 group flex flex-col hover:-translate-y-1 h-full"
+                            data-name="{{ strtolower($plugin->name) }}" 
+                            data-category="{{ $plugin->category }}">
+
+                            {{-- Image Thumbnail --}}
+                            <div class="h-36 md:h-52 w-full bg-gray-100 relative overflow-hidden">
+                                <img src="{{ $plugin->thumbnail_url }}" alt="{{ $plugin->name }}" class="card-img w-full h-full object-cover transition-transform duration-500 ease-out">
+                                
+                                {{-- Badge Category --}}
+                                <span class="absolute top-3 right-3 bg-white/95 backdrop-blur text-gray-800 text-[10px] md:text-xs font-bold px-3 py-1 rounded-full shadow-sm border border-gray-100">
+                                    {{ $plugin->category }}
+                                </span>
+                            </div>
+
+                            {{-- Card Body --}}
+                            <div class="p-5 flex flex-col flex-1">
+                                {{-- Header --}}
+                                <div class="mb-3">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <div class="flex items-center gap-1.5 text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded-md border border-gray-100">
+                                            <i class="ri-store-2-line text-blue-500"></i>
+                                            <span class="truncate max-w-[80px] md:max-w-[120px]" title="{{ $plugin->partner_name }}">
+                                                {{ $plugin->partner_name }}
+                                            </span>
+                                            @if($plugin->partner_verified ?? false)
+                                                <i class="ri-verified-badge-fill text-blue-500" title="Verified Partner"></i>
+                                            @endif
+                                        </div>
+                                        
+                                        {{-- Rating Small --}}
+                                        <div class="flex items-center gap-1 text-xs font-semibold text-gray-700">
+                                            <i class="ri-star-fill text-yellow-400"></i>
+                                            <span>{{ $plugin->rating }}</span>
+                                        </div>
+                                    </div>
+
+                                    <h3 class="font-bold text-base md:text-xl text-gray-900 group-hover:text-blue-600 transition leading-snug mb-2 line-clamp-1">
+                                        {{ $plugin->name }}
+                                    </h3>
+
+                                    <p class="text-gray-500 text-xs md:text-sm leading-relaxed line-clamp-2 h-10">
+                                        {{ $plugin->description }}
+                                    </p>
+                                </div>
+
+                                {{-- Footer --}}
+                                <div class="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between">
+                                    <div>
+                                        <p class="text-[10px] text-gray-400 font-medium uppercase tracking-wide">Mulai dari</p>
+                                        <p class="text-blue-600 font-bold text-sm md:text-lg">
+                                            Rp {{ number_format($plugin->price, 0, ',', '.') }}<span class="text-xs font-normal text-gray-400">{{ $plugin->cycle == 'monthly' ? '/bln' : ($plugin->cycle == 'annually' ? '/thn' : '') }}</span>
+                                        </p>
+                                    </div>
+                                    <span class="bg-gray-50 hover:bg-blue-600 hover:text-white text-blue-600 border border-blue-100 text-xs md:text-sm font-bold px-4 py-2 rounded-lg transition-colors duration-300">
+                                        Detail
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+            @endif
 
         </div>
     </section>

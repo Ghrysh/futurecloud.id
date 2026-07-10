@@ -100,22 +100,23 @@
                             <h3 class="font-bold text-gray-900 text-lg mb-4">Metode Pembayaran</h3>
                             
                             <div class="space-y-4">
-                                {{-- QRIS (MANUAL) --}}
-                                <label class="cursor-pointer block relative group">
+                                {{-- QRIS (MANUAL) - HIDDEN FOR NOW
+                                <label class="payment-method-card relative flex cursor-pointer rounded-xl border border-gray-200 bg-white p-4 shadow-sm hover:border-blue-500 hover:shadow-md transition-all duration-200">
                                     <input type="radio" name="payment_method" value="qris_manual" class="payment-radio sr-only">
-                                    <div class="border-2 border-gray-200 rounded-xl p-5 flex items-center justify-between bg-white">
-                                        <div class="flex items-center gap-4">
-                                            <div class="payment-logo-container">
+                                    <span class="flex flex-col flex-1">
+                                        <span class="flex justify-between items-center mb-3">
+                                            <span class="w-16 h-8 flex items-center justify-center">
                                                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Logo_QRIS.svg/1200px-Logo_QRIS.svg.png" class="payment-logo" alt="QRIS">
-                                            </div>
-                                            <div>
-                                                <span class="block font-bold text-gray-900">QRIS (Scan Barcode)</span>
-                                                <span class="text-xs text-gray-500">BCA, GoPay, OVO, Dana, ShopeePay</span>
-                                            </div>
-                                        </div>
-                                        <i class="ri-checkbox-circle-fill radio-icon hidden text-2xl ml-3"></i>
-                                    </div>
+                                            </span>
+                                            <i class="ri-checkbox-circle-fill check-icon text-2xl text-blue-600 hidden"></i>
+                                        </span>
+                                        <span class="block text-sm">
+                                            <span class="block font-bold text-gray-900">QRIS (Scan Barcode)</span>
+                                            <span class="block text-gray-500 text-xs mt-1">Manual Verifikasi</span>
+                                        </span>
+                                    </span>
                                 </label>
+                                --}}
 
                                 {{-- 2. BANK BNI (MANUAL) --}}
                                 <label class="cursor-pointer block relative group">
@@ -231,10 +232,21 @@
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    // Redirect ke halaman instruksi transfer
                     window.location.href = data.redirect_instruction;
                 } else {
-                    Swal.fire('Gagal!', data.message, 'error');
+                    if (data.redirect_instruction) {
+                        Swal.fire({
+                            title: 'Info',
+                            text: data.message,
+                            icon: 'info',
+                            confirmButtonText: 'Ke Client Area',
+                            allowOutsideClick: false
+                        }).then(() => {
+                            window.location.href = data.redirect_instruction;
+                        });
+                    } else {
+                        Swal.fire('Gagal!', data.message, 'error');
+                    }
                 }
             })
             .catch(error => {

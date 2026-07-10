@@ -105,6 +105,12 @@
                             'label' => 'SaaS Apps', 
                             'count' => $counts['saas'] ?? 0
                         ],
+                        [
+                            'route' => 'client.plugin', 
+                            'icon' => 'ri-plug-line', 
+                            'label' => 'Plugin Saya', 
+                            'count' => $counts['plugin'] ?? 0
+                        ],
                     ];
                 @endphp
 
@@ -141,6 +147,10 @@
             </nav>
 
             <div class="p-4 border-t border-gray-100">
+                <a href="{{ url('/') }}" class="flex items-center px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors mb-2">
+                    <i class="ri-global-line mr-3 text-lg"></i>
+                    Kembali ke Web
+                </a>
                 <a href="{{ route('logout') }}"
                     onclick="event.preventDefault(); document.getElementById('logout-form-sidebar').submit();"
                     class="flex items-center px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors">

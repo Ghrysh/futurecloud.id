@@ -27,6 +27,7 @@ use App\Http\Controllers\ClientAreaController;
 use App\Http\Controllers\PartnerSaasController;
 use App\Http\Controllers\Partner\PartnerDashboardController;
 use App\Http\Controllers\Admin\AdminSaasController;
+use App\Http\Controllers\Admin\AdminPluginController;
 use App\Http\Controllers\Admin\Auth\AdminLoginController;
 use App\Http\Controllers\Admin\ChatbotAdminController;
 use App\Http\Controllers\Admin\AdminDashboardController;
@@ -137,6 +138,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/order/buy', [OrderController::class, 'store'])->name('order.store');
     Route::get('/order/success/{id}', [OrderController::class, 'success'])->name('order.success');
     Route::get('/order/instruction/{id}', [OrderController::class, 'instruction'])->name('order.instruction');
+    Route::post('/order/upload-proof/{id}', [OrderController::class, 'uploadProof'])->name('order.upload_proof');
 });
 
 // --- RUTE CLIENT AREA ---
@@ -153,6 +155,7 @@ Route::middleware('auth')->prefix('client-area')->name('client.')->group(functio
     Route::get('/vps', [ClientAreaController::class, 'showProduct'])->defaults('type', 'vps')->name('vps');
     Route::get('/saas', [ClientAreaController::class, 'showProduct'])->defaults('type', 'saas')->name('saas');
     Route::get('/ssl', [ClientAreaController::class, 'showProduct'])->defaults('type', 'ssl')->name('ssl');
+    Route::get('/plugin', [ClientAreaController::class, 'plugins'])->name('plugin');
     Route::get('/aws', [ClientAreaController::class, 'showProduct'])->defaults('type', 'aws')->name('aws');
     Route::get('/license', [ClientAreaController::class, 'showProduct'])->defaults('type', 'license')->name('license');
     Route::get('/others', [ClientAreaController::class, 'showProduct'])->defaults('type', 'others')->name('others');
@@ -201,6 +204,16 @@ Route::prefix('admin')->middleware('auth:admin')->name('admin.')->group(function
     Route::get('/saas/{id}', [AdminSaasController::class, 'saasShow'])->name('saas.show');
     Route::post('/saas/{id}/approve', [AdminSaasController::class, 'approveSaas'])->name('saas.approve');
     Route::post('/saas/{id}/reject', [AdminSaasController::class, 'rejectSaas'])->name('saas.reject');
+
+    // === KELOLA PLUGIN ===
+    Route::get('/plugin-management', [AdminPluginController::class, 'index'])->name('plugin.index');
+    Route::get('/plugin/create', [AdminPluginController::class, 'create'])->name('plugin.create');
+    Route::post('/plugin', [AdminPluginController::class, 'store'])->name('plugin.store');
+    Route::get('/plugin/{id}/edit', [AdminPluginController::class, 'edit'])->name('plugin.edit');
+    Route::put('/plugin/{id}', [AdminPluginController::class, 'update'])->name('plugin.update');
+    Route::delete('/plugin/{id}', [AdminPluginController::class, 'destroy'])->name('plugin.destroy');
+    Route::get('/plugin-customers', [AdminPluginController::class, 'customers'])->name('plugin.customers');
+    // =====================
 
     Route::get('/admins', [AdminDashboardController::class, 'adminIndex'])->name('admins.index');
     Route::post('/add-new', [AdminDashboardController::class, 'storeAdmin'])->name('store');

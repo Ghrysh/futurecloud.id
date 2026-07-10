@@ -17,26 +17,42 @@ class OrderController extends Controller
 {
 public function store(Request $request)
     {
-        $request->validate([
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
             'payment_method' => 'required|string',
             'cart_ids' => 'required|array',
             'cart_ids.*' => 'exists:carts,id',
             'total_amount' => 'required|numeric'
         ]);
 
+        if ($validator->fails()) {
+            if ($validator->errors()->has('cart_ids') || $validator->errors()->has('cart_ids.0')) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Pesanan Anda sudah dibuat. Silakan cek tagihan Anda di Client Area.',
+                    'redirect_instruction' => route('client.invoices')
+                ]);
+            }
+            return response()->json([
+                'status' => 'error',
+                'message' => $validator->errors()->first()
+            ]);
+        }
+
         try {
-            $subtotal = $request->total_amount;
+            $cartItems = Cart::whereIn('id', $request->cart_ids)
+                             ->where('user_id', Auth::id())
+                             ->get();
+
+            if ($cartItems->isEmpty()) {
+                throw new \Exception('Keranjang belanja kosong atau item tidak valid.');
+            }
+
+            $subtotal = $cartItems->sum('price');
             $ppn = $subtotal * 0.11;
             $grand_total = $subtotal + $ppn;
 
-            $order = DB::transaction(function () use ($request, $grand_total) {
-                $cartItems = Cart::whereIn('id', $request->cart_ids)
-                                 ->where('user_id', Auth::id())
-                                 ->get();
+            $order = DB::transaction(function () use ($request, $grand_total, $cartItems) {
 
-                if ($cartItems->isEmpty()) {
-                    throw new \Exception('Keranjang belanja kosong atau item tidak valid.');
-                }
 
                 $order = Order::create([
                     'user_id' => Auth::id(),
@@ -62,47 +78,12 @@ public function store(Request $request)
                 return $order;
             });
 
-            $va = env('IPAYMU_VA');
-            $secret = env('IPAYMU_API_KEY');
-            $env = env('IPAYMU_ENV', 'sandbox');
-            $url = $env == 'production' ? 'https://my.ipaymu.com/api/v2/payment' : 'https://sandbox.ipaymu.com/api/v2/payment';
-
-            $body = [
-                'account'       => $va,
-                'product'       => ['Tagihan ' . $order->invoice_number, 'PPN 11%'],
-                'qty'           => ['1', '1'],
-                'price'         => [$subtotal, $ppn],
-                'returnUrl'     => route('order.instruction', ['id' => $order->id]),
-                'notifyUrl'     => route('ipaymu.callback'),
-                'cancelUrl'     => route('cart.index'),
-                'referenceId'   => $order->invoice_number,
-                'buyerName'     => Auth::user()->name,
-                'buyerEmail'    => Auth::user()->email,
-            ];
-
-            $jsonBody = json_encode($body, JSON_UNESCAPED_SLASHES);
-            $requestBody = strtolower(hash('sha256', $jsonBody));
-            $stringToSign = strtoupper('POST') . ':' . $va . ':' . $requestBody . ':' . $secret;
-            $signature = hash_hmac('sha256', $stringToSign, $secret);
-
-            $response = Http::withHeaders([
-                'Content-Type' => 'application/json',
-                'signature'    => $signature,
-                'va'           => $va,
-                'timestamp'    => date('YmdHis')
-            ])->post($url, $body);
-
-            $result = $response->json();
-
-            if ($response->successful() && $result['Status'] == 200) {
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Mengarahkan ke pembayaran...',
-                    'redirect_instruction' => $result['Data']['Url'], 
-                ]);
-            } else {
-                throw new \Exception($result['Message'] ?? 'Gagal membuat sesi pembayaran.');
-            }
+            // Langsung arahkan ke instruksi pembayaran manual
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Mengarahkan ke pembayaran...',
+                'redirect_instruction' => route('order.instruction', ['id' => $order->id]), 
+            ]);
 
         } catch (\Exception $e) {
             return response()->json([
@@ -125,32 +106,126 @@ public function store(Request $request)
 
             if ($order && $order->status !== 'paid') {
                 $order->update(['status' => 'paid']);
-
-                $namecheap = new NamecheapService();
-
-                foreach ($order->items as $item) {
-                    if ($item->type === 'domain') {
-                        $config = json_decode($item->configuration, true);
-                        $domainName = $config['domain_name'] ?? $item->product_name;
-
-                        $contactData = [
-                            'first_name' => $order->user->name,
-                            'last_name' => 'Customer',
-                            'email' => $order->user->email,
-                            'phone' => '+62.80000000000',
-                        ];
-
-                        try {
-                            $namecheap->registerDomain($domainName, 1, $contactData);
-                            Log::info("Domain {$domainName} berhasil didaftarkan via Namecheap untuk Order {$invoice}.");
-                        } catch (\Exception $e) {
-                            Log::error("Gagal mendaftarkan domain {$domainName} di Namecheap: " . $e->getMessage());
-                        }
-                    }
-                }
+                $this->provisionOrder($order);
             }
         }
 
         return response()->json(['status' => 'ok']);
+    }
+
+    public static function provisionOrder($order)
+    {
+        $namecheap = new NamecheapService();
+        foreach ($order->items as $item) {
+            // Cek jika produk adalah plugin (dari nama produk)
+            $isPlugin = str_contains(strtolower($item->product_name), 'plugin');
+            $config = json_decode($item->configuration, true) ?? [];
+
+            // --- HANDLE DOMAIN ---
+            if ($item->type === 'domain') {
+                $domainName = $config['domain_name'] ?? $item->product_name;
+
+                $contactData = [
+                    'first_name' => $order->user->name,
+                    'last_name' => 'Customer',
+                    'email' => $order->user->email,
+                    'phone' => '+62.80000000000',
+                ];
+
+                try {
+                    $namecheap->registerDomain($domainName, 1, $contactData);
+                    Log::info("Domain {$domainName} berhasil didaftarkan via Namecheap untuk Order {$order->invoice_number}.");
+                } catch (\Exception $e) {
+                    Log::error("Gagal mendaftarkan domain {$domainName} di Namecheap: " . $e->getMessage());
+                }
+            } 
+            // --- HANDLE PLUGIN LISENSI ---
+            elseif ($isPlugin) {
+                // Tentukan expired_at berdasarkan billing_cycle
+                $expiredAt = null;
+                if ($item->billing_cycle === 'monthly') {
+                    $expiredAt = now()->addMonth()->format('Y-m-d H:i:s');
+                } elseif ($item->billing_cycle === 'annually') {
+                    $expiredAt = now()->addYear()->format('Y-m-d H:i:s');
+                }
+
+                // Generate License Key
+                $licenseKey = 'FC-LIC-' . str_pad($item->id, 4, '0', STR_PAD_LEFT) . '-' . strtoupper(\Illuminate\Support\Str::random(6));
+                $config['license_key'] = $licenseKey;
+                $config['expired_at'] = $expiredAt;
+                
+                $item->configuration = json_encode($config);
+                $item->save();
+
+                // Tentukan URL API berdasarkan nama plugin
+                $isChatbot = str_contains(strtolower($item->product_name), 'chatbot');
+                // Fallback default: Chatbot -> 8081, Monitoring -> 8082
+                $syncUrl = $isChatbot 
+                    ? env('CHATBOT_API_URL', 'http://localhost:8081') . '/api/v1/license/sync'
+                    : env('MONITORING_API_URL', 'http://localhost:8082') . '/api/v1/license/sync';
+
+                try {
+                    \Illuminate\Support\Facades\Http::post($syncUrl, [
+                        'name' => $order->user->name,
+                        'email' => $order->user->email,
+                        'license_key' => $licenseKey,
+                        'expired_at' => $expiredAt,
+                    ]);
+                    Log::info("Lisensi {$licenseKey} untuk plugin {$item->product_name} berhasil di-sync ke {$syncUrl}");
+                } catch (\Exception $e) {
+                    Log::error("Gagal sinkronisasi lisensi {$licenseKey} ke {$syncUrl}: " . $e->getMessage());
+                }
+            }
+        }
+    }
+
+
+    public function instruction($id)
+    {
+        Order::cleanUpExpired();
+        
+        $order = Order::where('id', $id)->where('user_id', Auth::id())->first();
+        if (!$order) {
+            return redirect()->route('client.invoices')->with('error', 'Pesanan tidak ditemukan atau sudah kedaluwarsa.');
+        }
+        return view('order.instruction', compact('order'));
+    }
+
+    public function uploadProof(Request $request, $id)
+    {
+        $order = Order::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
+        
+        $request->validate([
+            'payment_proof' => 'required|image|mimes:jpeg,png|max:5120'
+        ], [
+            'payment_proof.required' => 'File bukti pembayaran wajib diunggah.',
+            'payment_proof.image' => 'File harus berupa gambar.',
+            'payment_proof.mimes' => 'Format gambar harus JPG atau PNG.',
+            'payment_proof.max' => 'Ukuran gambar maksimal adalah 5 MB.',
+        ]);
+
+        if ($request->hasFile('payment_proof')) {
+            // Hapus bukti lama jika ada
+            if ($order->payment_proof && \Illuminate\Support\Facades\Storage::disk('public')->exists($order->payment_proof)) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($order->payment_proof);
+            }
+
+            $path = $request->file('payment_proof')->store('proofs', 'public');
+            $order->update(['payment_proof' => $path]);
+            
+            // Kirim notifikasi email ke Admin
+            try {
+                $messageText = "Halo Admin,\n\nPelanggan {$order->user->name} telah mengunggah bukti pembayaran untuk pesanan {$order->invoice_number}.\n\nSilakan cek dan verifikasi di panel admin:\n" . route('admin.orders.show', $order->id);
+                
+                \Illuminate\Support\Facades\Mail::raw($messageText, function ($message) use ($order) {
+                    $message->to('ptbtt01@gmail.com')
+                            ->subject('Konfirmasi Pembayaran: ' . $order->invoice_number);
+                });
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Gagal mengirim email konfirmasi pembayaran: ' . $e->getMessage());
+            }
+        }
+
+        return redirect()->route('client.invoices')->with('success', 'Bukti pembayaran berhasil diunggah! Admin akan segera memverifikasinya.');
     }
 }

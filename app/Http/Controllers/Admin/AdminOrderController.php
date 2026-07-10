@@ -14,6 +14,8 @@ class AdminOrderController extends Controller
     // 1. Menampilkan Daftar Pesanan
     public function index(Request $request)
     {
+        \App\Models\Order::cleanUpExpired();
+        
         $orders = Order::with('user')->latest()->paginate(10);
         return view('admin.orders.index', compact('orders'));
     }
@@ -39,68 +41,12 @@ class AdminOrderController extends Controller
         // Jika ya, jalankan otomatisasi pembelian domain
         if ($request->status == 'paid' && $order->status != 'paid') {
             
-            foreach ($order->items as $item) {
-                // Ambil konfigurasi item (JSON)
-                $config = $item->configuration ?? [];
-
-                // --- A. OTOMATISASI DOMAIN ---
-                if ($item->type == 'domain') {
-                    // Tentukan nama domain dan durasi tahun
-                    // Cek key 'domain_connection' (dari form hosting) atau 'domain' (dari form domain) atau nama produk
-                    $domainName = $config['domain_connection'] ?? ($config['domain'] ?? $item->product_name);
-                    
-                    // Bersihkan nama domain dari kata-kata tambahan jika ada (misal: "Domain premium (example.com)")
-                    // Jika user input bersih, logic ini aman. Jika tidak, regex ini membantu mengambil domain.
-                    if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $domainName, $matches)) {
-                        $domainName = $matches['domain'];
-                    }
-
-                    $years = $config['years'] ?? 1;
-
-                    try {
-                        // 1. Siapkan Data Kontak dari Profil User
-                        // Namecheap butuh nama depan dan belakang terpisah
-                        $nameParts = explode(' ', $order->user->name, 2);
-                        $firstName = $nameParts[0];
-                        $lastName  = $nameParts[1] ?? 'Customer'; // Fallback jika tidak ada nama belakang
-
-                        $contactData = [
-                            'first_name' => $firstName,
-                            'last_name'  => $lastName,
-                            'email'      => $order->user->email,
-                            'phone'      => $order->user->phone ?? '+62.81234567890', // Format wajib +NN.NNNN
-                            'address'    => $order->user->address ?? 'Jl. Raya Indonesia No 1',
-                            'city'       => 'Jakarta',
-                            'state'      => 'DKI Jakarta',
-                            'zip'        => '10110',
-                            'country'    => 'ID'
-                        ];
-
-                        // 2. Panggil API Namecheap
-                        // Pastikan saldo di Namecheap cukup!
-                        $result = $namecheap->registerDomain($domainName, $years, $contactData);
-
-                        // Log Sukses
-                        Log::info("AUTO-REGISTER SUCCESS: Domain $domainName berhasil didaftarkan. Order ID Namecheap: " . $result['order_id']);
-                        
-                        // Opsional: Simpan Order ID Namecheap ke notes item
-                        $config['notes'] = "Registered via API. NC OrderID: " . $result['order_id'];
-                        $item->configuration = $config;
-                        $item->save();
-
-                    } catch (\Exception $e) {
-                        // Jika Gagal (Misal saldo kurang atau koneksi timeout), catat error tapi JANGAN batalkan status Paid di lokal
-                        // Admin harus cek log dan proses manual jika error.
-                        Log::error("AUTO-REGISTER FAILED: Gagal mendaftarkan $domainName. Error: " . $e->getMessage());
-                        
-                        // Flash message warning ke Admin
-                        session()->flash('error', "Status diubah ke Paid, NAMUN gagal register domain $domainName di Namecheap: " . $e->getMessage());
-                    }
-                }
-
-                // --- B. OTOMATISASI LAINNYA (VPS/HOSTING) ---
-                // Untuk VPS/Hosting biasanya provisioning butuh waktu atau pakai modul WHM/cPanel terpisah.
-                // Disini kita skip dulu, admin input IP manual nanti.
+            // Panggil fungsi provisioning tersentralisasi
+            try {
+                \App\Http\Controllers\OrderController::provisionOrder($order);
+            } catch (\Exception $e) {
+                Log::error("Gagal melakukan provisioning pesanan {$order->id}: " . $e->getMessage());
+                session()->flash('error', "Status diubah ke Paid, tapi ada error saat provisioning (lihat log).");
             }
 
             // Set waktu pembayaran

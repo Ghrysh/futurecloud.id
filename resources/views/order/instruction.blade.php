@@ -10,7 +10,10 @@
             {{-- Header Biru --}}
             <div class="bg-blue-600 px-6 py-4 text-center">
                 <h2 class="text-white font-bold text-xl">Instruksi Pembayaran</h2>
-                <p class="text-blue-100 text-sm">Invoice #{{ $order->invoice_number }}</p>
+                <p class="text-blue-100 text-sm mb-2">Invoice #{{ $order->invoice_number }}</p>
+                <div class="bg-blue-700/50 rounded-lg inline-block px-4 py-2 text-white font-bold mt-2">
+                    Batas Waktu: <span id="countdown_timer">--:--:--</span>
+                </div>
             </div>
 
             <div class="p-8 text-center">
@@ -82,30 +85,40 @@
                     $gmailLink = "https://mail.google.com/mail/?view=cm&fs=1&to=$emailTo&su=" . rawurlencode($subject) . "&body=" . rawurlencode($text);
                 @endphp
 
-                <div class="space-y-3">
-                    <p class="text-sm text-gray-500 font-medium">Sudah melakukan pembayaran? Konfirmasi sekarang:</p>
-                    
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        {{-- OPSI 1: APLIKASI EMAIL (HP/Outlook) --}}
-                        <a href="{{ $mailtoLink }}" class="flex items-center justify-center gap-2 py-3 px-4 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition border border-gray-300">
-                            <i class="ri-mail-line text-lg"></i> Aplikasi Email
-                        </a>
 
-                        {{-- OPSI 2: GMAIL WEB (Browser) --}}
-                        <a href="{{ $gmailLink }}" target="_blank" class="flex items-center justify-center gap-2 py-3 px-4 bg-red-50 text-red-600 font-bold rounded-xl hover:bg-red-100 transition border border-red-200">
-                            <i class="ri-google-fill text-lg"></i> Gmail Web
-                        </a>
-                    </div>
+                <div class="space-y-4">
+                    <p class="text-sm text-gray-800 font-bold">Langkah Selanjutnya: Unggah Bukti Transfer</p>
                     
-                    {{-- TEXT MANUAL COPY (JAGA-JAGA JIKA TOMBOL GAGAL) --}}
-                    <div class="bg-blue-50 p-3 rounded-lg text-xs text-gray-600 mt-4 text-left">
-                        <p class="mb-1 font-bold">Jika tombol di atas tidak berfungsi:</p>
-                        <p>Kirim email manual ke: <strong class="select-all">ptbtt01@gmail.com</strong></p>
-                        <p>Subjek: <span class="select-all font-mono">{{ $subject }}</span></p>
-                        <p class="mt-1 text-gray-400 italic">*Jangan lupa lampirkan foto bukti transfer.</p>
-                    </div>
+                    @if(session('success'))
+                        <div class="bg-green-50 text-green-700 p-4 rounded-xl mb-4 text-sm font-semibold border border-green-200">
+                            {{ session('success') }}
+                        </div>
+                    @endif
 
-                    <div class="pt-4 mt-4 border-t border-gray-100">
+                    @if($order->payment_proof)
+                        <div class="bg-blue-50 border border-blue-200 p-4 rounded-xl text-left mb-6">
+                            <p class="text-sm font-bold text-blue-800 mb-2 text-center">Bukti Pembayaran Saat Ini:</p>
+                            <img src="{{ asset('storage/' . $order->payment_proof) }}" class="w-full max-w-xs mx-auto rounded-lg shadow-sm border border-gray-200 mb-3">
+                            <p class="text-xs text-blue-600 text-center">Anda dapat mengunggah ulang jika ada kesalahan gambar.</p>
+                        </div>
+                    @endif
+
+                    <form id="paymentProofForm" action="{{ route('order.upload_proof', $order->id) }}" method="POST" enctype="multipart/form-data" class="bg-gray-50 border border-gray-200 p-5 rounded-xl text-left mb-6">
+                        @csrf
+                        <div class="mb-4 text-left">
+                            <label class="block text-sm font-bold text-gray-700 mb-2">File Bukti Transfer (JPG/PNG)</label>
+                            <input type="file" name="payment_proof" id="payment_proof_input" accept="image/jpeg,image/png" required class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 border border-gray-300 rounded-md p-1 focus:ring-blue-500 focus:border-blue-500">
+                            <p class="text-xs text-gray-500 mt-1">Maksimal ukuran file: 5 MB</p>
+                        </div>
+                        @error('payment_proof')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                        <button type="submit" class="mt-4 w-full bg-blue-600 text-white font-bold py-2.5 rounded-lg hover:bg-blue-700 transition flex items-center justify-center gap-2">
+                            <i class="ri-upload-cloud-2-line text-lg"></i> Unggah Bukti
+                        </button>
+                    </form>
+
+                    <div class="pt-4 mt-6 border-t border-gray-100">
                         <a href="{{ route('client.invoices') }}" class="text-sm font-semibold text-gray-600 hover:text-blue-600 hover:underline">
                             Cek Status di Client Area
                         </a>
@@ -132,5 +145,59 @@
         // Simple feedback
         alert("Nomor/Nominal berhasil disalin!");
     }
+
+    // JS File Size Validation (Max 5MB)
+    const paymentForm = document.getElementById('paymentProofForm');
+    const paymentInput = document.getElementById('payment_proof_input');
+    
+    if (paymentForm && paymentInput) {
+        paymentForm.addEventListener('submit', function(e) {
+            if (paymentInput.files.length > 0) {
+                const fileSize = paymentInput.files[0].size / 1024 / 1024; // in MB
+                if (fileSize > 5) {
+                    e.preventDefault();
+                    Swal.fire({
+                        title: 'Ukuran Terlalu Besar!',
+                        text: 'Ukuran gambar maksimal adalah 5 MB. Harap perkecil (compress) gambar Anda sebelum mengunggah.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            }
+        });
+    }
+
+    // Countdown Timer Logic
+    const createdAt = new Date("{{ $order->created_at->toIso8601String() }}").getTime();
+    const expireTime = createdAt + (24 * 60 * 60 * 1000); // 24 hours in milliseconds
+
+    const countdownInterval = setInterval(function() {
+        const now = new Date().getTime();
+        const distance = expireTime - now;
+
+        if (distance < 0) {
+            clearInterval(countdownInterval);
+            document.getElementById("countdown_timer").innerHTML = "KEDALUWARSA";
+            Swal.fire({
+                title: 'Waktu Habis!',
+                text: 'Pesanan ini sudah kedaluwarsa karena melewati batas 24 jam. Halaman akan dimuat ulang.',
+                icon: 'warning',
+                confirmButtonText: 'Kembali',
+                allowOutsideClick: false
+            }).then(() => {
+                window.location.href = "{{ route('client.invoices') }}";
+            });
+            return;
+        }
+
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        document.getElementById("countdown_timer").innerHTML = 
+            (hours < 10 ? "0" + hours : hours) + "j " + 
+            (minutes < 10 ? "0" + minutes : minutes) + "m " + 
+            (seconds < 10 ? "0" + seconds : seconds) + "d";
+    }, 1000);
 </script>
 @endsection

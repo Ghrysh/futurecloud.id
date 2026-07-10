@@ -73,6 +73,13 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 text-right">
+                                @if(!in_array(strtolower($inv->status), ['paid', 'active', 'success', 'cancelled']))
+                                    <a href="{{ route('order.instruction', $inv->id) }}"
+                                       class="inline-flex items-center justify-center p-2 text-blue-600 hover:text-blue-700 rounded-full hover:bg-blue-50 transition"
+                                       title="Bayar Sekarang">
+                                        <i class="ri-wallet-3-line text-lg"></i>
+                                    </a>
+                                @endif
                                 <a href="{{ route('client.invoices.download', $inv->id) }}" 
                                    class="inline-flex items-center justify-center p-2 text-gray-400 hover:text-blue-600 rounded-full hover:bg-blue-50 transition" 
                                    title="Download PDF">
@@ -124,10 +131,10 @@
                             <i class="ri-download-line"></i> Unduh PDF
                         </a>
                         
-                        @if($inv->status == 'pending')
-                            <button class="flex-1 py-2 bg-blue-600 text-white rounded-lg text-xs font-semibold hover:bg-blue-700 transition shadow-sm shadow-blue-200">
+                        @if(!in_array(strtolower($inv->status), ['paid', 'active', 'success', 'cancelled']))
+                            <a href="{{ route('order.instruction', $inv->id) }}" class="flex-1 py-2 bg-blue-600 text-white text-center rounded-lg text-xs font-semibold hover:bg-blue-700 transition shadow-sm shadow-blue-200 block">
                                 Bayar
-                            </button>
+                            </a>
                         @endif
                     </div>
                 </div>

@@ -14,31 +14,32 @@ class SaasController extends Controller
 
     public function index()
     {
-        // Murni ambil dari Database
-        $apps = SaasProduct::with('user')
+        $allApproved = SaasProduct::with('user')
             ->where('status', 'approved')
             ->latest()
-            ->get()
-            ->map(function ($app) {
-                return (object) [
-                    'name' => $app->name,
-                    'slug' => $app->slug,
-                    'category' => $app->category,
-                    'description' => $app->tagline ?? Str::limit($app->description, 80),
-                    'price' => $app->price,
-                    // Rating dummy karena belum ada review real (bisa diupdate nanti)
-                    'rating' => 5.0, 
-                    'reviews_count' => SaasReview::where('saas_slug', $app->slug)->count(),
-                    'subscribers' => 'New',
-                    // Gunakan gambar asset lokal jika ada, atau placeholder
-                    'thumbnail_url' => asset($app->thumbnail ?? 'assets/img/placeholder.jpg'),
-                    
-                    'partner_name' => 'FutureCloud Official',
-                    'partner_verified' => true,
-                ];
-            });
+            ->get();
 
-        return view('saas-detail', compact('apps'));
+        $mapProduct = function ($app) {
+            return (object) [
+                'name' => $app->name,
+                'slug' => $app->slug,
+                'category' => $app->category,
+                'description' => $app->tagline ?? Str::limit($app->description, 80),
+                'price' => $app->price,
+                'rating' => 5.0, 
+                'reviews_count' => SaasReview::where('saas_slug', $app->slug)->count(),
+                'subscribers' => 'New',
+                'thumbnail_url' => asset($app->thumbnail ?? 'assets/img/placeholder.jpg'),
+                'partner_name' => 'FutureCloud Official',
+                'partner_verified' => true,
+                'cycle' => is_array($app->plans) && isset($app->plans['cycle']) ? $app->plans['cycle'] : 'monthly',
+            ];
+        };
+
+        $apps = $allApproved->where('category', '!=', 'Plugin')->map($mapProduct)->values();
+        $plugins = $allApproved->where('category', 'Plugin')->map($mapProduct)->values();
+
+        return view('saas-detail', compact('apps', 'plugins'));
     }
 
     public function show($slug)
@@ -56,9 +57,11 @@ class SaasController extends Controller
         foreach($rawLines as $line) {
             $trimmed = trim($line);
 
-            // 1. Jika baris dimulai dengan strip (-), jadikan Fitur
+            // 1. Jika baris dimulai dengan strip (-), jadikan Fitur (hanya jika fitur dari DB kosong)
             if (str_starts_with($trimmed, '-')) {
-                $cleanFeatures[] = trim(substr($trimmed, 1));
+                if (empty($dbApp->features) || !is_array($dbApp->features)) {
+                    $cleanFeatures[] = trim(substr($trimmed, 1));
+                }
             } 
             // 2. Jika baris berisi kata "Fitur Utama", abaikan (Hapus judulnya)
             elseif (stripos($trimmed, 'Fitur Utama') !== false) {
@@ -72,11 +75,15 @@ class SaasController extends Controller
 
         // Gabungkan kembali baris deskripsi menjadi satu string
         $finalDescription = trim(implode("\n", $cleanDescriptionLines));
+        
+        // Gunakan fitur dari DB jika ada, jika tidak gunakan hasil parsing
+        $finalFeatures = (!empty($dbApp->features) && is_array($dbApp->features)) ? $dbApp->features : $cleanFeatures;
         // ----------------------------------------------------
 
         $app = (object) [
             'name' => $dbApp->name,
             'slug' => $dbApp->slug,
+            'category' => $dbApp->category,
             'tag' => $dbApp->category,
             'short_desc' => $dbApp->tagline,
             
@@ -90,7 +97,7 @@ class SaasController extends Controller
             'price' => $dbApp->price,
             
             // GUNAKAN ARRAY FITUR
-            'features' => $cleanFeatures, 
+            'features' => $finalFeatures, 
             
             'reviews' => [],
             'plans' => json_decode(json_encode($dbApp->plans)),

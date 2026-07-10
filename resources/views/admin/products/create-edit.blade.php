@@ -50,28 +50,28 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Nama Produk / TLD</label>
                             <input type="text" name="name" value="{{ old('name', $product->name ?? '') }}"
-                                class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                                placeholder="Contoh: VPS Starter atau .COM">
+                                class="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-gray-700"
+                                placeholder="Contoh: VPS Starter atau .COM" required>
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Slug (URL)</label>
                             <input type="text" name="slug" value="{{ old('slug', $product->slug ?? '') }}"
-                                class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                                placeholder="contoh: vps-starter">
+                                class="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-gray-700"
+                                placeholder="contoh: vps-starter" required>
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Kategori (Filter)</label>
                             <input type="text" name="category"
                                 value="{{ old('category', $product->category ?? 'General') }}"
-                                class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                class="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-gray-700"
                                 placeholder="Contoh: Popular, Business">
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Siklus Tagihan Default</label>
-                            <select name="cycle" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500">
+                            <select name="cycle" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-gray-700">
                                 <option value="mo"
                                     {{ old('cycle', $product->cycle ?? '') == 'mo' ? 'selected' : '' }}>Per Bulan (mo)
                                 </option>
@@ -85,7 +85,7 @@
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Label Global (Badge)</label>
                             <input type="text" name="tag" value="{{ old('tag', $product->tag ?? '') }}"
-                                class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                class="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-gray-700"
                                 placeholder="Contoh: Best Value, Recommended">
                         </div>
 

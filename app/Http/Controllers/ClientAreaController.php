@@ -52,7 +52,8 @@ class ClientAreaController extends Controller implements HasMiddleware
                         'hosting'   => $items->where('type', 'hosting')->count(),
                         'email'     => $items->where('type', 'email')->count(),
                         'vps'       => $items->where('type', 'vps')->count(),
-                        'saas'      => $items->where('type', 'saas')->count(),
+                        'saas'      => $items->filter(function($item) { return $item->type == 'saas' && stripos($item->product_name, 'Plugin') === false; })->count(),
+                        'plugin'    => $items->filter(function($item) { return $item->type == 'saas' && stripos($item->product_name, 'Plugin') !== false; })->count(),
                         'ssl'       => $items->where('type', 'ssl')->count(),
                         'aws'       => $items->where('type', 'aws')->count(),
                         'license'   => $items->where('type', 'license')->count(),
@@ -93,7 +94,8 @@ class ClientAreaController extends Controller implements HasMiddleware
     // --- HALAMAN LIST INVOICE ---
     public function invoices()
     {
-        // Tambahkan with('items') agar efisien (Eager Loading)
+        \App\Models\Order::cleanUpExpired();
+        
         $invoices = Order::where('user_id', Auth::id())
                          ->with('items') 
                          ->latest()
@@ -190,5 +192,22 @@ class ClientAreaController extends Controller implements HasMiddleware
 
         // View ini akan menampilkan detail Username/Password/IP dari kolom configuration
         return view('dashboard.manage', compact('title', 'service'));
+    }
+
+    /**
+     * HALAMAN PLUGIN (KHUSUS PLUGIN)
+     */
+    public function plugins()
+    {
+        $plugins = OrderItem::whereHas('order', function($q) {
+            $q->where('user_id', Auth::id());
+        })
+        ->where('type', 'saas')
+        ->where('product_name', 'like', '%Plugin%')
+        ->with('order')
+        ->latest()
+        ->get();
+
+        return view('dashboard.plugin', compact('plugins'));
     }
 }

@@ -112,7 +112,7 @@
 
 @section('content')
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-20">
 
         {{-- Breadcrumb --}}
         <div class="mb-6">
@@ -355,29 +355,77 @@
                                 @endif
 
                                 <div class="space-y-4">
-                                    @foreach(['ultimate', 'pro', 'starter'] as $planKey)
-                                        @if(isset($app->plans->$planKey))
-                                            @php $plan = $app->plans->$planKey; @endphp
-                                            <div class="plan-card">
-                                                <template x-if="billing === 'yearly'"><span class="discount-badge">{{ $plan->yearly->save_text ?? 'SAVE' }}</span></template>
-                                                <template x-if="billing === 'trial'"><span class="discount-badge" style="background-color: #60A5FA; color:white; border:none;">FREE</span></template>
-                                                @if(isset($plan->tag) && $plan->tag)<span class="best-value-badge">{{ $plan->tag }}</span>@endif
-                                                
-                                                <h3 class="font-bold text-gray-800 text-lg">{{ $plan->name }}</h3>
-                                                
-                                                <div class="mt-2 mb-4">
-                                                    <template x-if="billing === 'yearly'"><div><div class="flex items-baseline gap-1"><span class="text-3xl font-extrabold text-blue-800">Rp {{ number_format(($plan->yearly->price_mo ?? $plan->price) / 1000, 0) }}rb</span><span class="text-sm text-gray-500">/mo</span></div><p class="text-xs text-green-600 mt-1 font-bold">{{ $plan->yearly->save_text ?? '' }} promo</p></div></template>
-                                                    <template x-if="billing === 'trial'"><div><div class="flex items-baseline gap-1"><span class="text-3xl font-extrabold text-gray-800">Rp 0</span><span class="text-sm text-gray-500">/mo</span></div><p class="text-xs text-blue-500 mt-1 font-bold">Gratis 2 bulan</p></div></template>
+                                        @if(strtolower($app->category) == 'plugin')
+                                            @php
+                                                $pluginCycle = 'lifetime';
+                                                if (is_array($app->plans) && isset($app->plans['cycle'])) {
+                                                    $pluginCycle = $app->plans['cycle'];
+                                                } elseif (is_object($app->plans) && isset($app->plans->cycle)) {
+                                                    $pluginCycle = $app->plans->cycle;
+                                                }
+                                                $cycleText = $pluginCycle == 'monthly' ? '/bln' : ($pluginCycle == 'annually' ? '/thn' : '');
+                                            @endphp
+                                            <div class="border-2 border-blue-500 rounded-2xl p-6 relative bg-white shadow-xl">
+                                                <div class="absolute -top-3 inset-x-0 flex justify-center">
+                                                    <span class="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">LISENSI PLUGIN</span>
+                                                </div>
+                                                <h3 class="font-bold text-gray-800 text-lg text-center mt-2">{{ $app->name }}</h3>
+                                                <div class="mt-4 mb-6 text-center">
+                                                    <div class="flex items-baseline justify-center gap-1">
+                                                        <span class="text-4xl font-extrabold text-blue-800">Rp {{ number_format($app->price, 0, ',', '.') }}</span>
+                                                        <span class="text-sm text-gray-500">{{ $cycleText }}</span>
+                                                    </div>
                                                 </div>
                                                 
-                                                <a href="{{ route('order.config.saas', ['product_name' => $app->name.' - '.$plan->name, 'price' => $plan->yearly->total_year ?? $plan->price, 'cycle' => 'annually']) }}" class="btn-action mb-3">Pilih Paket</a>
+                                                <form action="{{ route('cart.add') }}" method="POST" class="mb-3 w-full">
+                                                    @csrf
+                                                    <input type="hidden" name="type" value="saas">
+                                                    <input type="hidden" name="product_name" value="{{ $app->name }}">
+                                                    <input type="hidden" name="price" value="{{ $app->price }}">
+                                                    <input type="hidden" name="cycle" value="{{ $pluginCycle }}">
+                                                    <input type="hidden" name="domain_mode" value="skip">
+                                                    <button type="submit" class="btn-action w-full py-3 text-lg">Beli Sekarang</button>
+                                                </form>
                                                 
-                                                <ul class="space-y-2 text-sm text-gray-600 border-t border-gray-100 pt-4">
-                                                    @foreach($plan->features as $feature)<li class="flex items-start gap-2"><i class="ri-check-line text-blue-500 mt-0.5"></i><span class="leading-tight">{{ $feature }}</span></li>@endforeach
-                                                </ul>
+                                                <div class="text-sm text-gray-500 border-t border-gray-100 pt-4 mt-4 text-center font-medium">
+                                                    @if($pluginCycle == 'monthly')
+                                                        Pembayaran per bulan, lisensi perlu diperbarui setiap bulan.
+                                                    @elseif($pluginCycle == 'annually')
+                                                        Pembayaran per tahun, lisensi aktif selama 1 tahun penuh.
+                                                    @else
+                                                        Hanya bayar sekali, lisensi aktif selamanya (Lifetime).
+                                                    @endif
+                                                </div>
                                             </div>
+                                        @else
+                                            @foreach(['ultimate', 'pro', 'starter'] as $planKey)
+                                                @if(isset($app->plans->$planKey))
+                                                    @php $plan = $app->plans->$planKey; @endphp
+                                                    <div class="border-2 {{ $planKey === 'pro' ? 'border-blue-500' : 'border-gray-200' }} rounded-2xl p-6 relative bg-white {{ $planKey === 'pro' ? 'shadow-xl scale-[1.02]' : '' }} transition-transform">
+                                                        @if($planKey === 'pro')<div class="absolute -top-3 inset-x-0 flex justify-center"><span class="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Paling Populer</span></div>@endif
+                                                        
+                                                        <template x-if="billing === 'yearly'"><span class="discount-badge">{{ $plan->yearly->save_text ?? 'SAVE' }}</span></template>
+                                                        
+                                                        @if(isset($plan->tag) && $plan->tag)<span class="best-value-badge">{{ $plan->tag }}</span>@endif
+                                                        
+                                                        <h3 class="font-bold text-gray-800 text-lg">{{ $plan->name }}</h3>
+                                                        
+                                                        <div class="mt-2 mb-4">
+                                                            <template x-if="billing === 'yearly'"><div><div class="flex items-baseline gap-1"><span class="text-3xl font-extrabold text-blue-800">Rp {{ number_format(($plan->yearly->price_mo ?? $plan->price) / 1000, 0) }}rb</span><span class="text-sm text-gray-500">/mo</span></div><p class="text-xs text-green-600 mt-1 font-bold">{{ $plan->yearly->save_text ?? '' }} promo</p></div></template>
+                                                            <template x-if="billing === 'trial'"><div><div class="flex items-baseline gap-1"><span class="text-3xl font-extrabold text-gray-800">Rp 0</span><span class="text-sm text-gray-500">/mo</span></div><p class="text-xs text-blue-500 mt-1 font-bold">Gratis 2 bulan</p></div></template>
+                                                        </div>
+                                                        
+                                                        <a href="{{ route('order.config.saas', ['product_name' => $app->name.' - '.$plan->name, 'price' => $plan->yearly->total_year ?? $plan->price, 'cycle' => 'annually']) }}" class="btn-action mb-3">Pilih Paket</a>
+                                                        
+                                                        @if(isset($plan->features) && is_iterable($plan->features))
+                                                        <ul class="space-y-2 text-sm text-gray-600 border-t border-gray-100 pt-4">
+                                                            @foreach($plan->features as $feature)<li class="flex items-start gap-2"><i class="ri-check-line text-blue-500 mt-0.5"></i><span class="leading-tight">{{ $feature }}</span></li>@endforeach
+                                                        </ul>
+                                                        @endif
+                                                    </div>
+                                                @endif
+                                            @endforeach
                                         @endif
-                                    @endforeach
                                 </div>
                             </div>
                         @endif

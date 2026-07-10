@@ -11,7 +11,8 @@ class SaasProduct extends Model
 
     protected $fillable = [
         'user_id', 'name', 'slug', 'category', 'tagline', 
-        'description', 'price', 'thumbnail', 'status'
+        'description', 'price', 'thumbnail', 'status',
+        'features', 'plans'
     ];
 
     protected $guarded = [];

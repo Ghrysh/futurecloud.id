@@ -17,4 +17,12 @@ class Order extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
+
+    public static function cleanUpExpired()
+    {
+        // Hapus order pending yang umurnya lebih dari 24 jam
+        self::where('status', 'pending')
+            ->where('created_at', '<', now()->subHours(24))
+            ->delete();
+    }
 }

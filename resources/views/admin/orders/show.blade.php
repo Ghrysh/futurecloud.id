@@ -52,7 +52,7 @@
 
                     <div>
                         <label class="block text-sm font-medium text-gray-600 mb-1">Status Saat Ini</label>
-                        <select name="status" class="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                        <select name="status" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-gray-700">
                             <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Pending (Menunggu Bayar)</option>
                             <option value="paid" {{ $order->status == 'paid' ? 'selected' : '' }}>Paid / Active (Lunas)</option>
                             <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }}>Cancelled (Batal)</option>
@@ -134,7 +134,7 @@
                                             <label class="block text-xs font-medium text-gray-600 mb-1">IP Address</label>
                                             <input type="text" name="ip_address" 
                                                 value="{{ $config['ip_address'] ?? '' }}" 
-                                                class="w-full text-sm border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500" 
+                                                class="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-gray-700" 
                                                 placeholder="Contoh: 103.166.x.x">
                                         </div>
 
@@ -143,7 +143,7 @@
                                             <label class="block text-xs font-medium text-gray-600 mb-1">Username (SSH/cPanel)</label>
                                             <input type="text" name="username" 
                                                 value="{{ $config['username'] ?? '' }}" 
-                                                class="w-full text-sm border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500" 
+                                                class="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-gray-700" 
                                                 placeholder="root / admin">
                                         </div>
 
@@ -152,7 +152,7 @@
                                             <label class="block text-xs font-medium text-gray-600 mb-1">Password (Opsional)</label>
                                             <input type="text" name="password" 
                                                 value="{{ $config['password'] ?? '' }}" 
-                                                class="w-full text-sm border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500" 
+                                                class="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-gray-700" 
                                                 placeholder="Isi untuk ubah">
                                         </div>
                                     </div>
@@ -205,6 +205,19 @@
                     </a>
                 </div>
             </div>
+
+            {{-- Bukti Pembayaran --}}
+            @if($order->payment_proof)
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <i class="ri-image-line text-blue-500"></i> Bukti Transfer
+                    </h3>
+                    <a href="{{ asset('storage/' . $order->payment_proof) }}" target="_blank" class="block w-full aspect-video rounded-lg overflow-hidden border border-gray-200 hover:opacity-90 transition">
+                        <img src="{{ asset('storage/' . $order->payment_proof) }}" class="w-full h-full object-cover">
+                    </a>
+                    <p class="text-xs text-gray-500 mt-2 text-center">Klik gambar untuk memperbesar</p>
+                </div>
+            @endif
 
             {{-- Ringkasan Tagihan --}}
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">

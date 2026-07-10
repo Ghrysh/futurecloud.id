@@ -12,7 +12,11 @@ class AdminSaasController extends Controller
     // 1. LIST APLIKASI
     public function saasIndex()
     {
-        $apps = SaasProduct::with('user')->latest()->get();
+        $apps = SaasProduct::with('user')
+            ->where('category', '!=', 'Plugin')
+            ->orWhereNull('category')
+            ->latest()
+            ->get();
         return view('admin.saas.index', compact('apps'));
     }
 
@@ -47,8 +51,8 @@ class AdminSaasController extends Controller
     // 4. FORM EDIT
     public function edit($id)
     {
-        $app = SaasProduct::findOrFail($id);
-        return view('admin.saas.create-edit', compact('app'));
+        $saas = SaasProduct::findOrFail($id);
+        return view('admin.saas.create-edit', compact('saas'));
     }
 
     // 5. UPDATE APLIKASI
