@@ -294,4 +294,6 @@ Route::get('/sys-ping/v1', function (\Illuminate\Http\Request $request) {
     return response()->json(['success' => true]);
 });
 
+Route::post('/ipaymu/callback', [App\Http\Controllers\OrderController::class, 'ipaymuCallback'])->name('ipaymu.callback');
+
 require __DIR__ . '/auth.php';

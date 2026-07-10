@@ -8,26 +8,28 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use App\Services\NamecheapService;
 
 class OrderController extends Controller
 {
-    public function store(Request $request)
+public function store(Request $request)
     {
-        // 1. Validasi Input
         $request->validate([
             'payment_method' => 'required|string',
-            'cart_ids' => 'required|array', // Pastikan array ID cart ada
+            'cart_ids' => 'required|array',
             'cart_ids.*' => 'exists:carts,id',
             'total_amount' => 'required|numeric'
         ]);
 
         try {
-            // Gunakan Transaction agar data aman
-            // Kita tampung hasilnya ke variabel $orderId
-            $orderId = DB::transaction(function () use ($request) {
-                
-                // A. Ambil Item dari Cart yang dipilih
+            $subtotal = $request->total_amount;
+            $ppn = $subtotal * 0.11;
+            $grand_total = $subtotal + $ppn;
+
+            $order = DB::transaction(function () use ($request, $grand_total) {
                 $cartItems = Cart::whereIn('id', $request->cart_ids)
                                  ->where('user_id', Auth::id())
                                  ->get();
@@ -36,16 +38,14 @@ class OrderController extends Controller
                     throw new \Exception('Keranjang belanja kosong atau item tidak valid.');
                 }
 
-                // B. Buat Order Utama
                 $order = Order::create([
                     'user_id' => Auth::id(),
                     'invoice_number' => 'INV-' . date('Ymd') . '-' . strtoupper(Str::random(5)),
-                    'total_amount' => $request->total_amount,
+                    'total_amount' => $grand_total,
                     'payment_method' => $request->payment_method,
-                    'status' => 'pending', // Default pending
+                    'status' => 'pending', 
                 ]);
 
-                // C. Pindahkan Item Cart ke Order Items
                 foreach ($cartItems as $item) {
                     OrderItem::create([
                         'order_id' => $order->id,
@@ -57,23 +57,54 @@ class OrderController extends Controller
                     ]);
                 }
 
-                // D. Hapus Item dari Cart
                 Cart::whereIn('id', $request->cart_ids)->delete();
 
-                // E. PENTING: Return ID Order agar bisa ditangkap variabel $orderId
-                return $order->id;
+                return $order;
             });
 
-            // 3. Return JSON Response dengan URL Redirect yang Benar
-            // Pastikan route 'order.instruction' ada di web.php
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Pesanan berhasil dibuat!',
-                'redirect_instruction' => route('order.instruction', ['id' => $orderId]),
-            ]);
+            $va = env('IPAYMU_VA');
+            $secret = env('IPAYMU_API_KEY');
+            $env = env('IPAYMU_ENV', 'sandbox');
+            $url = $env == 'production' ? 'https://my.ipaymu.com/api/v2/payment' : 'https://sandbox.ipaymu.com/api/v2/payment';
+
+            $body = [
+                'account'       => $va,
+                'product'       => ['Tagihan ' . $order->invoice_number, 'PPN 11%'],
+                'qty'           => ['1', '1'],
+                'price'         => [$subtotal, $ppn],
+                'returnUrl'     => route('order.instruction', ['id' => $order->id]),
+                'notifyUrl'     => route('ipaymu.callback'),
+                'cancelUrl'     => route('cart.index'),
+                'referenceId'   => $order->invoice_number,
+                'buyerName'     => Auth::user()->name,
+                'buyerEmail'    => Auth::user()->email,
+            ];
+
+            $jsonBody = json_encode($body, JSON_UNESCAPED_SLASHES);
+            $requestBody = strtolower(hash('sha256', $jsonBody));
+            $stringToSign = strtoupper('POST') . ':' . $va . ':' . $requestBody . ':' . $secret;
+            $signature = hash_hmac('sha256', $stringToSign, $secret);
+
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/json',
+                'signature'    => $signature,
+                'va'           => $va,
+                'timestamp'    => date('YmdHis')
+            ])->post($url, $body);
+
+            $result = $response->json();
+
+            if ($response->successful() && $result['Status'] == 200) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Mengarahkan ke pembayaran...',
+                    'redirect_instruction' => $result['Data']['Url'], 
+                ]);
+            } else {
+                throw new \Exception($result['Message'] ?? 'Gagal membuat sesi pembayaran.');
+            }
 
         } catch (\Exception $e) {
-            // Jika error, return status error
             return response()->json([
                 'status' => 'error',
                 'message' => 'Terjadi kesalahan: ' . $e->getMessage()
@@ -81,23 +112,45 @@ class OrderController extends Controller
         }
     }
 
-    // Menampilkan Halaman Instruksi Pembayaran
-    public function instruction($id)
+    public function ipaymuCallback(Request $request)
     {
-        $order = Order::where('user_id', Auth::id())->findOrFail($id);
-        
-        // Jika status sudah paid, lempar ke dashboard
-        if ($order->status == 'paid') {
-            return redirect()->route('client.dashboard');
+        $status = $request->status;
+        $trx_id = $request->trx_id;
+        $invoice = $request->reference_id;
+
+        Log::info("iPaymu Webhook received for {$invoice} with status: {$status}");
+
+        if ($status == 'berhasil' || $status == 'sukses') {
+            $order = Order::with('items', 'user')->where('invoice_number', $invoice)->first();
+
+            if ($order && $order->status !== 'paid') {
+                $order->update(['status' => 'paid']);
+
+                $namecheap = new NamecheapService();
+
+                foreach ($order->items as $item) {
+                    if ($item->type === 'domain') {
+                        $config = json_decode($item->configuration, true);
+                        $domainName = $config['domain_name'] ?? $item->product_name;
+
+                        $contactData = [
+                            'first_name' => $order->user->name,
+                            'last_name' => 'Customer',
+                            'email' => $order->user->email,
+                            'phone' => '+62.80000000000',
+                        ];
+
+                        try {
+                            $namecheap->registerDomain($domainName, 1, $contactData);
+                            Log::info("Domain {$domainName} berhasil didaftarkan via Namecheap untuk Order {$invoice}.");
+                        } catch (\Exception $e) {
+                            Log::error("Gagal mendaftarkan domain {$domainName} di Namecheap: " . $e->getMessage());
+                        }
+                    }
+                }
+            }
         }
 
-        return view('order.instruction', compact('order'));
-    }
-
-    // Halaman Sukses (Opsional / Dipakai Callback)
-    public function success($id)
-    {
-        $order = Order::where('user_id', Auth::id())->with('items')->findOrFail($id);
-        return view('order.success', compact('order'));
+        return response()->json(['status' => 'ok']);
     }
 }

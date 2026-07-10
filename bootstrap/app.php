@@ -26,6 +26,12 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->append(\App\Http\Middleware\CheckBanned::class);
     })
+
+    ->withMiddleware(function (Middleware $middleware) {
+        $middleware->validateCsrfTokens(except: [
+            'ipaymu/callback',
+        ]);
+    })
     
     ->withExceptions(function (Exceptions $exceptions) {
         //
