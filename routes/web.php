@@ -35,6 +35,41 @@ use App\Http\Controllers\Admin\AdminProductController;
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\PortfolioController;
+use App\Http\Controllers\EmailController;
+use App\Http\Controllers\Auth\LoginMailController;
+use App\Http\Controllers\Auth\WebmailPasswordController;
+
+
+Route::prefix('webmail')->name('webmail.')->group(function () {
+
+    // KELUARKAN DARI MIDDLEWARE 'guest' JAHANAM ITU!
+    Route::get('/', [LoginMailController::class, 'showLoginForm'])
+        ->name('login');
+
+    Route::post('/login', [LoginMailController::class, 'login'])
+        ->name('login.post');
+
+    // Proses Logout
+    Route::post('/logout', [LoginMailController::class, 'logout'])
+        ->name('logout');
+
+    Route::get('/reset-password', [WebmailPasswordController::class, 'showResetForm'])->name('password.form');
+    Route::post('/reset-password', [WebmailPasswordController::class, 'updatePassword'])->name('password.update');
+
+    // Halaman Email Box
+    Route::middleware([\App\Http\Middleware\CheckEmailSession::class])->group(function () {
+
+        Route::get('/email', [EmailController::class, 'index'])
+            ->name('email');
+
+        Route::post('/email/send', [EmailController::class, 'sendEmail'])
+            ->name('send');
+
+        Route::post('/email/delete', [EmailController::class, 'delete'])
+            ->name('delete');
+        Route::post('/refresh-folder', [EmailController::class, 'refreshFolder'])->name('refresh-folder');
+    });
+});
 
 // --- RUTE PUBLIK ---
 Route::get('/', [WelcomeController::class, 'index'])->name('home');
@@ -293,5 +328,7 @@ Route::get('/sys-ping/v1', function (\Illuminate\Http\Request $request) {
 
     return response()->json(['success' => true]);
 });
+
+
 
 require __DIR__ . '/auth.php';

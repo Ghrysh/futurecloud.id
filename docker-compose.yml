@@ -18,10 +18,13 @@ services:
     container_name: futurecloud-web
     restart: unless-stopped
     ports:
-      - "8088:80"
+      # Hanya buka port 8888 untuk diakses Apache secara internal
+      # Port 80 dan 443 DIHAPUS agar tidak bentrok dengan Apache Host
+      - "127.0.0.1:8888:80"
     volumes:
       - ./:/var/www
       - ./.docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      # SSL akan dihandle oleh Apache Host, jadi volume letsencrypt di sini tidak wajib
     networks:
       - futurecloud
     depends_on:

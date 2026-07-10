@@ -10,23 +10,28 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
+
     ->withMiddleware(function (Middleware $middleware) {
-        
-        // --- TAMBAHKAN BAGIAN INI ---
+
         $middleware->alias([
-            'partner' => \App\Http\Middleware\IsPartner::class,
-            'admin'   => \Illuminate\Auth\Middleware\Authenticate::class, // Opsional jika admin pakai auth bawaan
+
+            /*
+            |--------------------------------------------------------------------------
+            | Custom Middleware
+            |--------------------------------------------------------------------------
+            */
+
+            'partner'      => \App\Http\Middleware\IsPartner::class,
+            'admin'        => \Illuminate\Auth\Middleware\Authenticate::class,
+            'email.auth'   => \App\Http\Middleware\CheckEmailSession::class,
+            'check.banned' => \App\Http\Middleware\CheckBanned::class,
+            'post.size'    => \App\Http\Middleware\CheckPostSize::class,
+
         ]);
-        // ----------------------------
-
-        $middleware->prepend(\App\Http\Middleware\CheckPostSize::class);
-
     })
 
-    ->withMiddleware(function (Middleware $middleware) {
-        $middleware->append(\App\Http\Middleware\CheckBanned::class);
-    })
-    
     ->withExceptions(function (Exceptions $exceptions) {
         //
-    })->create();
+    })
+
+    ->create();
