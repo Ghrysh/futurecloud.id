@@ -71,6 +71,67 @@
                     </span>
                 </div>
 
+                @if($service->type == 'saas' || $service->type == 'plugin')
+                @php
+                    $licenseKey = $config['license_key'] ?? 'Belum Dibuat (Hubungi Admin)';
+                    $isChatbot = str_contains(strtolower($service->product_name), 'chatbot');
+                    $cliCommand = $isChatbot ? 'chatbot' : 'monitoring';
+                    $cliShort = $isChatbot ? 'cb' : 'm';
+                @endphp
+                <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x border-gray-100 border-t">
+                    <!-- License Info -->
+                    <div class="p-6 bg-white">
+                        <div class="mb-4">
+                            <h4 class="text-sm font-semibold text-gray-500 mb-2 uppercase tracking-wider text-[11px]">Kode Lisensi</h4>
+                            @if(in_array($status, ['paid', 'active']))
+                            <div class="bg-blue-50 p-3 rounded-lg border border-blue-100 relative group">
+                                <span class="font-mono text-blue-700 font-bold block">{{ $licenseKey }}</span>
+                                <button class="absolute top-1/2 -translate-y-1/2 right-3 text-blue-400 hover:text-blue-600 transition p-1 bg-white rounded shadow-sm border border-blue-100" onclick="copyToClipboard('{{ $licenseKey }}', 'Lisensi berhasil disalin!')" title="Copy License">
+                                    <i class="ri-file-copy-line text-sm"></i>
+                                </button>
+                            </div>
+                            <p class="text-[10px] text-gray-400 mt-2">* Gunakan lisensi ini saat proses instalasi.</p>
+                            @else
+                            <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                                <span class="text-sm text-gray-500 font-medium">Menunggu Pembayaran</span>
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Installation Steps -->
+                    <div class="p-6 bg-gray-50/30">
+                        <h4 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                            <i class="ri-terminal-box-line text-gray-400"></i> Panduan Instalasi CLI
+                        </h4>
+                        
+                        @if(in_array($status, ['paid', 'active']))
+                        <div class="space-y-4">
+                            <div>
+                                <h5 class="text-xs font-semibold text-gray-700 mb-1">1. Install CLI Global:</h5>
+                                <div class="bg-gray-900 text-gray-200 p-2.5 rounded-lg font-mono text-xs shadow-inner flex justify-between items-center group">
+                                    <span>npm install -g futurecloud-{{ $cliCommand }}-cli</span>
+                                    <button class="text-gray-500 hover:text-white opacity-0 group-hover:opacity-100 transition" onclick="copyToClipboard('npm install -g futurecloud-{{ $cliCommand }}-cli', 'Perintah berhasil disalin!')"><i class="ri-file-copy-line"></i></button>
+                                </div>
+                            </div>
+                            <div>
+                                <h5 class="text-xs font-semibold text-gray-700 mb-1">2. Jalankan Perintah:</h5>
+                                <div class="bg-gray-900 text-gray-200 p-2.5 rounded-lg font-mono text-xs shadow-inner flex justify-between items-center group">
+                                    <span>futurecloud-{{ $cliCommand }} install</span>
+                                    <button class="text-gray-500 hover:text-white opacity-0 group-hover:opacity-100 transition" onclick="copyToClipboard('futurecloud-{{ $cliCommand }} install', 'Perintah berhasil disalin!')"><i class="ri-file-copy-line"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        @else
+                        <div class="text-center p-4 bg-white border-2 border-dashed border-gray-200 rounded-xl">
+                            <i class="ri-wallet-3-line text-2xl text-gray-300 mb-1 block"></i>
+                            <h5 class="font-bold text-gray-700 text-sm">Selesaikan Pembayaran</h5>
+                            <p class="text-xs text-gray-500 mt-1">Panduan instalasi akan muncul setelah lunas.</p>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+                @else
                 <div class="p-6">
                     <div class="space-y-4">
                         
@@ -117,8 +178,10 @@
 
                     </div>
                 </div>
+                @endif
             </div>
 
+            @if($service->type != 'saas' && $service->type != 'plugin')
             <!-- Login Credentials Section -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden" x-data="{ showPass: false }">
                 <div class="p-6 border-b border-gray-100">
@@ -135,7 +198,7 @@
                                 <label class="text-xs text-gray-500 block mb-1">Username</label>
                                 <div class="bg-gray-50 px-3 py-2 rounded text-sm font-mono text-gray-700 border border-gray-200 flex justify-between group relative">
                                     <span id="usernameText">{{ $username }}</span>
-                                    <button class="text-gray-400 hover:text-blue-600" onclick="navigator.clipboard.writeText('{{ $username }}'); alert('Username disalin!')" title="Copy">
+                                    <button class="text-gray-400 hover:text-blue-600" onclick="copyToClipboard('{{ $username }}', 'Username disalin!')" title="Copy">
                                         <i class="ri-file-copy-line"></i>
                                     </button>
                                 </div>
@@ -144,7 +207,7 @@
                             <div>
                                 <label class="text-xs text-gray-500 block mb-1">Password</label>
                                 <div class="bg-gray-50 px-3 py-2 rounded text-sm font-mono text-gray-700 border border-gray-200 flex justify-between items-center">
-                                    <span x-show="!showPass" class="blur-sm select-none">••••••••••</span>
+                                    <span x-show="!showPass" class="blur-sm select-none">â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢</span>
                                     <span x-show="showPass" class="text-gray-900 font-medium">{{ $password }}</span>
                                     
                                     <div class="flex gap-2">
@@ -152,7 +215,7 @@
                                             <i class="ri-eye-line" x-show="!showPass"></i>
                                             <i class="ri-eye-off-line" x-show="showPass"></i>
                                         </button>
-                                        <button class="text-gray-400 hover:text-blue-600" onclick="navigator.clipboard.writeText('{{ $password }}'); alert('Password disalin!')" title="Copy">
+                                        <button class="text-gray-400 hover:text-blue-600" onclick="copyToClipboard('{{ $password }}', 'Password disalin!')" title="Copy">
                                             <i class="ri-file-copy-line"></i>
                                         </button>
                                     </div>
@@ -163,6 +226,7 @@
                     </div>
                 </div>
             </div>
+            @endif
 
         </div>
 
@@ -238,5 +302,43 @@
         </div>
     </div>
 </div>
+
+<script>
+    function copyToClipboard(text, message = 'Berhasil disalin!') {
+        navigator.clipboard.writeText(text).then(() => {
+            const existingToast = document.getElementById('copy-toast');
+            if (existingToast) {
+                existingToast.remove();
+            }
+
+            const toast = document.createElement('div');
+            toast.id = 'copy-toast';
+            toast.className = 'fixed top-5 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-5 bg-gray-900 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 z-[100] transform transition-all duration-300 -translate-y-10 opacity-0 border border-gray-700 w-[90%] md:w-auto max-w-sm';
+            
+            toast.innerHTML = `
+                <div class="bg-green-500/20 text-green-400 rounded-full p-1 flex items-center justify-center shrink-0">
+                    <i class="ri-check-line text-lg"></i>
+                </div>
+                <span class="text-sm font-medium tracking-wide">${message}</span>
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('-translate-y-10', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('-translate-y-10', 'opacity-0');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 3000);
+        }).catch(err => {
+            console.error('Gagal menyalin: ', err);
+            alert('Gagal menyalin teks');
+        });
+    }
+</script>
 
 @endsection

@@ -121,7 +121,7 @@
                             </div>
 
                             {{-- === FORM SETUP TEKNIS (KHUSUS ADMIN) === --}}
-                            @if($item->type !== 'plugin')
+                            @if($item->type !== 'plugin' && $item->type !== 'saas')
                             <div class="bg-blue-50/50 border border-blue-100 rounded-lg p-4 mt-2">
                                 <h5 class="text-xs font-bold text-blue-800 uppercase tracking-wide mb-3 flex items-center gap-2">
                                     <i class="ri-settings-5-fill"></i> Setup Teknis (Akan tampil di Client Area)
