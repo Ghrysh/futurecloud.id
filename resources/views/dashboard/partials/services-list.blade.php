@@ -7,7 +7,7 @@
             <thead>
                 <tr class="bg-gray-50 text-gray-500 text-xs uppercase font-semibold tracking-wider">
                     <th class="px-6 py-4 border-b border-gray-100">Layanan / Produk</th>
-                    <th class="px-6 py-4 border-b border-gray-100">IP Address / Domain</th>
+                    <th class="px-6 py-4 border-b border-gray-100">IP Address / Domain / Lisensi</th>
                     <th class="px-6 py-4 border-b border-gray-100">Siklus Tagihan</th>
                     <th class="px-6 py-4 border-b border-gray-100">Jatuh Tempo</th>
                     <th class="px-6 py-4 border-b border-gray-100 text-center">Status</th>
@@ -39,6 +39,9 @@
                         }
 
                         $config = $service->configuration ?? [];
+                        if(is_string($config)) {
+                            $config = json_decode($config, true) ?? [];
+                        }
                         $domainLabel = $config['domain_connection'] ?? ($config['domain'] ?? '-');
                         $ipLabel = $config['ip_address'] ?? 'Menunggu Alokasi';
                     @endphp
@@ -64,10 +67,17 @@
                             </div>
                         </td>
 
-                        {{-- 2. IP / Domain --}}
+                        {{-- 2. IP / Domain / Lisensi --}}
                         <td class="px-6 py-4">
                             @if($service->type == 'domain')
                                 <span class="font-mono text-blue-600 font-semibold">{{ $service->product_name }}</span>
+                            @elseif($service->type == 'saas' || $service->type == 'plugin')
+                                <div class="flex flex-col">
+                                    <span class="text-xs text-gray-500 mb-1">Lisensi:</span>
+                                    <span class="font-mono font-medium {{ isset($config['license_key']) ? 'text-blue-600 font-bold' : 'text-yellow-600 italic' }}">
+                                        {{ $config['license_key'] ?? 'Menunggu Pemrosesan' }}
+                                    </span>
+                                </div>
                             @else
                                 <div class="flex flex-col">
                                     <span class="text-xs text-gray-500 mb-1">IP:</span>

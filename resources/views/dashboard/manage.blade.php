@@ -7,6 +7,9 @@
 @php
     // AMBIL DATA DARI JSON CONFIGURATION
     $config = $service->configuration ?? [];
+    if(is_string($config)) {
+        $config = json_decode($config, true) ?? [];
+    }
     
     // Default value jika data belum diset admin
     $ipAddress = $config['ip_address'] ?? 'Menunggu Alokasi';
@@ -234,6 +237,7 @@
         <div class="space-y-6">
 
             <!-- 1. Quick Actions -->
+            @if($service->type != 'saas' && $service->type != 'plugin')
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                 <h3 class="font-bold text-gray-800 mb-4">Aksi Cepat</h3>
                 
@@ -272,6 +276,7 @@
                     </a>
                 </div>
             </div>
+            @endif
 
             <!-- 2. Billing Overview -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
