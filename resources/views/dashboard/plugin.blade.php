@@ -21,7 +21,7 @@
             </div>
             <h3 class="text-lg font-bold text-gray-800 mb-1">Belum ada plugin</h3>
             <p class="text-gray-500 text-sm mb-4">Anda belum memiliki produk plugin yang aktif.</p>
-            <a href="{{ route('saas') }}" class="btn-action inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition">
+            <a href="{{ route('saas.detail') }}" class="btn-action inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition">
                 <i class="ri-shopping-bag-line"></i> Beli Plugin
             </a>
         </div>
