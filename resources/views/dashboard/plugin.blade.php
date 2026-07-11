@@ -119,7 +119,7 @@
                                     <div class="bg-gray-900 text-gray-200 p-3.5 rounded-lg font-mono text-sm leading-relaxed shadow-inner">
                                         <p class="text-gray-500 text-xs mb-1"># Install CLI secara global:</p>
                                         <div class="flex justify-between items-center group">
-                                            <span>npm install -g futurecloud-{{ $cliShort }}-cli</span>
+                                            <span>npm install -g futurecloud-{{ $cliCommand }}-cli</span>
                                             <button class="text-gray-500 hover:text-white opacity-0 group-hover:opacity-100 transition" onclick="navigator.clipboard.writeText('npm install -g futurecloud-{{ $cliCommand }}-cli')"><i class="ri-file-copy-line"></i></button>
                                         </div>
 
