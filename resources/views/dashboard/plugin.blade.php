@@ -188,10 +188,10 @@
 
             const toast = document.createElement('div');
             toast.id = 'copy-toast';
-            toast.className = 'fixed bottom-5 right-5 bg-gray-900 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 z-50 transform transition-all duration-300 translate-y-10 opacity-0 border border-gray-700';
+            toast.className = 'fixed top-5 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:right-5 bg-gray-900 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 z-[100] transform transition-all duration-300 -translate-y-10 opacity-0 border border-gray-700 w-[90%] md:w-auto max-w-sm';
             
             toast.innerHTML = `
-                <div class="bg-green-500/20 text-green-400 rounded-full p-1 flex items-center justify-center">
+                <div class="bg-green-500/20 text-green-400 rounded-full p-1 flex items-center justify-center shrink-0">
                     <i class="ri-check-line text-lg"></i>
                 </div>
                 <span class="text-sm font-medium tracking-wide">${message}</span>
@@ -200,11 +200,11 @@
             document.body.appendChild(toast);
 
             setTimeout(() => {
-                toast.classList.remove('translate-y-10', 'opacity-0');
+                toast.classList.remove('-translate-y-10', 'opacity-0');
             }, 10);
 
             setTimeout(() => {
-                toast.classList.add('translate-y-10', 'opacity-0');
+                toast.classList.add('-translate-y-10', 'opacity-0');
                 setTimeout(() => {
                     toast.remove();
                 }, 300);
