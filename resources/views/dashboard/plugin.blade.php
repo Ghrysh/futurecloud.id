@@ -117,16 +117,22 @@
                                         <h5 class="text-sm font-semibold text-gray-700">Jalankan Perintah Instalasi</h5>
                                     </div>
                                     <div class="bg-gray-900 text-gray-200 p-3.5 rounded-lg font-mono text-sm leading-relaxed shadow-inner">
-                                        <p class="text-gray-500 text-xs mb-1"># Format instalasi langsung dengan flag key:</p>
+                                        <p class="text-gray-500 text-xs mt-3 mb-1"># Install CLI secara global:</p>
                                         <div class="flex justify-between items-center group">
-                                            <span>futurecloud-{{ $cliCommand }} install --key <span class="text-green-400">{{ $licenseKey }}</span></span>
-                                            <button class="text-gray-500 hover:text-white opacity-0 group-hover:opacity-100 transition" onclick="navigator.clipboard.writeText('futurecloud -{{ $cliCommand }} install --key {{ $licenseKey }}')"><i class="ri-file-copy-line"></i></button>
+                                            <span>npm install -g futurecloud-{{ $cliShort }}-cli</span>
+                                            <button class="text-gray-500 hover:text-white opacity-0 group-hover:opacity-100 transition" onclick="navigator.clipboard.writeText('npm install -g futurecloud-{{ $cliShort }}-cli')"><i class="ri-file-copy-line"></i></button>
+                                        </div>
+
+                                        <p class="text-gray-500 text-xs mb-1"># Format instalasi :</p>
+                                        <div class="flex justify-between items-center group">
+                                            <span>futurecloud-{{ $cliCommand }} install</span>
+                                            <button class="text-gray-500 hover:text-white opacity-0 group-hover:opacity-100 transition" onclick="navigator.clipboard.writeText('futurecloud-{{ $cliCommand }} install')"><i class="ri-file-copy-line"></i></button>
                                         </div>
                                         
                                         <p class="text-gray-500 text-xs mt-3 mb-1"># Atau menggunakan versi perintah yang lebih singkat (alias):</p>
                                         <div class="flex justify-between items-center group">
-                                            <span>fc-{{ $cliShort }} install --key <span class="text-green-400">{{ $licenseKey }}</span></span>
-                                            <button class="text-gray-500 hover:text-white opacity-0 group-hover:opacity-100 transition" onclick="navigator.clipboard.writeText('fc -{{ $cliShort }} install --key {{ $licenseKey }}')"><i class="ri-file-copy-line"></i></button>
+                                            <span>fc-{{ $cliShort }} install</span>
+                                            <button class="text-gray-500 hover:text-white opacity-0 group-hover:opacity-100 transition" onclick="navigator.clipboard.writeText('fc-{{ $cliShort }} install')"><i class="ri-file-copy-line"></i></button>
                                         </div>
                                     </div>
                                 </div>
