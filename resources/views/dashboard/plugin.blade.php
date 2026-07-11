@@ -90,7 +90,7 @@
                                 @if(in_array($status, ['paid', 'active']))
                                 <div class="bg-blue-50 p-3 rounded-lg border border-blue-100 relative group">
                                     <span class="font-mono text-blue-700 font-bold block">{{ $licenseKey }}</span>
-                                    <button class="absolute top-1/2 -translate-y-1/2 right-3 text-blue-400 hover:text-blue-600 transition p-1 bg-white rounded shadow-sm border border-blue-100" onclick="navigator.clipboard.writeText('{{ $licenseKey }}'); alert('Lisensi disalin!')" title="Copy License">
+                                    <button class="absolute top-1/2 -translate-y-1/2 right-3 text-blue-400 hover:text-blue-600 transition p-1 bg-white rounded shadow-sm border border-blue-100" onclick="copyToClipboard('{{ $licenseKey }}', 'Lisensi berhasil disalin!')" title="Copy License">
                                         <i class="ri-file-copy-line text-sm"></i>
                                     </button>
                                 </div>
@@ -120,19 +120,19 @@
                                         <p class="text-gray-500 text-xs mb-1"># Install CLI secara global:</p>
                                         <div class="flex justify-between items-center group">
                                             <span>npm install -g futurecloud-{{ $cliCommand }}-cli</span>
-                                            <button class="text-gray-500 hover:text-white opacity-0 group-hover:opacity-100 transition" onclick="navigator.clipboard.writeText('npm install -g futurecloud-{{ $cliCommand }}-cli')"><i class="ri-file-copy-line"></i></button>
+                                            <button class="text-gray-500 hover:text-white opacity-0 group-hover:opacity-100 transition" onclick="copyToClipboard('npm install -g futurecloud-{{ $cliCommand }}-cli', 'Perintah berhasil disalin!')"><i class="ri-file-copy-line"></i></button>
                                         </div>
 
                                         <p class="text-gray-500 text-xs mt-3 mb-1"># Format instalasi :</p>
                                         <div class="flex justify-between items-center group">
                                             <span>futurecloud-{{ $cliCommand }} install</span>
-                                            <button class="text-gray-500 hover:text-white opacity-0 group-hover:opacity-100 transition" onclick="navigator.clipboard.writeText('futurecloud-{{ $cliCommand }} install')"><i class="ri-file-copy-line"></i></button>
+                                            <button class="text-gray-500 hover:text-white opacity-0 group-hover:opacity-100 transition" onclick="copyToClipboard('futurecloud-{{ $cliCommand }} install', 'Perintah berhasil disalin!')"><i class="ri-file-copy-line"></i></button>
                                         </div>
                                         
                                         <p class="text-gray-500 text-xs mt-3 mb-1"># Atau menggunakan versi perintah yang lebih singkat (alias):</p>
                                         <div class="flex justify-between items-center group">
                                             <span>fc-{{ $cliShort }} install</span>
-                                            <button class="text-gray-500 hover:text-white opacity-0 group-hover:opacity-100 transition" onclick="navigator.clipboard.writeText('fc-{{ $cliShort }} install')"><i class="ri-file-copy-line"></i></button>
+                                            <button class="text-gray-500 hover:text-white opacity-0 group-hover:opacity-100 transition" onclick="copyToClipboard('fc-{{ $cliShort }} install', 'Perintah berhasil disalin!')"><i class="ri-file-copy-line"></i></button>
                                         </div>
                                     </div>
                                 </div>
@@ -177,5 +177,43 @@
         </div>
     @endif
 </div>
+
+<script>
+    function copyToClipboard(text, message = 'Berhasil disalin!') {
+        navigator.clipboard.writeText(text).then(() => {
+            const existingToast = document.getElementById('copy-toast');
+            if (existingToast) {
+                existingToast.remove();
+            }
+
+            const toast = document.createElement('div');
+            toast.id = 'copy-toast';
+            toast.className = 'fixed bottom-5 right-5 bg-gray-900 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 z-50 transform transition-all duration-300 translate-y-10 opacity-0 border border-gray-700';
+            
+            toast.innerHTML = `
+                <div class="bg-green-500/20 text-green-400 rounded-full p-1 flex items-center justify-center">
+                    <i class="ri-check-line text-lg"></i>
+                </div>
+                <span class="text-sm font-medium tracking-wide">${message}</span>
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-10', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-10', 'opacity-0');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 3000);
+        }).catch(err => {
+            console.error('Gagal menyalin: ', err);
+            alert('Gagal menyalin teks');
+        });
+    }
+</script>
 
 @endsection
