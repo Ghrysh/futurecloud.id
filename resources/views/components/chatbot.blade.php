@@ -1,355 +1,423 @@
 <div x-data="chatbot()" class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[999] font-sans">
     
     <button @click="toggleChat()" :class="isOpen ? 'scale-0 opacity-0' : 'scale-100 opacity-100'" 
-        class="w-14 h-14 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full shadow-2xl flex items-center justify-center text-white hover:scale-110 hover:shadow-indigo-300 transition-all duration-300 absolute bottom-0 right-0">
+        class="w-14 h-14 bg-gradient-to-r from-blue-500 to-blue-700 rounded-full shadow-2xl flex items-center justify-center text-white hover:scale-110 hover:shadow-blue-300 transition-all duration-300 absolute bottom-0 right-0">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
-        <span x-show="unread > 0" class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow" x-text="unread"></span>
+        <span x-show="unread > 0" class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white shadow-sm" x-text="unread" style="display: none;"></span>
     </button>
 
-    <div :class="isOpen ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-4 pointer-events-none'" 
-        class="origin-bottom-right transition-all duration-300 absolute bottom-16 right-0 w-[90vw] sm:w-[380px] bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden flex flex-col h-[550px] max-h-[80vh]">
+    <div x-show="isOpen" 
+         x-transition:enter="transition ease-out duration-300 origin-bottom-right"
+         x-transition:enter-start="opacity-0 scale-50 translate-y-10"
+         x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+         x-transition:leave="transition ease-in duration-200 origin-bottom-right"
+         x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+         x-transition:leave-end="opacity-0 scale-50 translate-y-10"
+         style="display: none;" 
+         class="absolute bottom-0 right-0 w-[calc(100vw-2rem)] sm:w-[380px] h-[550px] max-h-[85vh] bg-white rounded-3xl shadow-[0_10px_40px_rgba(0,0,0,0.2)] border border-slate-100 flex flex-col overflow-hidden">
         
-        <div class="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 flex justify-between items-center relative overflow-hidden text-white shadow-md z-10">
-            <div class="absolute -top-6 -right-6 w-24 h-24 bg-white opacity-10 rounded-full blur-2xl"></div>
-            <div class="flex items-center gap-3 relative z-10">
-                <div class="relative">
-                    <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-inner p-1">
-                        <img src="{{ asset('favicon.svg') }}" alt="Bot" class="w-full h-full object-contain">
-                    </div>
-                    <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-blue-600 rounded-full"></div>
-                </div>
+        <div class="bg-gradient-to-r from-blue-500 to-blue-700 p-3 sm:p-4 flex items-center justify-between shadow-md z-10 shrink-0">
+            <div class="flex items-center gap-2 sm:gap-3">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-base sm:text-xl shadow-inner border border-white/30">🤖</div>
                 <div>
-                    <h3 class="font-bold text-sm tracking-wide">Mimin FutureCloud</h3>
-                    <p class="text-[10px] text-blue-100 flex items-center gap-1">
-                        <span class="relative flex h-1.5 w-1.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span><span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-400"></span></span>
-                        Online & Siap Membantu
-                    </p>
+                    <h3 class="text-white font-bold text-sm sm:text-base leading-tight">
+                        Futurecloud CS 
+                    </h3>
+                    <p class="text-blue-100 text-[9px] sm:text-[10px] flex items-center gap-1 mt-0.5"><span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></span> Siap Membantu</p>
                 </div>
             </div>
-            
-            <div class="flex items-center relative z-10 gap-1.5">
-                <button @click="resetChat()" title="Mulai Chat Baru" class="text-white hover:text-blue-200 transition-colors bg-white/10 hover:bg-white/20 px-2 py-1.5 rounded-lg flex items-center gap-1 text-[11px] font-medium border border-white/10">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
-                    New
+            <div class="flex items-center gap-1 sm:gap-2">
+                <button @click="resetChat()" title="Mulai Chat Baru" class="text-white hover:bg-white/20 px-2.5 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 bg-white/10 shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-4 sm:w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg>
+                    <span class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider">New Chat</span>
                 </button>
-                <button @click="closeChat()" class="text-white hover:text-blue-200 transition-colors bg-white/10 hover:bg-white/20 p-1.5 rounded-lg border border-white/10">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                <button @click="toggleChat()" title="Tutup Chat" class="text-white hover:bg-white/20 p-1.5 rounded-lg transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
                 </button>
             </div>
         </div>
 
-        <div id="chat-scroll-area" class="flex-1 p-4 overflow-y-auto bg-slate-50 space-y-4 relative">
-            
-            <template x-if="messages.length === 0 && showTopics">
-                <div class="flex items-start gap-3">
-                    <div class="w-7 h-7 bg-gradient-to-tr from-blue-500 to-indigo-500 rounded-full flex-shrink-0 flex items-center justify-center shadow-md">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd" /></svg>
-                    </div>
-                    <div class="bg-white border border-blue-100 rounded-2xl rounded-tl-sm p-3 shadow-sm max-w-[85%] text-[13px] text-slate-700 leading-relaxed">
-                        <p class="mb-2">Halo {{ Auth::check() ? Auth::user()->name : 'Kak' }}! 👋 Ada yang bisa Mimin bantu hari ini?</p>
-                        <p class="font-medium text-slate-800 mb-2">Pilih salah satu topik di bawah ya:</p>
-                        <div class="flex flex-col gap-2">
-                            <template x-for="t in dynamicTopics" :key="t">
-                                <button @click="setTopic(t)" class="text-left px-3 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl transition-colors border border-blue-100 font-medium break-words">
-                                    💬 <span x-text="t"></span>
-                                </button>
-                            </template>
-                        </div>
-                    </div>
-                </div>
-            </template>
-
+        <div id="chat-container" class="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50 scroll-smooth">
             <template x-for="(msg, index) in messages" :key="index">
-                <div :class="msg.sender === 'user' ? 'flex items-end justify-end gap-2' : 'flex items-start gap-2'">
-                    <template x-if="msg.sender === 'bot'">
-                        <div class="w-7 h-7 bg-gradient-to-tr from-blue-500 to-indigo-500 rounded-full flex-shrink-0 flex items-center justify-center shadow-md">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd" /></svg>
-                        </div>
-                    </template>
-                    <div class="flex flex-col" :class="msg.sender === 'user' ? 'items-end max-w-[85%]' : 'items-start max-w-[85%]'">
-                        <div x-html="msg.text" 
-                            :class="msg.sender === 'user' ? 'bg-blue-600 text-white rounded-2xl rounded-tr-sm shadow-md' : 'bg-white border border-blue-100 text-slate-700 rounded-2xl rounded-tl-sm shadow-sm'"
-                            class="p-3 text-[13px] leading-relaxed break-words">
-                        </div>
-                        <span class="text-[10px] text-slate-400 mt-1 px-1 font-medium" x-text="msg.time"></span>
-
-                        <template x-if="msg.sender === 'bot' && index === messages.length - 1 && !isFinished && !askingContact">
-                            <div class="flex flex-wrap gap-2 mt-2 mb-2">
-                                <button @click="showTopics = true; scrollToBottom();" class="text-[11px] bg-blue-50 text-blue-600 border border-blue-200 hover:bg-blue-100 px-3 py-1.5 rounded-full transition-all font-medium">Ubah Topik</button>
-                                <button @click="askContact()" class="text-[11px] bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 px-3 py-1.5 rounded-full transition-all font-medium">Akhiri & Hubungi CS</button>
-                            </div>
-                        </template>
+                <div class="flex flex-col" :class="msg.sender === 'user' ? 'items-end' : 'items-start'">
+                    <div class="flex items-baseline gap-1 mb-1 px-1">
+                        <span class="text-[9px] text-slate-400 font-bold" x-text="msg.sender === 'user' ? 'Anda' : (msg.sender === 'admin' ? liveAdminName : 'Asisten')"></span>
+                        <span class="text-[8px] text-slate-400/70 font-medium" x-show="msg.time" x-text="msg.time"></span>
                     </div>
+                    <div class="max-w-[85%] px-4 py-2.5 rounded-2xl text-xs sm:text-sm shadow-sm whitespace-pre-line"
+                         :class="msg.sender === 'user' ? 'bg-blue-500 text-white rounded-tr-sm' : 'bg-white text-slate-700 border border-slate-200 rounded-tl-sm leading-relaxed'"
+                         x-html="msg.text"></div>
                 </div>
             </template>
 
-            <div x-show="isTyping" class="flex items-start gap-2">
-                <div class="w-7 h-7 bg-gradient-to-tr from-blue-500 to-indigo-500 rounded-full flex-shrink-0 flex items-center justify-center shadow-md">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd" /></svg>
-                </div>
-                <div class="bg-white border border-blue-100 rounded-2xl rounded-tl-sm p-3.5 shadow-sm flex gap-1">
-                    <div class="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce"></div>
-                    <div class="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
-                    <div class="w-1.5 h-1.5 bg-blue-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
-                </div>
-            </div>
-            
-            <div x-show="showTopics && messages.length > 0" class="mt-4 bg-white border border-blue-100 rounded-2xl p-3 shadow-sm text-[13px] text-slate-700 leading-relaxed">
-                <p class="font-medium text-slate-800 mb-2">Pilih topik baru:</p>
-                <div class="flex flex-col gap-2">
-                    <template x-for="t in dynamicTopics" :key="t">
-                        <button @click="setTopic(t)" class="text-left px-3 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl transition-colors border border-blue-100 font-medium break-words">
-                            💬 <span x-text="t"></span>
-                        </button>
-                    </template>
+            <div x-show="isTyping" class="flex items-start" style="display: none;">
+                <div class="bg-white border border-slate-200 px-4 py-3 rounded-2xl rounded-tl-sm shadow-sm flex items-center gap-1.5">
+                    <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"></div>
+                    <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                    <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
                 </div>
             </div>
         </div>
 
-        <div class="p-3 bg-white border-t border-slate-100">
-            <div x-show="!isFinished" class="flex gap-2">
-                <input type="text" x-model="userInput" @keydown.enter="sendMessage()" 
-                    :disabled="showTopics"
-                    :placeholder="askingContact ? 'Ketik Email / No Telepon Anda...' : (showTopics ? 'Pilih topik di atas dulu...' : 'Ketik pesan...')" 
-                    class="w-full bg-slate-50 border border-slate-200 text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all disabled:opacity-50">
-                <button @click="sendMessage()" :disabled="!userInput.trim() || showTopics" 
-                    class="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white w-11 h-11 flex items-center justify-center rounded-xl flex-shrink-0 transition-colors shadow-md">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 -ml-0.5" viewBox="0 0 20 20" fill="currentColor"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" /></svg>
+        <div x-show="liveChatStatus !== 'pending' && liveChatStatus !== 'active' && !isFinished" class="shrink-0 bg-slate-100/90 backdrop-blur-sm p-2.5 border-t border-slate-200 flex flex-wrap justify-center gap-2 z-10" style="display: none;">
+            <button @click="requestLiveChat()" class="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white text-[10px] sm:text-xs font-bold rounded-full transition-all shadow-md flex items-center gap-1.5 transform hover:scale-105">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2h2v4l.586-.586z" /></svg>
+                Live Chat CS
+            </button>
+
+            <button x-show="!followUpMode" @click="triggerFollowUp()" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white text-[10px] sm:text-xs font-bold rounded-full transition-colors shadow-sm flex items-center gap-1.5">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                Akhiri Sesi
+            </button>
+        </div>
+
+        <div class="shrink-0 p-2 sm:p-3 bg-white border-t border-slate-200 shadow-[0_-4px_15px_rgba(0,0,0,0.03)] z-20">
+            <form @submit.prevent="sendMessage()" class="relative flex items-end">
+                <textarea 
+                    x-ref="chatInput"
+                    x-model="inputText" 
+                    @input="resizeInput()"
+                    @keydown.enter="if(!$event.shiftKey) { $event.preventDefault(); if(inputText.trim() && !isFinished && !isTyping) sendMessage(); }"
+                    :placeholder="followUpMode ? 'Ketik Email / No WA Anda...' : 'Ketik pertanyaan Anda di sini...'" 
+                    :disabled="isFinished || isTyping"
+                    rows="1"
+                    class="w-full bg-slate-100 text-slate-800 text-xs sm:text-sm px-3.5 py-2.5 pr-14 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-shadow disabled:opacity-50 border border-transparent resize-none overflow-y-auto max-h-[120px] leading-normal shadow-inner [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+                    style="min-height: 40px; height: 40px;"
+                ></textarea>
+                
+                <button type="submit" :disabled="!inputText.trim() || isFinished || isTyping" 
+                        class="absolute bottom-1 right-1 sm:bottom-1.5 sm:right-1.5 w-8 h-8 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:bg-slate-300 transition-all shadow-sm flex items-center justify-center transform active:scale-95">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transform rotate-0 ml-0.5" viewBox="0 0 20 20" fill="currentColor"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" /></svg>
                 </button>
-            </div>
-            <div x-show="isFinished" class="text-center text-xs text-slate-500 py-2 bg-slate-50 rounded-lg">
-                Sesi selesai. Klik tombol <b>New</b> di atas untuk chat ulang.
+            </form>
+            <div class="text-center mt-1.5 flex justify-center items-center gap-1" x-show="!isFinished">
+                <span class="text-[8px] sm:text-[9px] text-slate-400 font-medium">Powered by Futurecloud AI</span>
+                <span class="hidden sm:inline text-[8px] text-slate-300">|</span>
+                <span class="hidden sm:inline text-[8px] text-slate-400">Enter ↵ kirim, Shift+Enter baris baru</span>
             </div>
         </div>
-    </div>
+
+    </div> 
 </div>
 
 <script>
-document.addEventListener('alpine:init', () => {
-    Alpine.data('chatbot', () => ({
+function chatbot() {
+    return {
         isOpen: false,
         unread: 0,
+        inputText: '',
         isTyping: false,
-        showTopics: true,
-        dynamicTopics: [],
-        selectedTopic: 'Umum',
-        messages: [],
-        userInput: '',
-        leadId: null,
+        followUpMode: false,
         isFinished: false,
-        askingContact: false,
+        selectedTopic: 'Umum',
+        lastUserMessage: '',
+        leadId: null,
+        
+        lastActivity: Date.now(),
+        hasNudged: false,
+        activityTimer: null,
 
-        async init() {
-            let saved = sessionStorage.getItem('chatbotState');
+        showLiveChatBtn: false,
+        isLiveChat: false,
+        liveChatStatus: 'none',
+        liveAdminName: 'Admin',
+        livePollInterval: null,
+
+        messages: [],
+
+        init() {
+            this.loadState();
+        },
+
+        // Fungsi Cerdas Pengatur Tinggi Otomatis Textarea
+        resizeInput() {
+            let el = this.$refs.chatInput;
+            if (el) {
+                el.style.height = 'auto'; // Reset tinggi dasar
+                // Mengikuti tinggi scroll internal, dibatasi maksimal 120px (seperempat tinggi chatbox)
+                el.style.height = Math.min(el.scrollHeight, 120) + 'px'; 
+            }
+        },
+
+        loadState() {
+            let saved = localStorage.getItem('futurecloud_chatbot_state');
             if (saved) {
-                let state = JSON.parse(saved);
-                this.messages = state.messages || [];
-                this.selectedTopic = state.selectedTopic || 'Umum';
-                this.showTopics = state.showTopics;
-                this.leadId = state.leadId;
-                this.isFinished = state.isFinished || false;
-                this.askingContact = state.askingContact || false;
+                let data = JSON.parse(saved);
+                this.isOpen = data.isOpen || false;
+                this.unread = data.unread || 0;
+                this.messages = data.messages || [];
+                this.selectedTopic = data.selectedTopic || 'Umum';
+                this.followUpMode = data.followUpMode || false;
+                this.isFinished = data.isFinished || false;
+                this.leadId = data.leadId || null;
+                this.lastActivity = data.lastActivity || Date.now();
+                this.hasNudged = data.hasNudged || false;
+                
+                if (this.isOpen) this.scrollToBottom();
+            } else {
+                this.unread = 1;
+                this.lastActivity = Date.now();
+                this.sendWelcome();
             }
-            this.createNotificationSound();
-
-            try {
-                let res = await fetch('/chatbot/init');
-                let data = await res.json();
-                this.dynamicTopics = data.topics;
-            } catch(e) {
-                this.dynamicTopics = ['Layanan Cloud', 'Domain & SSL', 'Lainnya'];
-            }
-        },
-
-        createNotificationSound() {
-            try {
-                const AudioContext = window.AudioContext || window.webkitAudioContext;
-                const audioCtx = new AudioContext();
-                this.playNotificationSound = () => {
-                    const now = audioCtx.currentTime;
-                    const osc = audioCtx.createOscillator();
-                    const gain = audioCtx.createGain();
-                    osc.connect(gain);
-                    gain.connect(audioCtx.destination);
-                    osc.frequency.value = 659.25;
-                    osc.type = 'sine';
-                    gain.gain.setValueAtTime(0.3, now);
-                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
-                    osc.start(now);
-                    osc.stop(now + 0.15);
-                };
-            } catch (e) { }
-        },
-
-        getCurrentTime() {
-            const now = new Date();
-            return `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+            
+            this.startActivityMonitor();
         },
 
         saveState() {
-            sessionStorage.setItem('chatbotState', JSON.stringify({
+            localStorage.setItem('futurecloud_chatbot_state', JSON.stringify({
+                isOpen: this.isOpen,
+                unread: this.unread,
                 messages: this.messages,
                 selectedTopic: this.selectedTopic,
-                showTopics: this.showTopics,
-                leadId: this.leadId,
+                followUpMode: this.followUpMode,
                 isFinished: this.isFinished,
-                askingContact: this.askingContact
+                leadId: this.leadId,
+                lastActivity: this.lastActivity,
+                hasNudged: this.hasNudged
             }));
+        },
+
+        startActivityMonitor() {
+            if(this.activityTimer) clearInterval(this.activityTimer);
+            
+            const checkTimeout = () => {
+                if (this.isFinished) return;
+
+                if (this.liveChatStatus === 'pending' || this.liveChatStatus === 'active') {
+                    this.updateActivity(); 
+                    return; 
+                }
+                
+                let elapsed = Date.now() - this.lastActivity;
+                
+                if (elapsed >= 900000) {
+                    this.triggerAutoClose();
+                } 
+                else if (elapsed >= 600000 && !this.hasNudged) {
+                    this.hasNudged = true;
+                    this.messages.push({ sender: 'bot', text: 'Bot perhatikan tidak ada balasan cukup lama. Apakah Anda masih di sana? Sesi ini akan otomatis diakhiri dalam 5 menit.' });
+                    this.playNotification();
+                    if (!this.isOpen) this.unread++;
+                    this.saveState();
+                    this.scrollToBottom();
+                }
+            };
+            
+            checkTimeout();
+            this.activityTimer = setInterval(checkTimeout, 60000);
+        },
+
+        updateActivity() {
+            this.lastActivity = Date.now();
+            this.hasNudged = false;
+        },
+
+        async triggerAutoClose() {
+            this.isFinished = true;
+            this.followUpMode = false;
+            this.messages.push({ sender: 'bot', text: 'Sesi chat telah diakhiri otomatis oleh sistem karena tidak ada aktivitas.' });
+            this.saveState();
+            this.scrollToBottom();
+            
+            if (this.leadId) {
+                try {
+                    await fetch('/chatbot/send', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                        },
+                        body: JSON.stringify({ 
+                            is_autoclose: true,
+                            chat_history: this.messages,
+                            lead_id: this.leadId
+                        })
+                    });
+                } catch(e) {}
+            }
+        },
+
+        playNotification() {
+            try {
+                let AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                let ctx = new AudioContext();
+                let osc = ctx.createOscillator();
+                let gain = ctx.createGain();
+                osc.connect(gain); gain.connect(ctx.destination);
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(800, ctx.currentTime); 
+                osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.1); 
+                gain.gain.setValueAtTime(0, ctx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.3, ctx.currentTime + 0.02);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+                osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.3);
+            } catch(e) {}
+        },
+
+        sendWelcome() {
+            this.selectedTopic = 'Umum';
+            this.messages = [{ sender: 'bot', text: 'Halo 👋! Selamat datang di pusat bantuan Futurecloud. Ada yang bisa kami bantu hari ini?' }];
+            this.saveState();
+        },
+
+        resetChat() {
+            this.selectedTopic = 'Umum';
+            this.followUpMode = false;
+            this.isFinished = false;
+            this.inputText = '';
+            this.$nextTick(() => { this.resizeInput(); }); // Paksa input kembali ke tinggi semula (40px)
+            this.unread = 1;
+            this.leadId = null;
+            this.isLiveChat = false;
+            this.showLiveChatBtn = false;
+            this.updateActivity();
+            this.sendWelcome();
         },
 
         toggleChat() {
             this.isOpen = !this.isOpen;
-            if(this.isOpen) {
+            if (this.isOpen) {
                 this.unread = 0;
-                this.scrollToBottom();
+                this.updateActivity();
             }
-        },
-
-        closeChat() { this.isOpen = false; },
-
-        // --- FUNGSI NEW CHAT ---
-        resetChat() {
-            this.messages = [];
-            this.selectedTopic = 'Umum';
-            this.showTopics = true;
-            this.leadId = null; // Agar DB membuat riwayat/baris baru di backend
-            this.isFinished = false;
-            this.askingContact = false;
-            sessionStorage.removeItem('chatbotState');
+            this.saveState();
             this.scrollToBottom();
-        },
-
-        async setTopic(topic) {
-            this.selectedTopic = topic;
-            this.showTopics = false;
-            this.messages.push({ sender: 'user', text: `Topik dipilih: ${topic}`, time: this.getCurrentTime() });
-            
-            this.isTyping = true;
-            this.scrollToBottom();
-
-            try {
-                let res = await fetch('/chatbot/send', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    },
-                    body: JSON.stringify({ 
-                        message: `Memilih topik: ${topic}`, 
-                        topic: this.selectedTopic,
-                        chat_history: this.messages,
-                        lead_id: this.leadId,
-                        is_init: true
-                    })
-                });
-                
-                let data = await res.json();
-                if(data.lead_id) this.leadId = data.lead_id;
-
-                setTimeout(() => {
-                    this.isTyping = false;
-                    this.messages.push({ sender: 'bot', text: data.reply, time: this.getCurrentTime() });
-                    if(this.playNotificationSound) this.playNotificationSound();
-                    if (!this.isOpen) this.unread++;
-                    this.saveState();
-                    this.scrollToBottom();
-                }, 800);
-            } catch (e) { this.isTyping = false; }
-        },
-
-        async askContact() {
-            this.messages.push({ sender: 'user', text: 'Akhiri & Hubungi CS', time: this.getCurrentTime() });
-            this.askingContact = true;
-            this.isTyping = true;
-            this.scrollToBottom();
-
-            try {
-                let res = await fetch('/chatbot/send', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    },
-                    body: JSON.stringify({ 
-                        message: 'Akhiri & Hubungi CS', 
-                        topic: this.selectedTopic,
-                        chat_history: this.messages,
-                        lead_id: this.leadId,
-                        asking_contact: true
-                    })
-                });
-                
-                let data = await res.json();
-                setTimeout(() => {
-                    this.isTyping = false;
-                    this.messages.push({ sender: 'bot', text: data.reply, time: this.getCurrentTime() });
-                    if(this.playNotificationSound) this.playNotificationSound();
-                    this.saveState();
-                    this.scrollToBottom();
-                }, 800);
-            } catch (e) { this.isTyping = false; }
-        },
-
-        async sendMessage() {
-            let msgText = this.userInput.trim();
-            if (!msgText || this.showTopics || this.isFinished) return;
-
-            this.messages.push({ sender: 'user', text: msgText, time: this.getCurrentTime() });
-            this.userInput = '';
-            this.isTyping = true;
-            this.scrollToBottom();
-
-            let payload = {
-                message: msgText, 
-                topic: this.selectedTopic, 
-                chat_history: this.messages,
-                lead_id: this.leadId
-            };
-            if (this.askingContact) payload.submitting_contact = true;
-
-            try {
-                let res = await fetch('/chatbot/send', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    },
-                    body: JSON.stringify(payload)
-                });
-                
-                let data = await res.json();
-                if(data.lead_id) this.leadId = data.lead_id;
-
-                setTimeout(() => {
-                    this.isTyping = false;
-                    this.messages.push({ sender: 'bot', text: data.reply, time: this.getCurrentTime() });
-                    
-                    if(this.playNotificationSound) this.playNotificationSound();
-                    if (!this.isOpen) this.unread++;
-
-                    if (data.is_finished) {
-                        this.isFinished = true;
-                        this.askingContact = false;
-                    }
-                    
-                    this.saveState();
-                    this.scrollToBottom();
-                }, 800);
-
-            } catch (e) {
-                this.isTyping = false;
-                this.messages.push({ sender: 'bot', text: 'Maaf, jaringan sedang bermasalah.', time: this.getCurrentTime() });
-                this.saveState();
-                this.scrollToBottom();
-            }
         },
 
         scrollToBottom() {
-            this.$nextTick(() => {
-                const el = document.getElementById('chat-scroll-area');
-                if (el) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
-            });
+            setTimeout(() => {
+                const container = document.getElementById('chat-container');
+                if (container) container.scrollTop = container.scrollHeight;
+            }, 100);
+        },
+
+        triggerFollowUp() {
+            this.followUpMode = true;
+            this.messages.push({ sender: 'bot', text: 'Tentu. Silakan ketikkan <b>Email atau No WA</b> Anda di bawah ini, agar tim teknis/CS kami bisa segera mengecek dan menghubungi Anda.' });
+            this.playNotification();
+            this.updateActivity();
+            this.saveState();
+            this.scrollToBottom();
+        },
+
+        async sendMessage() {
+            if (!this.inputText.trim()) return;
+            
+            const msgText = this.inputText;
+            let timeNow = new Date().toLocaleTimeString('id-ID', {day: 'numeric', month: 'short', hour: '2-digit', minute:'2-digit'});
+            this.messages.push({ sender: 'user', text: msgText, time: timeNow });
+            this.inputText = '';
+            
+            // Kembalikan ukuran tinggi textarea ke 40px setelah dikirim
+            this.$nextTick(() => { this.resizeInput(); });
+            
+            this.updateActivity();
+            this.saveState();
+            if (!this.followUpMode) this.lastUserMessage = msgText; 
+            
+            this.scrollToBottom();
+            this.isTyping = true;
+
+            try {
+                let isLive = (this.liveChatStatus === 'pending' || this.liveChatStatus === 'active');
+                let endpoint = isLive ? '/chatbot/live/send' : '/chatbot/send';
+                
+                let res = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
+                    body: JSON.stringify({ 
+                        message: msgText, 
+                        topic: this.selectedTopic, 
+                        is_followup: this.followUpMode,
+                        last_chat: this.lastUserMessage,
+                        chat_history: this.messages,
+                        lead_id: this.leadId
+                    })
+                });
+                let data = await res.json();
+
+                if(data.lead_id) this.leadId = data.lead_id;
+
+                setTimeout(() => {
+                    this.isTyping = false;
+
+                    if(!isLive && data.reply) {
+                        this.messages.push({ sender: 'bot', text: data.reply, time: timeNow });
+                        this.playNotification();
+                    }
+
+                    if (data.is_finished) { this.isFinished = true; this.followUpMode = false; }
+                    if (data.show_live_chat_btn) this.showLiveChatBtn = true;
+                    if (!this.isOpen) this.unread++;
+                    
+                    this.saveState(); this.scrollToBottom();
+                }, 400);
+
+            } catch (e) {
+                this.isTyping = false;
+                this.messages.push({ sender: 'bot', text: 'Maaf, sedang gangguan jaringan. Coba lagi ya.' });
+                this.saveState(); this.scrollToBottom();
+            }
+        },
+
+        async requestLiveChat() {
+            this.selectedTopic = 'Live Chat'; 
+            this.showLiveChatBtn = false;
+            this.liveChatStatus = 'pending';
+            
+            this.messages.push({ sender: 'bot', text: 'Meneruskan permintaan ke tim Live Chat. Mohon tunggu sebentar...' });
+            this.saveState(); 
+            this.scrollToBottom();
+
+            try {
+                let res = await fetch('/chatbot/live/request', {
+                    method: 'POST', 
+                    headers: { 
+                        'Content-Type': 'application/json', 
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content 
+                    },
+                    body: JSON.stringify({ lead_id: this.leadId })
+                });
+                let data = await res.json();
+                
+                if (data.lead_id) {
+                    this.leadId = data.lead_id;
+                    this.saveState();
+                }
+
+                this.startLivePolling();
+            } catch(e) {
+                this.messages.push({ sender: 'bot', text: 'Gagal menghubungkan. Pastikan koneksi internet Anda stabil.' });
+            }
+        },
+
+        startLivePolling() {
+            if(this.livePollInterval) clearInterval(this.livePollInterval);
+            this.livePollInterval = setInterval(async () => {
+                if(!this.leadId) return;
+                let res = await fetch(`/chatbot/live/poll/${this.leadId}`);
+                let data = await res.json();
+                
+                this.liveChatStatus = data.status;
+                if(data.admin_name) this.liveAdminName = data.admin_name;
+                
+                if(data.status === 'active') this.isLiveChat = true;
+                if(data.status === 'ended') {
+                    this.isLiveChat = false; 
+                    clearInterval(this.livePollInterval);
+                }
+                
+                if(data.history && data.history.length > 0) {
+                    if (JSON.stringify(data.history) !== JSON.stringify(this.messages)) {
+                        this.messages = data.history;
+                        this.playNotification();
+                        this.scrollToBottom();
+                        this.saveState();
+                    }
+                }
+            }, 3000);
         }
-    }));
-});
+    };
+}
 </script>

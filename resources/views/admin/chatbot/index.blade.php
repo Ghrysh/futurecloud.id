@@ -1,6 +1,6 @@
 @extends('layouts.admin-app')
-@section('title', 'Knowledge Base Chatbot')
-@section('header_title', 'Kelola Pengetahuan Chatbot')
+@section('title', 'Latih Otak Bot')
+@section('header_title', 'Latih Otak Bot')
 
 @section('content')
 <div class="mx-4 sm:mx-0 grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">

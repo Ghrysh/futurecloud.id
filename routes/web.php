@@ -114,6 +114,11 @@ Route::get('/chatbot/init', [ChatbotController::class, 'initChat']);
 Route::post('/chatbot/send', [ChatbotController::class, 'processChat']);
 Route::get('/chatbot/history', [ChatbotController::class, 'getHistory']);
 
+// Live Chat User Routes
+Route::post('/chatbot/live/request', [ChatbotController::class, 'requestLiveChat']);
+Route::get('/chatbot/live/poll/{leadId}', [ChatbotController::class, 'pollLiveChat']);
+Route::post('/chatbot/live/send', [ChatbotController::class, 'sendLiveChatMessage']);
+
 // --- DOMAIN & HOSTING (UPDATED) ---
 Route::post('/domain-check', [DomainCheckController::class, 'check'])->name('domain.check');
 Route::post('/check-domain-availability', [DomainCheckController::class, 'check'])->name('domain.check.availability');
@@ -191,6 +196,8 @@ Route::middleware('auth')->prefix('client-area')->name('client.')->group(functio
     Route::get('/saas', [ClientAreaController::class, 'showProduct'])->defaults('type', 'saas')->name('saas');
     Route::get('/ssl', [ClientAreaController::class, 'showProduct'])->defaults('type', 'ssl')->name('ssl');
     Route::get('/plugin', [ClientAreaController::class, 'plugins'])->name('plugin');
+    Route::get('/plugin/manage', [ClientAreaController::class, 'managePlugins'])->name('plugin.manage');
+    Route::put('/plugin/chatbot/{id}', [ClientAreaController::class, 'updateChatbotPlugin'])->name('plugin.chatbot.update');
     Route::get('/aws', [ClientAreaController::class, 'showProduct'])->defaults('type', 'aws')->name('aws');
     Route::get('/license', [ClientAreaController::class, 'showProduct'])->defaults('type', 'license')->name('license');
     Route::get('/others', [ClientAreaController::class, 'showProduct'])->defaults('type', 'others')->name('others');
@@ -264,9 +271,14 @@ Route::prefix('admin')->middleware('auth:admin')->name('admin.')->group(function
     Route::put('/chatbot/responses/{id}', [ChatbotAdminController::class, 'update'])->name('chatbot.update');
     Route::delete('/chatbot/responses/{id}', [ChatbotAdminController::class, 'destroy'])->name('chatbot.destroy');
     Route::get('/chatbot/history', [ChatbotAdminController::class, 'history'])->name('chatbot.history');
+    Route::get('/chatbot/live', [ChatbotAdminController::class, 'live'])->name('chatbot.live');
 
     Route::patch('/chatbot/leads/{id}/status', [ChatbotAdminController::class, 'toggleLeadStatus'])->name('chatbot.lead.status');
     Route::get('/chatbot/leads/{id}/history', [ChatbotAdminController::class, 'getLeadHistory'])->name('chatbot.lead.history');
+
+    Route::get('/chatbot/live/poll', [ChatbotAdminController::class, 'pollLiveChats'])->name('chatbot.live.poll');
+    Route::post('/chatbot/live/action', [ChatbotAdminController::class, 'actionLiveChat'])->name('chatbot.live.action');
+    Route::post('/chatbot/live/send', [ChatbotAdminController::class, 'sendLiveChatMessage'])->name('chatbot.live.send');
 
     Route::resource('products', AdminProductController::class);
 

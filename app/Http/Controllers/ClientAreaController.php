@@ -210,4 +210,79 @@ class ClientAreaController extends Controller implements HasMiddleware
 
         return view('dashboard.plugin', compact('plugins'));
     }
+
+    /**
+     * HALAMAN KELOLA PLUGIN
+     */
+    public function managePlugins()
+    {
+        $plugins = OrderItem::whereHas('order', function($q) {
+            $q->where('user_id', Auth::id());
+        })
+        ->where('type', 'saas')
+        ->where('product_name', 'like', '%Plugin%')
+        ->with('order')
+        ->latest()
+        ->get();
+
+        // Load plugin data from plugin_db
+        foreach ($plugins as $plugin) {
+            $config = $plugin->configuration ?? [];
+            if(is_string($config)) {
+                $config = json_decode($config, true) ?? [];
+            }
+            $licenseKey = $config['license_key'] ?? null;
+            
+            if ($licenseKey) {
+                try {
+                    $clientData = \Illuminate\Support\Facades\DB::connection('plugin_db')
+                        ->table('clients')
+                        ->where('license_key', $licenseKey)
+                        ->first();
+                    
+                    $plugin->plugin_data = $clientData;
+                } catch (\Exception $e) {
+                    $plugin->plugin_data = null;
+                }
+            }
+        }
+
+        return view('dashboard.plugin-manage', compact('plugins'));
+    }
+
+    public function updateChatbotPlugin(Request $request, $id)
+    {
+        $request->validate([
+            'bot_name' => 'required|string|max:255',
+            'bot_color' => 'required|string|max:50',
+        ]);
+
+        $plugin = OrderItem::whereHas('order', function($q) {
+            $q->where('user_id', Auth::id());
+        })->findOrFail($id);
+
+        $config = $plugin->configuration ?? [];
+        if(is_string($config)) {
+            $config = json_decode($config, true) ?? [];
+        }
+        $licenseKey = $config['license_key'] ?? null;
+
+        if ($licenseKey) {
+            try {
+                \Illuminate\Support\Facades\DB::connection('plugin_db')
+                    ->table('clients')
+                    ->where('license_key', $licenseKey)
+                    ->update([
+                        'bot_name' => $request->bot_name,
+                        'bot_color' => $request->bot_color,
+                    ]);
+                
+                return back()->with('success', 'Pengaturan Chatbot berhasil disimpan.');
+            } catch (\Exception $e) {
+                return back()->with('error', 'Gagal menyimpan pengaturan: ' . $e->getMessage());
+            }
+        }
+
+        return back()->with('error', 'Lisensi tidak ditemukan.');
+    }
 }

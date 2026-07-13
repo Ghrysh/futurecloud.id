@@ -4,7 +4,9 @@
 
 @section('content')
 <div x-data="historyViewer()" x-cloak class="mx-4 sm:mx-0">
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    
+
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         
         <div class="px-4 py-3 sm:px-6 sm:py-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
             <div>
@@ -150,7 +152,6 @@
         </div>
     </div>
 </div>
-
 <script>
     function historyViewer() {
         return {

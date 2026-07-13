@@ -511,6 +511,7 @@
     });
     </script>
 
+    @include('components.chatbot')
 </body>
 
 </html>

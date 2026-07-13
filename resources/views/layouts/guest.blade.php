@@ -43,6 +43,7 @@
             }).catch(err => console.error('Tracking failed'));
         });
     </script>
+    @include('components.chatbot')
 </body>
 
 </html>

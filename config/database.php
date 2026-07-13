@@ -97,6 +97,20 @@ return [
             'sslmode' => 'prefer',
         ],
 
+        'plugin_db' => [
+            'driver' => 'pgsql',
+            'host' => env('DB_PLUGIN_HOST', '127.0.0.1'),
+            'port' => env('DB_PLUGIN_PORT', '5432'),
+            'database' => env('DB_PLUGIN_DATABASE', 'laravel'),
+            'username' => env('DB_PLUGIN_USERNAME', 'sail'),
+            'password' => env('DB_PLUGIN_PASSWORD', 'password'),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'search_path' => 'public',
+            'sslmode' => 'prefer',
+        ],
+
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'url' => env('DB_URL'),

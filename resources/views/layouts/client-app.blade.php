@@ -115,19 +115,48 @@
                 @endphp
 
                 @foreach ($menuItems as $item)
-                    <a href="{{ route($item['route']) }}"
-                        class="flex items-center justify-between px-3 py-2.5 rounded-lg group transition-all duration-200
-                       {{ request()->routeIs($item['route']) ? 'bg-blue-50 text-blue-700 shadow-sm ring-1 ring-blue-100' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
-                        <div class="flex items-center">
-                            <i class="{{ $item['icon'] }} text-lg mr-3 {{ request()->routeIs($item['route']) ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-600' }}"></i>
-                            <span class="font-medium text-sm">{{ $item['label'] }}</span>
+                    @if($item['route'] === 'client.plugin')
+                        <div x-data="{ open: {{ request()->routeIs('client.plugin*') ? 'true' : 'false' }} }">
+                            <button @click="open = !open"
+                                class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg group transition-all duration-200 {{ request()->routeIs('client.plugin*') ? 'bg-blue-50 text-blue-700 shadow-sm ring-1 ring-blue-100' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                                <div class="flex items-center">
+                                    <i class="{{ $item['icon'] }} text-lg mr-3 {{ request()->routeIs('client.plugin*') ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-600' }}"></i>
+                                    <span class="font-medium text-sm">Plugin Saya</span>
+                                </div>
+                                <div class="flex items-center">
+                                    @if (isset($item['count']) && $item['count'] > 0)
+                                        <span class="px-2 py-0.5 mr-2 rounded-md text-[10px] font-bold {{ request()->routeIs('client.plugin*') ? 'bg-white text-blue-600 shadow-sm' : 'bg-gray-100 text-gray-500 group-hover:bg-white group-hover:text-gray-700 group-hover:shadow-sm' }}">
+                                            {{ $item['count'] }}
+                                        </span>
+                                    @endif
+                                    <i class="ri-arrow-down-s-line transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                                </div>
+                            </button>
+                            
+                            <div x-show="open" x-collapse class="pl-9 pr-3 mt-1 space-y-1">
+                                <a href="{{ route('client.plugin') }}" class="block px-3 py-2 text-sm rounded-lg transition-colors {{ request()->routeIs('client.plugin') ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-500 hover:text-gray-800 hover:bg-gray-50' }}">
+                                    List Plugin
+                                </a>
+                                <a href="{{ route('client.plugin.manage') }}" class="block px-3 py-2 text-sm rounded-lg transition-colors {{ request()->routeIs('client.plugin.manage') ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-500 hover:text-gray-800 hover:bg-gray-50' }}">
+                                    Kelola Plugin
+                                </a>
+                            </div>
                         </div>
-                        @if (isset($item['count']) && $item['count'] > 0)
-                            <span class="px-2 py-0.5 rounded-md text-[10px] font-bold {{ request()->routeIs($item['route']) ? 'bg-white text-blue-600 shadow-sm' : 'bg-gray-100 text-gray-500 group-hover:bg-white group-hover:text-gray-700 group-hover:shadow-sm' }}">
-                                {{ $item['count'] }}
-                            </span>
-                        @endif
-                    </a>
+                    @else
+                        <a href="{{ route($item['route']) }}"
+                            class="flex items-center justify-between px-3 py-2.5 rounded-lg group transition-all duration-200
+                           {{ request()->routeIs($item['route']) ? 'bg-blue-50 text-blue-700 shadow-sm ring-1 ring-blue-100' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                            <div class="flex items-center">
+                                <i class="{{ $item['icon'] }} text-lg mr-3 {{ request()->routeIs($item['route']) ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-600' }}"></i>
+                                <span class="font-medium text-sm">{{ $item['label'] }}</span>
+                            </div>
+                            @if (isset($item['count']) && $item['count'] > 0)
+                                <span class="px-2 py-0.5 rounded-md text-[10px] font-bold {{ request()->routeIs($item['route']) ? 'bg-white text-blue-600 shadow-sm' : 'bg-gray-100 text-gray-500 group-hover:bg-white group-hover:text-gray-700 group-hover:shadow-sm' }}">
+                                    {{ $item['count'] }}
+                                </span>
+                            @endif
+                        </a>
+                    @endif
                 @endforeach
 
                 <div class="pt-5 pb-2 px-3">
@@ -314,5 +343,6 @@
             }).catch(err => console.error('Tracking failed'));
         });
     </script>
+    @include('components.chatbot')
 </body>
 </html>
