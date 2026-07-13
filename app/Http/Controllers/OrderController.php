@@ -157,23 +157,23 @@ public function store(Request $request)
                 $item->configuration = json_encode($config);
                 $item->save();
 
-                // Tentukan URL API berdasarkan nama plugin
-                $isChatbot = str_contains(strtolower($item->product_name), 'chatbot');
-                // Fallback default: Chatbot -> 8081, Monitoring -> 8082
-                $syncUrl = $isChatbot 
-                    ? env('CHATBOT_API_URL', 'http://localhost:8081') . '/api/v1/license/sync'
-                    : env('MONITORING_API_URL', 'http://localhost:8082') . '/api/v1/license/sync';
-
                 try {
-                    \Illuminate\Support\Facades\Http::post($syncUrl, [
-                        'name' => $order->user->name,
-                        'email' => $order->user->email,
-                        'license_key' => $licenseKey,
-                        'expired_at' => $expiredAt,
-                    ]);
-                    Log::info("Lisensi {$licenseKey} untuk plugin {$item->product_name} berhasil di-sync ke {$syncUrl}");
+                    \Illuminate\Support\Facades\DB::connection('plugin_db')
+                        ->table('clients')
+                        ->updateOrInsert(
+                            ['license_key' => $licenseKey],
+                            [
+                                'name' => $order->user->name,
+                                'email' => $order->user->email,
+                                'status' => 'active',
+                                'subscription_expires_at' => $expiredAt ?? now()->addYear(),
+                                'created_at' => now(),
+                                'updated_at' => now(),
+                            ]
+                        );
+                    Log::info("Lisensi {$licenseKey} untuk plugin {$item->product_name} berhasil di-insert langsung ke plugin_db.");
                 } catch (\Exception $e) {
-                    Log::error("Gagal sinkronisasi lisensi {$licenseKey} ke {$syncUrl}: " . $e->getMessage());
+                    Log::error("Gagal insert lisensi {$licenseKey} ke plugin_db: " . $e->getMessage());
                 }
             }
         }
