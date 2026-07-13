@@ -24,6 +24,8 @@
                         <th class="px-6 py-4 font-semibold text-gray-900">Invoice / Tgl Beli</th>
                         <th class="px-6 py-4 font-semibold text-gray-900">Produk Plugin</th>
                         <th class="px-6 py-4 font-semibold text-gray-900">Kode Lisensi</th>
+                        <th class="px-6 py-4 font-semibold text-gray-900 text-center">Status</th>
+                        <th class="px-6 py-4 font-semibold text-gray-900 text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
@@ -64,10 +66,43 @@
                                     </div>
                                 @endif
                             </td>
+                            <td class="px-6 py-4 text-center">
+                                @if(isset($item->plugin_status))
+                                    @if($item->plugin_status === 'active')
+                                        <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-bold">Aktif</span>
+                                    @elseif($item->plugin_status === 'inactive')
+                                        <span class="px-2 py-1 bg-red-100 text-red-700 rounded text-xs font-bold">Nonaktif</span>
+                                    @else
+                                        <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs font-bold">Unknown</span>
+                                    @endif
+                                @else
+                                    <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs font-bold">-</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center justify-center gap-2">
+                                    @if(isset($item->plugin_status) && in_array($item->plugin_status, ['active', 'inactive']))
+                                        <form action="{{ route('plugin.customers.toggle', $item->id) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="px-3 py-1.5 {{ $item->plugin_status === 'active' ? 'bg-orange-500 hover:bg-orange-600' : 'bg-green-500 hover:bg-green-600' }} text-white rounded text-xs font-medium transition" onclick="return confirm('Yakin ingin {{ $item->plugin_status === 'active' ? 'menonaktifkan' : 'mengaktifkan' }} lisensi pelanggan ini?')">
+                                                {{ $item->plugin_status === 'active' ? 'Nonaktifkan' : 'Aktifkan' }}
+                                            </button>
+                                        </form>
+                                    @endif
+                                    
+                                    <form action="{{ route('plugin.customers.destroy', $item->id) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded text-xs font-medium transition" onclick="return confirm('Yakin ingin menghapus lisensi pelanggan ini? Seluruh data plugin pelanggan akan terhapus secara permanen.')">
+                                            Hapus
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="px-6 py-8 text-center text-gray-500">
+                            <td colspan="6" class="px-6 py-8 text-center text-gray-500">
                                 Belum ada pelanggan yang membeli plugin.
                             </td>
                         </tr>

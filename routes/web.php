@@ -254,7 +254,11 @@ Route::prefix('admin')->middleware('auth:admin')->name('admin.')->group(function
     Route::get('/plugin/{id}/edit', [AdminPluginController::class, 'edit'])->name('plugin.edit');
     Route::put('/plugin/{id}', [AdminPluginController::class, 'update'])->name('plugin.update');
     Route::delete('/plugin/{id}', [AdminPluginController::class, 'destroy'])->name('plugin.destroy');
+
+    // Pelanggan Plugin
     Route::get('/plugin-customers', [AdminPluginController::class, 'customers'])->name('plugin.customers');
+    Route::post('/plugin-customers/{id}/toggle-status', [AdminPluginController::class, 'toggleCustomerStatus'])->name('plugin.customers.toggle');
+    Route::delete('/plugin-customers/{id}', [AdminPluginController::class, 'destroyCustomer'])->name('plugin.customers.destroy');
     // =====================
 
     Route::get('/admins', [AdminDashboardController::class, 'adminIndex'])->name('admins.index');

@@ -61,15 +61,24 @@
                         {{-- Badge Status --}}
                         @php
                             $status = $plugin->order->status ?? 'pending';
-                            $statusClass = match($status) {
-                                'paid', 'active' => 'bg-green-100 text-green-800 border-green-200',
-                                'pending' => 'bg-orange-100 text-orange-800 border-orange-200',
-                                'cancelled' => 'bg-red-100 text-red-800 border-red-200',
-                                default => 'bg-gray-100 text-gray-800 border-gray-200',
-                            };
+                            $pluginData = $plugin->plugin_data ?? null;
+                            $isActive = $pluginData && $pluginData->status === 'active';
+                            
+                            if (!$isActive && in_array($status, ['paid', 'active'])) {
+                                $statusClass = 'bg-red-100 text-red-800 border-red-200';
+                                $statusText = 'NONAKTIF';
+                            } else {
+                                $statusClass = match($status) {
+                                    'paid', 'active' => 'bg-green-100 text-green-800 border-green-200',
+                                    'pending' => 'bg-orange-100 text-orange-800 border-orange-200',
+                                    'cancelled' => 'bg-red-100 text-red-800 border-red-200',
+                                    default => 'bg-gray-100 text-gray-800 border-gray-200',
+                                };
+                                $statusText = $status === 'paid' ? 'AKTIF' : $status;
+                            }
                         @endphp
                         <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide border {{ $statusClass }}">
-                            {{ $status == 'paid' ? 'Active' : $status }}
+                            {{ $statusText }}
                         </span>
                     </div>
 

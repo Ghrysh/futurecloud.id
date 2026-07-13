@@ -208,6 +208,27 @@ class ClientAreaController extends Controller implements HasMiddleware
         ->latest()
         ->get();
 
+        foreach ($plugins as $plugin) {
+            $config = $plugin->configuration ?? [];
+            if(is_string($config)) {
+                $config = json_decode($config, true) ?? [];
+            }
+            $licenseKey = $config['license_key'] ?? null;
+            
+            if ($licenseKey) {
+                try {
+                    $clientData = \Illuminate\Support\Facades\DB::connection('plugin_db')
+                        ->table('clients')
+                        ->where('license_key', $licenseKey)
+                        ->first();
+                    
+                    $plugin->plugin_data = $clientData;
+                } catch (\Exception $e) {
+                    $plugin->plugin_data = null;
+                }
+            }
+        }
+
         return view('dashboard.plugin', compact('plugins'));
     }
 

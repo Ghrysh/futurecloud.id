@@ -35,19 +35,25 @@
                     $licenseKey = $config['license_key'] ?? null;
                     
                     $isChatbot = str_contains(strtolower($plugin->product_name), 'chatbot');
-                    $isInstalled = $plugin->plugin_data && $plugin->plugin_data->is_installed;
+                    $pluginData = $plugin->plugin_data ?? null;
+                    $isInstalled = $pluginData && $pluginData->is_installed;
+                    $isActive = $pluginData && $pluginData->status === 'active';
                 @endphp
 
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden" x-data="{ tab: '{{ $isChatbot ? 'settings' : 'dashboard' }}' }">
                     <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
                         <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 {{ $isInstalled ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-400' }} rounded-lg flex items-center justify-center text-2xl">
+                            <div class="w-12 h-12 {{ !$isActive ? 'bg-red-100 text-red-600' : ($isInstalled ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-400') }} rounded-lg flex items-center justify-center text-2xl">
                                 <i class="ri-plug-line"></i>
                             </div>
                             <div>
                                 <h3 class="font-bold text-gray-800 text-lg">{{ $plugin->product_name }}</h3>
                                 <div class="flex items-center gap-2 mt-1">
-                                    @if($isInstalled)
+                                    @if(!$isActive)
+                                        <span class="px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-700 border border-red-200">
+                                            <i class="ri-close-circle-line mr-1"></i> Nonaktif
+                                        </span>
+                                    @elseif($isInstalled)
                                         <span class="px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-700 border border-green-200">
                                             <i class="ri-check-line mr-1"></i> Terinstal
                                         </span>
@@ -61,7 +67,15 @@
                         </div>
                     </div>
 
-                    @if(!$isInstalled)
+                    @if(!$isActive)
+                        <div class="p-8 text-center bg-white">
+                            <div class="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="ri-error-warning-fill text-3xl text-red-500"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-800 mb-2">Lisensi Dinonaktifkan</h3>
+                            <p class="text-gray-500 text-sm max-w-md mx-auto mb-6">Lisensi plugin Anda telah dinonaktifkan oleh administrator. Fitur plugin saat ini tidak berjalan di website Anda.</p>
+                        </div>
+                    @elseif(!$isInstalled)
                         <div class="p-8 text-center bg-white">
                             <div class="w-16 h-16 bg-yellow-50 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <i class="ri-terminal-box-line text-3xl text-yellow-500"></i>

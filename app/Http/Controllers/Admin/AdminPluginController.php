@@ -114,7 +114,91 @@ class AdminPluginController extends Controller
             ->where('product_name', 'LIKE', '%Plugin%')
             ->latest()
             ->get();
+
+        foreach ($customers as $item) {
+            $config = $item->configuration ?? [];
+            if (is_string($config)) {
+                $config = json_decode($config, true) ?? [];
+            }
+            $licenseKey = $config['license_key'] ?? null;
+            if ($licenseKey) {
+                try {
+                    $pluginData = \Illuminate\Support\Facades\DB::connection('plugin_db')
+                        ->table('clients')
+                        ->where('license_key', $licenseKey)
+                        ->first();
+                    $item->plugin_status = $pluginData ? $pluginData->status : 'unknown';
+                } catch (\Exception $e) {
+                    $item->plugin_status = 'error';
+                }
+            } else {
+                $item->plugin_status = 'no_license';
+            }
+        }
             
         return view('admin.plugin.customers', compact('customers'));
+    }
+
+    // 8. TOGGLE CUSTOMER STATUS
+    public function toggleCustomerStatus($id)
+    {
+        $item = OrderItem::findOrFail($id);
+        
+        $config = $item->configuration ?? [];
+        if (is_string($config)) {
+            $config = json_decode($config, true) ?? [];
+        }
+        $licenseKey = $config['license_key'] ?? null;
+
+        if ($licenseKey) {
+            try {
+                $client = \Illuminate\Support\Facades\DB::connection('plugin_db')
+                    ->table('clients')
+                    ->where('license_key', $licenseKey)
+                    ->first();
+                
+                if ($client) {
+                    $newStatus = $client->status === 'active' ? 'inactive' : 'active';
+                    \Illuminate\Support\Facades\DB::connection('plugin_db')
+                        ->table('clients')
+                        ->where('license_key', $licenseKey)
+                        ->update(['status' => $newStatus]);
+                    
+                    return back()->with('success', 'Status lisensi plugin pelanggan berhasil diubah menjadi ' . $newStatus . '.');
+                }
+                return back()->with('error', 'Data pelanggan tidak ditemukan di Plugin API.');
+            } catch (\Exception $e) {
+                return back()->with('error', 'Gagal mengubah status: ' . $e->getMessage());
+            }
+        }
+        
+        return back()->with('error', 'Lisensi tidak valid.');
+    }
+
+    // 9. DELETE CUSTOMER
+    public function destroyCustomer($id)
+    {
+        $item = OrderItem::findOrFail($id);
+        
+        $config = $item->configuration ?? [];
+        if (is_string($config)) {
+            $config = json_decode($config, true) ?? [];
+        }
+        $licenseKey = $config['license_key'] ?? null;
+
+        if ($licenseKey) {
+            try {
+                \Illuminate\Support\Facades\DB::connection('plugin_db')
+                    ->table('clients')
+                    ->where('license_key', $licenseKey)
+                    ->delete();
+            } catch (\Exception $e) {
+                // Ignore error if connection fails, still delete the local order item
+            }
+        }
+        
+        $item->delete();
+        
+        return back()->with('success', 'Data pelanggan dan lisensi plugin berhasil dihapus permanen.');
     }
 }
