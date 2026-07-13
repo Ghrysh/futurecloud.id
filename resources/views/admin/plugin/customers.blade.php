@@ -82,7 +82,7 @@
                             <td class="px-6 py-4">
                                 <div class="flex items-center justify-center gap-2">
                                     @if(isset($item->plugin_status) && in_array($item->plugin_status, ['active', 'inactive']))
-                                        <form action="{{ route('plugin.customers.toggle', $item->id) }}" method="POST">
+                                        <form action="{{ route('admin.plugin.customers.toggle', $item->id) }}" method="POST">
                                             @csrf
                                             <button type="submit" class="px-3 py-1.5 {{ $item->plugin_status === 'active' ? 'bg-orange-500 hover:bg-orange-600' : 'bg-green-500 hover:bg-green-600' }} text-white rounded text-xs font-medium transition" onclick="return confirm('Yakin ingin {{ $item->plugin_status === 'active' ? 'menonaktifkan' : 'mengaktifkan' }} lisensi pelanggan ini?')">
                                                 {{ $item->plugin_status === 'active' ? 'Nonaktifkan' : 'Aktifkan' }}
@@ -90,7 +90,7 @@
                                         </form>
                                     @endif
                                     
-                                    <form action="{{ route('plugin.customers.destroy', $item->id) }}" method="POST">
+                                    <form action="{{ route('admin.plugin.customers.destroy', $item->id) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded text-xs font-medium transition" onclick="return confirm('Yakin ingin menghapus lisensi pelanggan ini? Seluruh data plugin pelanggan akan terhapus secara permanen.')">
