@@ -234,4 +234,24 @@ public function store(Request $request)
 
         return redirect()->route('client.invoices')->with('success', 'Bukti pembayaran berhasil diunggah! Admin akan segera memverifikasinya.');
     }
+
+    public function pluginInstalledWebhook(Request $request)
+    {
+        $licenseKey = $request->license_key;
+        if (!$licenseKey) return response()->json(['status' => 'error'], 400);
+        
+        // Cari order item yang punya config json dengan license_key ini
+        $items = \App\Models\OrderItem::where('product_name', 'like', '%Plugin%')->get();
+        foreach ($items as $item) {
+            $config = $item->configuration ?? [];
+            if(is_string($config)) $config = json_decode($config, true) ?? [];
+            if (isset($config['license_key']) && $config['license_key'] === $licenseKey) {
+                $config['is_installed'] = true;
+                $item->configuration = json_encode($config);
+                $item->save();
+                return response()->json(['status' => 'success', 'message' => 'Plugin marked as installed']);
+            }
+        }
+        return response()->json(['status' => 'not_found'], 404);
+    }
 }

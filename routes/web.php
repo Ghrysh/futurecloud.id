@@ -361,3 +361,4 @@ Route::get('/sys-ping/v1', function (\Illuminate\Http\Request $request) {
 Route::post('/ipaymu/callback', [App\Http\Controllers\OrderController::class, 'ipaymuCallback'])->name('ipaymu.callback');
 
 require __DIR__ . '/auth.php';
+Route::post('/webhook/plugin/installed', [App\Http\Controllers\OrderController::class, 'pluginInstalledWebhook'])->name('webhook.plugin.installed');
