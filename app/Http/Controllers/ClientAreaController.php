@@ -221,6 +221,7 @@ class ClientAreaController extends Controller implements HasMiddleware
                     'status' => $config['status'] ?? 'active',
                     'bot_name' => $config['bot_name'] ?? null,
                     'bot_color' => $config['bot_color'] ?? null,
+                    'is_installed' => $config['is_installed'] ?? false,
                 ];
             }
         }
