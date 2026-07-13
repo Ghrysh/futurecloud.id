@@ -229,7 +229,7 @@ class ClientAreaController extends Controller implements HasMiddleware
     }
 
     // New method for managing specific plugins UI (Tabs layout)
-    public function pluginManage()
+    public function managePlugins()
     {
         $plugins = OrderItem::whereHas('order', function($q) {
             $q->where('user_id', Auth::id())
