@@ -216,37 +216,31 @@ class ClientAreaController extends Controller implements HasMiddleware
             $licenseKey = $config['license_key'] ?? null;
             
             if ($licenseKey) {
-                try {
-                    $clientData = \Illuminate\Support\Facades\DB::connection('plugin_db')
-                        ->table('clients')
-                        ->where('license_key', $licenseKey)
-                        ->first();
-                    
-                    $plugin->plugin_data = $clientData;
-                } catch (\Exception $e) {
-                    $plugin->plugin_data = null;
-                }
+                // Gunakan config lokal sebagai ganti query database eksternal
+                $plugin->plugin_data = (object)[
+                    'status' => $config['status'] ?? 'active',
+                    'bot_name' => $config['bot_name'] ?? null,
+                    'bot_color' => $config['bot_color'] ?? null,
+                ];
             }
         }
 
         return view('dashboard.plugin', compact('plugins'));
     }
 
-    /**
-     * HALAMAN KELOLA PLUGIN
-     */
-    public function managePlugins()
+    // New method for managing specific plugins UI (Tabs layout)
+    public function pluginManage()
     {
         $plugins = OrderItem::whereHas('order', function($q) {
-            $q->where('user_id', Auth::id());
+            $q->where('user_id', Auth::id())
+              ->where('status', 'paid');
         })
-        ->where('type', 'saas')
         ->where('product_name', 'like', '%Plugin%')
         ->with('order')
         ->latest()
         ->get();
 
-        // Load plugin data from plugin_db
+        // Load plugin data from local config
         foreach ($plugins as $plugin) {
             $config = $plugin->configuration ?? [];
             if(is_string($config)) {
@@ -255,32 +249,28 @@ class ClientAreaController extends Controller implements HasMiddleware
             $licenseKey = $config['license_key'] ?? null;
             
             if ($licenseKey) {
-                try {
-                    $clientData = \Illuminate\Support\Facades\DB::connection('plugin_db')
-                        ->table('clients')
-                        ->where('license_key', $licenseKey)
-                        ->first();
-                    
-                    $plugin->plugin_data = $clientData;
-                } catch (\Exception $e) {
-                    $plugin->plugin_data = null;
-                }
+                // Gunakan config lokal sebagai ganti query database eksternal
+                $plugin->plugin_data = (object)[
+                    'status' => $config['status'] ?? 'active',
+                    'bot_name' => $config['bot_name'] ?? null,
+                    'bot_color' => $config['bot_color'] ?? null,
+                ];
             }
         }
 
         return view('dashboard.plugin-manage', compact('plugins'));
     }
 
-    public function updateChatbotPlugin(Request $request, $id)
+    public function updateChatbotSettings(Request $request, $id)
     {
         $request->validate([
             'bot_name' => 'required|string|max:255',
-            'bot_color' => 'required|string|max:50',
+            'bot_color' => 'required|string|max:7',
         ]);
 
         $plugin = OrderItem::whereHas('order', function($q) {
-            $q->where('user_id', Auth::id());
-        })->findOrFail($id);
+            $q->where('user_id', Auth::id())->where('status', 'paid');
+        })->where('id', $id)->firstOrFail();
 
         $config = $plugin->configuration ?? [];
         if(is_string($config)) {
@@ -289,19 +279,28 @@ class ClientAreaController extends Controller implements HasMiddleware
         $licenseKey = $config['license_key'] ?? null;
 
         if ($licenseKey) {
+            // Tentukan URL API
+            $apiUrl = env('CHATBOT_API_URL', 'http://localhost:8081');
+
             try {
-                \Illuminate\Support\Facades\DB::connection('plugin_db')
-                    ->table('clients')
-                    ->where('license_key', $licenseKey)
-                    ->update([
-                        'bot_name' => $request->bot_name,
-                        'bot_color' => $request->bot_color,
-                    ]);
-                
-                return back()->with('success', 'Pengaturan Chatbot berhasil disimpan.');
+                // Sinkronisasi ke Chatbot API
+                \Illuminate\Support\Facades\Http::post($apiUrl . '/api/v1/license/config', [
+                    'license_key' => $licenseKey,
+                    'bot_name' => $request->bot_name,
+                    'bot_color' => $request->bot_color,
+                ]);
             } catch (\Exception $e) {
-                return back()->with('error', 'Gagal menyimpan pengaturan: ' . $e->getMessage());
+                \Illuminate\Support\Facades\Log::error("Gagal sinkronisasi config chatbot {$licenseKey}: " . $e->getMessage());
+                // Lanjut saja agar lokal tersimpan
             }
+            
+            // Simpan lokal di configuration
+            $config['bot_name'] = $request->bot_name;
+            $config['bot_color'] = $request->bot_color;
+            $plugin->configuration = json_encode($config);
+            $plugin->save();
+            
+            return back()->with('success', 'Pengaturan Chatbot berhasil disimpan.');
         }
 
         return back()->with('error', 'Lisensi tidak ditemukan.');

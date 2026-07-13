@@ -122,15 +122,8 @@ class AdminPluginController extends Controller
             }
             $licenseKey = $config['license_key'] ?? null;
             if ($licenseKey) {
-                try {
-                    $pluginData = \Illuminate\Support\Facades\DB::connection('plugin_db')
-                        ->table('clients')
-                        ->where('license_key', $licenseKey)
-                        ->first();
-                    $item->plugin_status = $pluginData ? $pluginData->status : 'unknown';
-                } catch (\Exception $e) {
-                    $item->plugin_status = 'error';
-                }
+                // Gunakan status dari local config, default active untuk transisi
+                $item->plugin_status = $config['status'] ?? 'active';
             } else {
                 $item->plugin_status = 'no_license';
             }
@@ -151,25 +144,31 @@ class AdminPluginController extends Controller
         $licenseKey = $config['license_key'] ?? null;
 
         if ($licenseKey) {
+            $currentStatus = $config['status'] ?? 'active';
+            $newStatus = $currentStatus === 'active' ? 'inactive' : 'active';
+            
+            // Tentukan URL API
+            $isChatbot = str_contains(strtolower($item->product_name), 'chatbot');
+            $apiUrl = $isChatbot 
+                ? env('CHATBOT_API_URL', 'http://localhost:8081') 
+                : env('MONITORING_API_URL', 'http://localhost:8082');
+
             try {
-                $client = \Illuminate\Support\Facades\DB::connection('plugin_db')
-                    ->table('clients')
-                    ->where('license_key', $licenseKey)
-                    ->first();
-                
-                if ($client) {
-                    $newStatus = $client->status === 'active' ? 'inactive' : 'active';
-                    \Illuminate\Support\Facades\DB::connection('plugin_db')
-                        ->table('clients')
-                        ->where('license_key', $licenseKey)
-                        ->update(['status' => $newStatus]);
-                    
-                    return back()->with('success', 'Status lisensi plugin pelanggan berhasil diubah menjadi ' . $newStatus . '.');
-                }
-                return back()->with('error', 'Data pelanggan tidak ditemukan di Plugin API.');
+                \Illuminate\Support\Facades\Http::post($apiUrl . '/api/v1/license/status', [
+                    'license_key' => $licenseKey,
+                    'status' => $newStatus
+                ]);
             } catch (\Exception $e) {
-                return back()->with('error', 'Gagal mengubah status: ' . $e->getMessage());
+                \Illuminate\Support\Facades\Log::error("Gagal sinkronisasi toggle status lisensi {$licenseKey}: " . $e->getMessage());
+                // Tetap lanjut ubah lokal agar UI responsif meski API offline
             }
+            
+            // Simpan perubahan ke local
+            $config['status'] = $newStatus;
+            $item->configuration = json_encode($config);
+            $item->save();
+            
+            return back()->with('success', 'Status lisensi plugin pelanggan berhasil diubah menjadi ' . $newStatus . '.');
         }
         
         return back()->with('error', 'Lisensi tidak valid.');
@@ -187,13 +186,16 @@ class AdminPluginController extends Controller
         $licenseKey = $config['license_key'] ?? null;
 
         if ($licenseKey) {
+            // Tentukan URL API
+            $isChatbot = str_contains(strtolower($item->product_name), 'chatbot');
+            $apiUrl = $isChatbot 
+                ? env('CHATBOT_API_URL', 'http://localhost:8081') 
+                : env('MONITORING_API_URL', 'http://localhost:8082');
+
             try {
-                \Illuminate\Support\Facades\DB::connection('plugin_db')
-                    ->table('clients')
-                    ->where('license_key', $licenseKey)
-                    ->delete();
+                \Illuminate\Support\Facades\Http::delete($apiUrl . '/api/v1/license/' . $licenseKey);
             } catch (\Exception $e) {
-                // Ignore error if connection fails, still delete the local order item
+                \Illuminate\Support\Facades\Log::error("Gagal sinkronisasi hapus lisensi {$licenseKey}: " . $e->getMessage());
             }
         }
         
