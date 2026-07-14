@@ -46,7 +46,8 @@
                             </td>
                             <td class="px-6 py-4">
                                 @php
-                                    $config = json_decode($item->configuration, true) ?? [];
+                                    $config = is_string($item->configuration) ? json_decode($item->configuration, true) : $item->configuration;
+                                    $config = $config ?? [];
                                     $status = $item->order->status ?? 'pending';
                                 @endphp
                                 @if(in_array($status, ['paid', 'active']))
