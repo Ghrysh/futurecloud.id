@@ -126,22 +126,10 @@
                                         <h5 class="text-sm font-semibold text-gray-700">Jalankan Perintah Instalasi</h5>
                                     </div>
                                     <div class="bg-gray-900 text-gray-200 p-3.5 rounded-lg font-mono text-sm leading-relaxed shadow-inner">
-                                        <p class="text-gray-500 text-xs mb-1"># Install CLI secara global:</p>
+                                        <p class="text-gray-500 text-xs mb-1"># Perintah Instalasi 1-Baris dengan NPX:</p>
                                         <div class="flex justify-between items-center group">
-                                            <span>npm install -g futurecloud-{{ $cliCommand }}-cli</span>
-                                            <button class="text-gray-500 hover:text-white opacity-0 group-hover:opacity-100 transition" onclick="copyToClipboard('npm install -g futurecloud-{{ $cliCommand }}-cli', 'Perintah berhasil disalin!')"><i class="ri-file-copy-line"></i></button>
-                                        </div>
-
-                                        <p class="text-gray-500 text-xs mt-3 mb-1"># Format instalasi :</p>
-                                        <div class="flex justify-between items-center group">
-                                            <span>futurecloud-{{ $cliCommand }} install</span>
-                                            <button class="text-gray-500 hover:text-white opacity-0 group-hover:opacity-100 transition" onclick="copyToClipboard('futurecloud-{{ $cliCommand }} install', 'Perintah berhasil disalin!')"><i class="ri-file-copy-line"></i></button>
-                                        </div>
-                                        
-                                        <p class="text-gray-500 text-xs mt-3 mb-1"># Atau menggunakan versi perintah yang lebih singkat (alias):</p>
-                                        <div class="flex justify-between items-center group">
-                                            <span>fc-{{ $cliShort }} install</span>
-                                            <button class="text-gray-500 hover:text-white opacity-0 group-hover:opacity-100 transition" onclick="copyToClipboard('fc-{{ $cliShort }} install', 'Perintah berhasil disalin!')"><i class="ri-file-copy-line"></i></button>
+                                            <span>npx --package=futurecloud-{{ $cliCommand }}-cli@latest futurecloud-{{ $cliCommand }} install</span>
+                                            <button class="text-gray-500 hover:text-white opacity-0 group-hover:opacity-100 transition" onclick="copyToClipboard('npx --package=futurecloud-{{ $cliCommand }}-cli@latest futurecloud-{{ $cliCommand }} install', 'Perintah berhasil disalin!')"><i class="ri-file-copy-line"></i></button>
                                         </div>
                                     </div>
                                 </div>

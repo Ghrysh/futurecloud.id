@@ -111,17 +111,10 @@
                         @if(in_array($status, ['paid', 'active']))
                         <div class="space-y-4">
                             <div>
-                                <h5 class="text-xs font-semibold text-gray-700 mb-1">1. Install CLI Global:</h5>
+                                <h5 class="text-xs font-semibold text-gray-700 mb-1">Jalankan Perintah Instalasi:</h5>
                                 <div class="bg-gray-900 text-gray-200 p-2.5 rounded-lg font-mono text-xs shadow-inner flex justify-between items-center group">
-                                    <span>npm install -g futurecloud-{{ $cliCommand }}-cli</span>
-                                    <button class="text-gray-500 hover:text-white opacity-0 group-hover:opacity-100 transition" onclick="copyToClipboard('npm install -g futurecloud-{{ $cliCommand }}-cli', 'Perintah berhasil disalin!')"><i class="ri-file-copy-line"></i></button>
-                                </div>
-                            </div>
-                            <div>
-                                <h5 class="text-xs font-semibold text-gray-700 mb-1">2. Jalankan Perintah:</h5>
-                                <div class="bg-gray-900 text-gray-200 p-2.5 rounded-lg font-mono text-xs shadow-inner flex justify-between items-center group">
-                                    <span>futurecloud-{{ $cliCommand }} install</span>
-                                    <button class="text-gray-500 hover:text-white opacity-0 group-hover:opacity-100 transition" onclick="copyToClipboard('futurecloud-{{ $cliCommand }} install', 'Perintah berhasil disalin!')"><i class="ri-file-copy-line"></i></button>
+                                    <span>npx --package=futurecloud-{{ $cliCommand }}-cli@latest futurecloud-{{ $cliCommand }} install</span>
+                                    <button class="text-gray-500 hover:text-white opacity-0 group-hover:opacity-100 transition" onclick="copyToClipboard('npx --package=futurecloud-{{ $cliCommand }}-cli@latest futurecloud-{{ $cliCommand }} install', 'Perintah berhasil disalin!')"><i class="ri-file-copy-line"></i></button>
                                 </div>
                             </div>
                         </div>
