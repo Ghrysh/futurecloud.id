@@ -245,14 +245,31 @@ public function store(Request $request)
         $items = \App\Models\OrderItem::where('product_name', 'like', '%Plugin%')->get();
         foreach ($items as $item) {
             $config = $item->configuration ?? [];
-            if(is_string($config)) $config = json_decode($config, true) ?? [];
-            if (isset($config['license_key']) && $config['license_key'] === $licenseKey) {
+            
+            // Fix for double/triple encoded JSON strings
+            while (is_string($config)) {
+                $decoded = json_decode($config, true);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    $config = $decoded;
+                } else {
+                    break;
+                }
+            }
+
+            if (is_array($config) && isset($config['license_key']) && $config['license_key'] === $licenseKey) {
                 $config['is_installed'] = true;
-                $item->configuration = json_encode($config);
+                
+                // Jika sebelumnya di-save dengan double encode, kita ikuti formatnya agar tidak break UI lain
+                // Tapi sebisa mungkin save sebagai array karena Model sudah ada cast 'array'
+                $item->configuration = $config; 
                 $item->save();
+                
+                \Illuminate\Support\Facades\Log::info("Successfully marked license as installed: " . $licenseKey);
                 return response()->json(['status' => 'success', 'message' => 'Plugin marked as installed']);
             }
         }
+        
+        \Illuminate\Support\Facades\Log::warning("Webhook failed: License not found in any OrderItem: " . $licenseKey);
         return response()->json(['status' => 'not_found'], 404);
     }
 }
