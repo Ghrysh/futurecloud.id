@@ -42,23 +42,38 @@
                             $isActive = $pluginData && $pluginData->status === 'active';
                         @endphp
                         <button @click="activePlugin = {{ $plugin->id }}"
-                            :class="activePlugin === {{ $plugin->id }} ? 'bg-blue-50 text-blue-700 border-blue-200 shadow-sm' : 'text-gray-600 hover:bg-gray-50 border-gray-100'"
-                            class="min-w-[280px] text-left px-4 py-3 rounded-lg border font-medium flex items-center gap-3 transition-all duration-200 snap-start shrink-0">
+                            :class="activePlugin === {{ $plugin->id }} ? 'bg-blue-50 border-blue-200 shadow-sm' : 'hover:bg-gray-50 border-gray-100'"
+                            class="min-w-[340px] text-left px-4 py-3 rounded-lg border flex items-center gap-3 transition-all duration-200 snap-start shrink-0 relative">
+                            
                             <div class="w-10 h-10 rounded flex items-center justify-center text-xl shrink-0 transition-colors"
                                 :class="activePlugin === {{ $plugin->id }} ? 'bg-white text-blue-600 shadow-sm border border-blue-100' : 'bg-gray-50 text-gray-400'">
-                                <i class="{{ str_contains(strtolower($plugin->product_name), 'chatbot') ? 'ri-robot-2-line' : 'ri-bar-chart-box-line' }}"></i>
+                                <i class="{{ str_contains(strtolower($plugin->product_name), 'chatbot') ? 'ri-robot-2-fill' : 'ri-bar-chart-grouped-fill' }}"></i>
                             </div>
+                            
                             <div class="min-w-0 flex-1">
-                                <div class="text-sm font-bold truncate">{{ $plugin->product_name }}</div>
-                                <div class="text-xs text-gray-500 font-normal mt-0.5 truncate">
-                                    {{ $licenseKey ? substr($licenseKey, 0, 8).'...' : 'Tanpa Lisensi' }}
+                                <div class="text-sm font-bold truncate" :class="activePlugin === {{ $plugin->id }} ? 'text-blue-800' : 'text-gray-800'">
+                                    {{ $plugin->product_name }}
+                                </div>
+                                <div class="flex items-center gap-2 mt-1">
+                                    @if(!$isActive)
+                                        <span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-red-100 text-red-700 border border-red-200 whitespace-nowrap">
+                                            <i class="ri-close-circle-line mr-0.5"></i> Dinonaktifkan
+                                        </span>
+                                    @elseif($isInstalled)
+                                        <span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-green-100 text-green-700 border border-green-200 whitespace-nowrap">
+                                            <i class="ri-check-line mr-0.5"></i> Terinstal
+                                        </span>
+                                    @else
+                                        <span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-gray-100 text-gray-600 border border-gray-200 whitespace-nowrap">
+                                            <i class="ri-error-warning-line mr-0.5"></i> Belum Terinstal
+                                        </span>
+                                    @endif
+                                    
+                                    <span class="text-[10px] text-gray-400 font-mono border-l border-gray-200 pl-2 whitespace-nowrap">
+                                        {{ $licenseKey ?? 'Tanpa Lisensi' }}
+                                    </span>
                                 </div>
                             </div>
-                            @if(!$isActive)
-                                <div class="ml-auto flex items-center justify-center w-5 h-5 rounded-full bg-red-100 text-red-600" title="Dinonaktifkan">
-                                    <i class="ri-close-line text-xs"></i>
-                                </div>
-                            @endif
                         </button>
                     @endforeach
                     </div>
@@ -83,35 +98,7 @@
 
                     <div x-show="activePlugin === {{ $plugin->id }}" x-transition.opacity.duration.300ms style="display: none;">
                         <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden" x-data="{ tab: '{{ $isChatbot ? 'settings' : 'dashboard' }}' }">
-                            <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-12 h-12 {{ !$isActive ? 'bg-red-100 text-red-600' : ($isInstalled ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-400') }} rounded-lg flex items-center justify-center text-2xl">
-                                        <i class="{{ $isChatbot ? 'ri-robot-2-fill' : 'ri-bar-chart-grouped-fill' }}"></i>
-                                    </div>
-                                    <div>
-                                        <h3 class="font-bold text-gray-800 text-xl">{{ $plugin->product_name }}</h3>
-                                        <div class="flex items-center gap-2 mt-1">
-                                            @if(!$isActive)
-                                                <span class="px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-700 border border-red-200">
-                                                    <i class="ri-close-circle-line mr-1"></i> Lisensi Dinonaktifkan
-                                                </span>
-                                            @elseif($isInstalled)
-                                                <span class="px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-700 border border-green-200">
-                                                    <i class="ri-check-line mr-1"></i> Terinstal di Website
-                                                </span>
-                                            @else
-                                                <span class="px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-600 border border-gray-200">
-                                                    <i class="ri-error-warning-line mr-1"></i> Belum Terinstal
-                                                </span>
-                                            @endif
-                                            
-                                            <span class="text-xs text-gray-400 font-mono ml-2 border-l border-gray-200 pl-2">
-                                                KEY: {{ $licenseKey }}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+
 
                             @if(!$isActive)
                                 <div class="p-10 text-center bg-white">
