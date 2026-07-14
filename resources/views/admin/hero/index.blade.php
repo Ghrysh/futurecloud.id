@@ -165,7 +165,7 @@
                             </form>
                             @endif
                             @if($img !== 'assets/bg.jpg')
-                                <form action="{{ route('admin.hero.delete_image') }}" method="POST" onsubmit="return confirm('Hapus slide ini?')">
+                                <form action="{{ route('admin.hero.delete_image') }}" method="POST" onsubmit="confirmSubmit(event, 'Hapus slide ini?')">
                                     @csrf @method('DELETE')
                                     <input type="hidden" name="image_path" value="{{ $img }}">
                                     <button type="submit" class="p-1.5 sm:p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded transition ml-1"><i class="ri-delete-bin-line text-sm sm:text-base"></i></button>

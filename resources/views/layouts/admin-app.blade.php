@@ -12,7 +12,7 @@
     {{-- Assets --}}
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -258,6 +258,58 @@
             }).catch(err => console.error('Tracking failed'));
         });
     </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        window.customAlert = function(message, type = 'info') {
+            Swal.fire({
+                title: type === 'error' ? 'Oops...' : (type === 'success' ? 'Berhasil' : 'Info'),
+                text: message,
+                icon: type,
+                confirmButtonColor: '#2563eb'
+            });
+        };
+
+        window.confirmSubmit = function(event, message) {
+            event.preventDefault();
+            const form = event.target.closest('form') || event.target;
+            Swal.fire({
+                title: 'Konfirmasi',
+                text: message,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#94a3b8',
+                confirmButtonText: 'Ya, Lanjutkan!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        };
+        
+        window.confirmClickLink = function(event, message) {
+            event.preventDefault();
+            const link = event.currentTarget.href;
+            if(!link || link.includes('javascript:')) return;
+            Swal.fire({
+                title: 'Konfirmasi',
+                text: message,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#94a3b8',
+                confirmButtonText: 'Ya, Lanjutkan!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = link;
+                }
+            });
+        };
+    </script>
+
 </body>
 
 </html>

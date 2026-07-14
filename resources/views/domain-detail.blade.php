@@ -360,7 +360,7 @@
             // 4. AJAX CEK DOMAIN
             async function checkDomains() {
                 let domain = domainInput.value.trim().toLowerCase();
-                if (!domain) { alert("Mohon masukkan nama domain!"); return; }
+                if (!domain) { customAlert("Mohon masukkan nama domain!") return; }
                 if (!domain.includes('.')) { domain += '.com'; domainInput.value = domain; }
 
                 resultSection.classList.remove('hidden');

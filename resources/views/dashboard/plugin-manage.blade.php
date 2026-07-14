@@ -142,7 +142,7 @@
                                     </div>
                                     
                                     <div class="shrink-0 ml-4 py-2">
-                                        <form action="{{ route('client.plugin.reset', $plugin->id) }}" method="POST" onsubmit="return confirm('Peringatan: Aksi ini akan menghapus semua data (Analitik/Leads) secara permanen. Apakah Anda yakin ingin mereset data?');">
+                                        <form action="{{ route('client.plugin.reset', $plugin->id) }}" method="POST" onsubmit="confirmSubmit(event, 'Peringatan: Aksi ini akan menghapus semua data (Analitik/Leads) secara permanen. Apakah Anda yakin ingin mereset data?')">
                                             @csrf
                                             <button type="submit" class="px-3 py-1.5 bg-red-50 text-red-600 hover:bg-red-100 rounded text-xs font-semibold flex items-center gap-1 transition">
                                                 <i class="ri-delete-bin-line"></i> Reset Data

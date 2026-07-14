@@ -86,7 +86,7 @@
                             <td class="px-6 py-4 text-gray-500 font-mono text-xs">{{ $admin->username }}</td>
                             <td class="px-6 py-4 text-right">
                                 @if(Auth::guard('admin')->id() != $admin->id)
-                                    <form action="{{ route('admin.delete', $admin->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus admin ini?');">
+                                    <form action="{{ route('admin.delete', $admin->id) }}" method="POST" onsubmit="confirmSubmit(event, 'Yakin ingin menghapus admin ini?')">
                                         @csrf @method('DELETE')
                                         <button class="text-red-500 hover:text-red-700 hover:bg-red-50 px-3 py-1.5 rounded-md transition text-xs font-medium flex items-center gap-1 ml-auto">
                                             <i class="ri-delete-bin-line"></i> Hapus
@@ -124,7 +124,7 @@
                     {{-- Action --}}
                     <div>
                         @if(Auth::guard('admin')->id() != $admin->id)
-                            <form action="{{ route('admin.delete', $admin->id) }}" method="POST" onsubmit="return confirm('Hapus?');">
+                            <form action="{{ route('admin.delete', $admin->id) }}" method="POST" onsubmit="confirmSubmit(event, 'Hapus?')">
                                 @csrf @method('DELETE')
                                 <button class="w-8 h-8 flex items-center justify-center bg-white border border-red-200 text-red-500 rounded-lg shadow-sm hover:bg-red-50 transition">
                                     <i class="ri-delete-bin-line text-lg"></i>

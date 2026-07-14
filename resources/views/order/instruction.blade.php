@@ -143,7 +143,7 @@
         if(btn.tagName === 'I' || btn.tagName === 'SPAN') return; 
         
         // Simple feedback
-        alert("Nomor/Nominal berhasil disalin!");
+        customAlert("Nomor/Nominal berhasil disalin!")
     }
 
     // JS File Size Validation (Max 5MB)

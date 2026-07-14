@@ -70,7 +70,7 @@
                                         </button>
                                     </form>
                                     {{-- Reject --}}
-                                    <form action="{{ route('admin.saas.reject', $app->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menolak aplikasi ini?')">
+                                    <form action="{{ route('admin.saas.reject', $app->id) }}" method="POST" onsubmit="confirmSubmit(event, 'Yakin ingin menolak aplikasi ini?')">
                                         @csrf
                                         <button class="bg-white border border-red-200 text-red-500 w-8 h-8 rounded-lg hover:bg-red-50 transition shadow-sm flex items-center justify-center" title="Reject">
                                             <i class="ri-close-line text-lg"></i>
@@ -118,7 +118,7 @@
 
                     <div class="grid grid-cols-2 gap-3">
                         {{-- Tombol Reject --}}
-                        <form action="{{ route('admin.saas.reject', $app->id) }}" method="POST" class="w-full" onsubmit="return confirm('Tolak aplikasi ini?');">
+                        <form action="{{ route('admin.saas.reject', $app->id) }}" method="POST" class="w-full" onsubmit="confirmSubmit(event, 'Tolak aplikasi ini?')">
                             @csrf
                             <button class="w-full py-2 bg-white border border-red-200 text-red-600 rounded-lg text-sm font-semibold hover:bg-red-50 flex justify-center items-center gap-2 transition">
                                 <i class="ri-close-circle-line"></i> Tolak

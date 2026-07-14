@@ -62,7 +62,7 @@
                                     <a href="{{ route('partner.app.edit', $app->id) }}" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition" title="Edit">
                                         <i class="ri-edit-line text-lg"></i>
                                     </a>
-                                    <form action="{{ route('partner.app.delete', $app->id) }}" method="POST" onsubmit="return confirm('Yakin hapus aplikasi ini?');">
+                                    <form action="{{ route('partner.app.delete', $app->id) }}" method="POST" onsubmit="confirmSubmit(event, 'Yakin hapus aplikasi ini?')">
                                         @csrf @method('DELETE')
                                         <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition" title="Hapus">
                                             <i class="ri-delete-bin-line text-lg"></i>
@@ -126,7 +126,7 @@
                             <i class="ri-edit-line"></i> Edit
                         </a>
                         
-                        <form action="{{ route('partner.app.delete', $app->id) }}" method="POST" onsubmit="return confirm('Yakin hapus aplikasi ini?');" class="w-full">
+                        <form action="{{ route('partner.app.delete', $app->id) }}" method="POST" onsubmit="confirmSubmit(event, 'Yakin hapus aplikasi ini?')" class="w-full">
                             @csrf @method('DELETE')
                             <button class="w-full flex items-center justify-center gap-2 py-2 bg-red-50 border border-red-100 text-red-600 rounded-lg text-sm font-semibold hover:bg-red-100 transition">
                                 <i class="ri-delete-bin-line"></i> Hapus

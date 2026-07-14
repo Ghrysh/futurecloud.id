@@ -101,7 +101,7 @@
                                         <i class="ri-pencil-line text-lg"></i>
                                     </a>
                                     <form action="{{ route('admin.plugin.destroy', $app->id) }}" method="POST"
-                                        onsubmit="return confirm('Hapus aplikasi ini?')">
+                                        onsubmit="confirmSubmit(event, 'Hapus aplikasi ini?')">
                                         @csrf @method('DELETE')
                                         <button type="submit"
                                             class="p-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded transition"

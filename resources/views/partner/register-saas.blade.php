@@ -295,7 +295,7 @@
                         };
                         reader.readAsDataURL(file);
                     } else {
-                        alert('Mohon pilih file gambar yang valid.');
+                        customAlert('Mohon pilih file gambar yang valid.')
                     }
                 }
             });

@@ -334,7 +334,7 @@
             }, 3000);
         }).catch(err => {
             console.error('Gagal menyalin: ', err);
-            alert('Gagal menyalin teks');
+            customAlert('Gagal menyalin teks')
         });
     }
 </script>

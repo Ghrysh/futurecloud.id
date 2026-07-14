@@ -172,7 +172,7 @@
                     this.activeMessages = data.history || [];
                 } catch (e) {
                     console.error('Gagal memuat riwayat', e);
-                    alert('Gagal memuat riwayat chat. Coba lagi.');
+                    customAlert('Gagal memuat riwayat chat. Coba lagi.')
                 } finally {
                     this.isLoading = false;
                 }

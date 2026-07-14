@@ -363,3 +363,4 @@ Route::post('/ipaymu/callback', [App\Http\Controllers\OrderController::class, 'i
 
 require __DIR__ . '/auth.php';
 Route::post('/webhook/plugin/installed', [App\Http\Controllers\OrderController::class, 'pluginInstalledWebhook'])->name('webhook.plugin.installed');
+Route::get('/test_db', function() { return \App\Models\User::first(); });

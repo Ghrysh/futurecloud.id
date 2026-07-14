@@ -365,11 +365,11 @@
     }
 
     function triggerDelete(url) {
-        if(confirm('Apakah Anda yakin ingin menghapus item ini dari keranjang?')) {
+        Swal.fire({title: 'Konfirmasi', text: 'Apakah Anda yakin ingin menghapus item ini dari keranjang?', icon: 'warning', showCancelButton: true, confirmButtonText: 'Ya', cancelButtonText: 'Batal'}).then((result) => { if (result.isConfirmed) { 
             const form = document.getElementById('deleteForm');
             form.action = url;
             form.submit();
-        }
+         } })
     }
 
     function toggleAll(source) {
@@ -422,7 +422,7 @@
     function submitCheckout() {
         const checkedBoxes = document.querySelectorAll('.item-checkbox:checked');
         if(checkedBoxes.length === 0) {
-            alert('Harap pilih minimal satu item untuk melanjutkan.');
+            customAlert('Harap pilih minimal satu item untuk melanjutkan.')
             return;
         }
         document.getElementById('checkoutForm').submit();

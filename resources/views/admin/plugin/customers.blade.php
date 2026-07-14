@@ -85,7 +85,7 @@
                                     @if(isset($item->plugin_status) && in_array($item->plugin_status, ['active', 'inactive']))
                                         <form action="{{ route('admin.plugin.customers.toggle', $item->id) }}" method="POST">
                                             @csrf
-                                            <button type="submit" class="px-3 py-1.5 {{ $item->plugin_status === 'active' ? 'bg-orange-500 hover:bg-orange-600' : 'bg-green-500 hover:bg-green-600' }} text-white rounded text-xs font-medium transition" onclick="return confirm('Yakin ingin {{ $item->plugin_status === 'active' ? 'menonaktifkan' : 'mengaktifkan' }} lisensi pelanggan ini?')">
+                                            <button type="submit" class="px-3 py-1.5 {{ $item->plugin_status === 'active' ? 'bg-orange-500 hover:bg-orange-600' : 'bg-green-500 hover:bg-green-600' }} text-white rounded text-xs font-medium transition" onclick="event.preventDefault(); const t = event.currentTarget; Swal.fire({title: 'Konfirmasi', text: 'Yakin ingin {{ $item->plugin_status === 'active' ? 'menonaktifkan' : 'mengaktifkan' }} lisensi pelanggan ini?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#94a3b8', confirmButtonText: 'Ya', cancelButtonText: 'Batal'}).then((r) => { if(r.isConfirmed) { if(t.tagName === 'A') window.location.href = t.href; else { const f = t.closest('form'); if(f) f.submit(); } } })">
                                                 {{ $item->plugin_status === 'active' ? 'Nonaktifkan' : 'Aktifkan' }}
                                             </button>
                                         </form>
@@ -94,7 +94,7 @@
                                     <form action="{{ route('admin.plugin.customers.destroy', $item->id) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded text-xs font-medium transition" onclick="return confirm('Yakin ingin menghapus lisensi pelanggan ini? Seluruh data plugin pelanggan akan terhapus secara permanen.')">
+                                        <button type="submit" class="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded text-xs font-medium transition" onclick="event.preventDefault(); const t = event.currentTarget; Swal.fire({title: 'Konfirmasi', text: 'Yakin ingin menghapus lisensi pelanggan ini? Seluruh data plugin pelanggan akan terhapus secara permanen.', icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#94a3b8', confirmButtonText: 'Ya', cancelButtonText: 'Batal'}).then((r) => { if(r.isConfirmed) { if(t.tagName === 'A') window.location.href = t.href; else { const f = t.closest('form'); if(f) f.submit(); } } })">
                                             Hapus
                                         </button>
                                     </form>

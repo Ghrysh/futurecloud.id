@@ -87,7 +87,7 @@
                                 <button @click="editing = true" class="text-blue-500 hover:text-blue-700 p-1.5 bg-blue-50 hover:bg-blue-100 rounded-lg transition" title="Edit">
                                     <i class="ri-edit-line"></i>
                                 </button>
-                                <form action="{{ route('admin.chatbot.destroy', $knowledge->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?');" class="inline">
+                                <form action="{{ route('admin.chatbot.destroy', $knowledge->id) }}" method="POST" onsubmit="confirmSubmit(event, 'Yakin ingin menghapus data ini?')" class="inline">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="text-red-500 hover:text-red-700 p-1.5 bg-red-50 hover:bg-red-100 rounded-lg transition" title="Hapus">

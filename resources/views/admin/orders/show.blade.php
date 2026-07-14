@@ -21,7 +21,7 @@
             </a>
             
             {{-- Tombol Delete Order (Hati-hati) --}}
-            <form action="{{ route('admin.orders.destroy', $order->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus order ini secara permanen?');">
+            <form action="{{ route('admin.orders.destroy', $order->id) }}" method="POST" onsubmit="confirmSubmit(event, 'Yakin ingin menghapus order ini secara permanen?')">
                 @csrf @method('DELETE')
                 <button type="submit" class="px-4 py-2 bg-red-100 text-red-700 border border-red-200 rounded-lg hover:bg-red-200 transition">
                     <i class="ri-delete-bin-line"></i> Hapus

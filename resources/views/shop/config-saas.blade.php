@@ -247,7 +247,7 @@
 
             useExternalDomain() {
                 let dom = this.searchQuery.trim().toLowerCase();
-                if (!dom.match(/^[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,10}$/)) { alert('Format domain salah'); return; }
+                if (!dom.match(/^[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,10}$/)) { customAlert('Format domain salah') return; }
                 this.selectDomain(dom, 0); // Domain luar = Gratis (karena sudah punya)
             },
 

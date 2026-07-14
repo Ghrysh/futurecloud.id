@@ -81,7 +81,7 @@
                                 <button type="submit" 
                                     class="p-2 border rounded-lg transition shadow-sm {{ $user->is_banned ? 'bg-green-600 text-white border-green-600 hover:bg-green-700' : 'bg-white text-red-600 border-gray-200 hover:bg-red-50' }}"
                                     title="{{ $user->is_banned ? 'Aktifkan Kembali' : 'Ban User' }}"
-                                    onclick="return confirm('Apakah Anda yakin ingin mengubah status user ini?')">
+                                    onclick="event.preventDefault(); const t = event.currentTarget; Swal.fire({title: 'Konfirmasi', text: 'Apakah Anda yakin ingin mengubah status user ini?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#94a3b8', confirmButtonText: 'Ya', cancelButtonText: 'Batal'}).then((r) => { if(r.isConfirmed) { if(t.tagName === 'A') window.location.href = t.href; else { const f = t.closest('form'); if(f) f.submit(); } } })">
                                     <i class="{{ $user->is_banned ? 'ri-user-follow-line' : 'ri-user-forbid-line' }}"></i>
                                 </button>
                             </form>
