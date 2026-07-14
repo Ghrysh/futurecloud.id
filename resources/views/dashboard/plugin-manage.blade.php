@@ -25,11 +25,12 @@
             </a>
         </div>
     @else
-        <div class="flex flex-col lg:flex-row gap-6" x-data="{ activePlugin: {{ $plugins->first()->id }} }">
-            <!-- Sidebar Tab Menu -->
-            <div class="lg:w-1/3 xl:w-1/4">
-                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-3 space-y-2 sticky top-6">
-                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider px-2 pt-2 pb-1">Daftar Plugin</h3>
+        <div class="flex flex-col gap-6" x-data="{ activePlugin: {{ $plugins->first()->id }} }">
+            <!-- Top Horizontal Tab Menu -->
+            <div class="w-full">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-3">
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider px-2 pt-1 pb-2">Daftar Plugin</h3>
+                    <div class="flex overflow-x-auto gap-3 pb-2 snap-x">
                     @foreach($plugins as $plugin)
                         @php
                             $config = $plugin->configuration ?? [];
@@ -41,8 +42,8 @@
                             $isActive = $pluginData && $pluginData->status === 'active';
                         @endphp
                         <button @click="activePlugin = {{ $plugin->id }}"
-                            :class="activePlugin === {{ $plugin->id }} ? 'bg-blue-50 text-blue-700 border-blue-200 shadow-sm' : 'text-gray-600 hover:bg-gray-50 border-transparent'"
-                            class="w-full text-left px-4 py-3 rounded-lg border font-medium flex items-center gap-3 transition-all duration-200">
+                            :class="activePlugin === {{ $plugin->id }} ? 'bg-blue-50 text-blue-700 border-blue-200 shadow-sm' : 'text-gray-600 hover:bg-gray-50 border-gray-100'"
+                            class="min-w-[280px] text-left px-4 py-3 rounded-lg border font-medium flex items-center gap-3 transition-all duration-200 snap-start shrink-0">
                             <div class="w-10 h-10 rounded flex items-center justify-center text-xl shrink-0 transition-colors"
                                 :class="activePlugin === {{ $plugin->id }} ? 'bg-white text-blue-600 shadow-sm border border-blue-100' : 'bg-gray-50 text-gray-400'">
                                 <i class="{{ str_contains(strtolower($plugin->product_name), 'chatbot') ? 'ri-robot-2-line' : 'ri-bar-chart-box-line' }}"></i>
@@ -57,18 +58,15 @@
                                 <div class="ml-auto flex items-center justify-center w-5 h-5 rounded-full bg-red-100 text-red-600" title="Dinonaktifkan">
                                     <i class="ri-close-line text-xs"></i>
                                 </div>
-                            @else
-                                <div class="ml-auto" x-show="activePlugin === {{ $plugin->id }}">
-                                    <i class="ri-arrow-right-s-line text-blue-400 text-lg"></i>
-                                </div>
                             @endif
                         </button>
                     @endforeach
+                    </div>
                 </div>
             </div>
 
             <!-- Content Area -->
-            <div class="lg:w-2/3 xl:w-3/4">
+            <div class="w-full">
                 @foreach($plugins as $plugin)
                     @php
                         $config = $plugin->configuration ?? [];
