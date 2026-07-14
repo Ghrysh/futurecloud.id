@@ -145,7 +145,7 @@
                                     @if($isChatbot)
                                         <!-- SETTINGS TAB -->
                                         <div x-show="tab === 'settings'" class="p-8">
-                                            <form action="{{ route('plugin.chatbot.update', $plugin->id) }}" method="POST" class="max-w-2xl bg-gray-50 p-6 rounded-xl border border-gray-100">
+                                            <form action="{{ route('client.plugin.chatbot.update', $plugin->id) }}" method="POST" class="max-w-2xl bg-gray-50 p-6 rounded-xl border border-gray-100">
                                                 @csrf
                                                 @method('PUT')
                                                 <h4 class="text-lg font-bold text-gray-800 mb-4">Penyesuaian Widget</h4>
