@@ -197,6 +197,7 @@ Route::middleware('auth')->prefix('client-area')->name('client.')->group(functio
     Route::get('/ssl', [ClientAreaController::class, 'showProduct'])->defaults('type', 'ssl')->name('ssl');
     Route::get('/plugin', [ClientAreaController::class, 'plugins'])->name('plugin');
     Route::get('/plugin/manage', [ClientAreaController::class, 'managePlugins'])->name('plugin.manage');
+    Route::post('/plugin/{id}/reset', [ClientAreaController::class, 'resetPluginData'])->name('plugin.reset');
     Route::put('/plugin/chatbot/{id}', [ClientAreaController::class, 'updateChatbotPlugin'])->name('plugin.chatbot.update');
     Route::get('/aws', [ClientAreaController::class, 'showProduct'])->defaults('type', 'aws')->name('aws');
     Route::get('/license', [ClientAreaController::class, 'showProduct'])->defaults('type', 'license')->name('license');

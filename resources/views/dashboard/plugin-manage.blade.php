@@ -122,22 +122,33 @@
                                 </div>
                             @else
                                 <!-- TABS HEADER -->
-                                <div class="flex border-b border-gray-100 px-6 bg-white overflow-x-auto">
-                                    @if($isChatbot)
-                                        <button @click="tab = 'settings'" class="px-5 py-3.5 text-sm font-medium border-b-2 whitespace-nowrap transition-colors" :class="tab === 'settings' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'">
-                                            <i class="ri-settings-3-line mr-1.5"></i> Pengaturan Bot
-                                        </button>
-                                        <button @click="tab = 'chatbot'" class="px-5 py-3.5 text-sm font-medium border-b-2 whitespace-nowrap transition-colors" :class="tab === 'chatbot' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'">
-                                            <i class="ri-robot-line mr-1.5"></i> Manajemen Pengetahuan
-                                        </button>
-                                        <button @click="tab = 'livechat'" class="px-5 py-3.5 text-sm font-medium border-b-2 whitespace-nowrap transition-colors" :class="tab === 'livechat' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'">
-                                            <i class="ri-customer-service-2-line mr-1.5"></i> Live Chat
-                                        </button>
-                                    @else
-                                        <button @click="tab = 'dashboard'" class="px-5 py-3.5 text-sm font-medium border-b-2 whitespace-nowrap transition-colors" :class="tab === 'dashboard' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'">
-                                            <i class="ri-dashboard-line mr-1.5"></i> Dashboard Analytics
-                                        </button>
-                                    @endif
+                                <div class="flex justify-between items-center border-b border-gray-100 px-6 bg-white overflow-x-auto">
+                                    <div class="flex">
+                                        @if($isChatbot)
+                                            <button @click="tab = 'settings'" class="px-5 py-3.5 text-sm font-medium border-b-2 whitespace-nowrap transition-colors" :class="tab === 'settings' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'">
+                                                <i class="ri-settings-3-line mr-1.5"></i> Pengaturan Bot
+                                            </button>
+                                            <button @click="tab = 'chatbot'" class="px-5 py-3.5 text-sm font-medium border-b-2 whitespace-nowrap transition-colors" :class="tab === 'chatbot' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'">
+                                                <i class="ri-robot-line mr-1.5"></i> Manajemen Pengetahuan
+                                            </button>
+                                            <button @click="tab = 'livechat'" class="px-5 py-3.5 text-sm font-medium border-b-2 whitespace-nowrap transition-colors" :class="tab === 'livechat' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'">
+                                                <i class="ri-customer-service-2-line mr-1.5"></i> Live Chat
+                                            </button>
+                                        @else
+                                            <button @click="tab = 'dashboard'" class="px-5 py-3.5 text-sm font-medium border-b-2 whitespace-nowrap transition-colors" :class="tab === 'dashboard' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'">
+                                                <i class="ri-dashboard-line mr-1.5"></i> Dashboard Analytics
+                                            </button>
+                                        @endif
+                                    </div>
+                                    
+                                    <div class="shrink-0 ml-4 py-2">
+                                        <form action="{{ route('client.plugin.reset', $plugin->id) }}" method="POST" onsubmit="return confirm('Peringatan: Aksi ini akan menghapus semua data (Analitik/Leads) secara permanen. Apakah Anda yakin ingin mereset data?');">
+                                            @csrf
+                                            <button type="submit" class="px-3 py-1.5 bg-red-50 text-red-600 hover:bg-red-100 rounded text-xs font-semibold flex items-center gap-1 transition">
+                                                <i class="ri-delete-bin-line"></i> Reset Data
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
 
                                 <!-- TABS CONTENT -->

@@ -307,4 +307,39 @@ class ClientAreaController extends Controller implements HasMiddleware
 
         return back()->with('error', 'Lisensi tidak ditemukan.');
     }
+
+    public function resetPluginData(Request $request, $id)
+    {
+        $plugin = OrderItem::whereHas('order', function($q) {
+            $q->where('user_id', Auth::id())->where('status', 'paid');
+        })->where('id', $id)->firstOrFail();
+
+        $config = $plugin->configuration ?? [];
+        if(is_string($config)) {
+            $config = json_decode($config, true) ?? [];
+        }
+        $licenseKey = $config['license_key'] ?? null;
+
+        if ($licenseKey) {
+            $isChatbot = str_contains(strtolower($plugin->product_name), 'chatbot');
+            $apiUrl = $isChatbot ? env('CHATBOT_API_URL', 'http://localhost:8081') : env('MONITORING_API_URL', 'http://localhost:8080');
+
+            try {
+                $response = \Illuminate\Support\Facades\Http::post($apiUrl . '/api/v1/license/reset', [
+                    'license_key' => $licenseKey,
+                ]);
+
+                if ($response->successful()) {
+                    return back()->with('success', 'Data plugin berhasil direset.');
+                } else {
+                    return back()->with('error', 'Gagal mereset data plugin (API Response: ' . $response->status() . ').');
+                }
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error("Gagal reset data plugin {$licenseKey}: " . $e->getMessage());
+                return back()->with('error', 'Gagal menghubungi server plugin.');
+            }
+        }
+
+        return back()->with('error', 'Lisensi tidak ditemukan.');
+    }
 }
