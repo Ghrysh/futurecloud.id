@@ -39,6 +39,7 @@
                             }
                             $licenseKey = $config['license_key'] ?? null;
                             $pluginData = $plugin->plugin_data ?? null;
+                            $isInstalled = $pluginData && $pluginData->is_installed;
                             $isActive = $pluginData && $pluginData->status === 'active';
                         @endphp
                         <button @click="activePlugin = {{ $plugin->id }}"
