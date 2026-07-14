@@ -238,6 +238,7 @@ public function store(Request $request)
     public function pluginInstalledWebhook(Request $request)
     {
         $licenseKey = $request->license_key;
+        \Illuminate\Support\Facades\Log::info("Webhook plugin installed called with license: " . $licenseKey);
         if (!$licenseKey) return response()->json(['status' => 'error'], 400);
         
         // Cari order item yang punya config json dengan license_key ini
