@@ -263,7 +263,7 @@ class ClientAreaController extends Controller implements HasMiddleware
         return view('dashboard.plugin-manage', compact('plugins'));
     }
 
-    public function updateChatbotSettings(Request $request, $id)
+    public function updateChatbotPlugin(Request $request, $id)
     {
         $request->validate([
             'bot_name' => 'required|string|max:255',
