@@ -242,7 +242,7 @@ public function store(Request $request)
         if (!$licenseKey) return response()->json(['status' => 'error'], 400);
         
         // Cari order item yang punya config json dengan license_key ini
-        $items = \App\Models\OrderItem::where('product_name', 'like', '%Plugin%')->get();
+        $items = \App\Models\OrderItem::whereNotNull('configuration')->get();
         foreach ($items as $item) {
             $config = $item->configuration ?? [];
             
