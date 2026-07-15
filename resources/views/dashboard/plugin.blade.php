@@ -154,8 +154,8 @@
                                         <h5 class="text-sm font-semibold text-gray-700">Perintah Utilitas Lainnya</h5>
                                     </div>
                                     <div class="ml-7 bg-white border border-gray-200 p-3 rounded-lg font-mono text-xs text-gray-600 space-y-2">
-                                        <p><span class="text-gray-400 inline-block w-20">Cek Versi:</span> futurecloud-{{ $cliCommand }} --version</p>
-                                        <p><span class="text-gray-400 inline-block w-20">Bantuan:</span> futurecloud-{{ $cliCommand }} --help</p>
+                                        <p><span class="text-gray-400 inline-block w-20">Cek Versi:</span> npx futurecloud-{{ $cliCommand }}-cli@latest --version</p>
+                                        <p><span class="text-gray-400 inline-block w-20">Bantuan:</span> npx futurecloud-{{ $cliCommand }}-cli@latest --help</p>
                                     </div>
                                 </div>
                             </div>
