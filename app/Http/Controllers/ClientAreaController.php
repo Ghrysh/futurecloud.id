@@ -210,8 +210,14 @@ class ClientAreaController extends Controller implements HasMiddleware
 
         foreach ($plugins as $plugin) {
             $config = $plugin->configuration ?? [];
-            if(is_string($config)) {
-                $config = json_decode($config, true) ?? [];
+            // Fix for double/triple encoded JSON strings
+            while (is_string($config)) {
+                $decoded = json_decode($config, true);
+                if (json_last_error() === JSON_ERROR_NONE && (is_array($decoded) || is_object($decoded))) {
+                    $config = $decoded;
+                } else {
+                    break;
+                }
             }
             $licenseKey = $config['license_key'] ?? null;
             
@@ -244,8 +250,14 @@ class ClientAreaController extends Controller implements HasMiddleware
         // Load plugin data from local config
         foreach ($plugins as $plugin) {
             $config = $plugin->configuration ?? [];
-            if(is_string($config)) {
-                $config = json_decode($config, true) ?? [];
+            // Fix for double/triple encoded JSON strings
+            while (is_string($config)) {
+                $decoded = json_decode($config, true);
+                if (json_last_error() === JSON_ERROR_NONE && (is_array($decoded) || is_object($decoded))) {
+                    $config = $decoded;
+                } else {
+                    break;
+                }
             }
             $licenseKey = $config['license_key'] ?? null;
             
@@ -275,8 +287,14 @@ class ClientAreaController extends Controller implements HasMiddleware
         })->where('id', $id)->firstOrFail();
 
         $config = $plugin->configuration ?? [];
-        if(is_string($config)) {
-            $config = json_decode($config, true) ?? [];
+        // Fix for double/triple encoded JSON strings
+        while (is_string($config)) {
+            $decoded = json_decode($config, true);
+            if (json_last_error() === JSON_ERROR_NONE && (is_array($decoded) || is_object($decoded))) {
+                $config = $decoded;
+            } else {
+                break;
+            }
         }
         $licenseKey = $config['license_key'] ?? null;
 
@@ -299,7 +317,7 @@ class ClientAreaController extends Controller implements HasMiddleware
             // Simpan lokal di configuration
             $config['bot_name'] = $request->bot_name;
             $config['bot_color'] = $request->bot_color;
-            $plugin->configuration = json_encode($config);
+            $plugin->configuration = $config;
             $plugin->save();
             
             return back()->with('success', 'Pengaturan Chatbot berhasil disimpan.');
@@ -315,8 +333,14 @@ class ClientAreaController extends Controller implements HasMiddleware
         })->where('id', $id)->firstOrFail();
 
         $config = $plugin->configuration ?? [];
-        if(is_string($config)) {
-            $config = json_decode($config, true) ?? [];
+        // Fix for double/triple encoded JSON strings
+        while (is_string($config)) {
+            $decoded = json_decode($config, true);
+            if (json_last_error() === JSON_ERROR_NONE && (is_array($decoded) || is_object($decoded))) {
+                $config = $decoded;
+            } else {
+                break;
+            }
         }
         $licenseKey = $config['license_key'] ?? null;
 
