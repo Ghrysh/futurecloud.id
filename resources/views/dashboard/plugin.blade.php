@@ -128,8 +128,8 @@
                                     <div class="bg-gray-900 text-gray-200 p-3.5 rounded-lg font-mono text-sm leading-relaxed shadow-inner">
                                         <p class="text-gray-500 text-xs mb-1"># Perintah Instalasi 1-Baris dengan NPX:</p>
                                         <div class="flex justify-between items-center group">
-                                            <span>npx --package=futurecloud-{{ $cliCommand }}-cli@latest futurecloud-{{ $cliCommand }} install</span>
-                                            <button class="text-gray-500 hover:text-white opacity-0 group-hover:opacity-100 transition" onclick="copyToClipboard('npx --package=futurecloud-{{ $cliCommand }}-cli@latest futurecloud-{{ $cliCommand }} install', 'Perintah berhasil disalin!')"><i class="ri-file-copy-line"></i></button>
+                                            <span>npx futurecloud-{{ $cliCommand }}-cli@latest install</span>
+                                            <button class="text-gray-500 hover:text-white opacity-0 group-hover:opacity-100 transition" onclick="copyToClipboard('npx futurecloud-{{ $cliCommand }}-cli@latest install', 'Perintah berhasil disalin!')"><i class="ri-file-copy-line"></i></button>
                                         </div>
                                     </div>
                                 </div>
