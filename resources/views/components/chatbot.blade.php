@@ -1,4 +1,4 @@
-<div x-data="chatbot()" class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[999] font-sans">
+<div x-data="chatbot()" class="fixed bottom-6 right-6 sm:bottom-8 sm:right-10 z-[999] font-sans">
     
     <button @click="toggleChat()" :class="isOpen ? 'scale-0 opacity-0' : 'scale-100 opacity-100'" 
         class="w-14 h-14 bg-gradient-to-r from-blue-500 to-blue-700 rounded-full shadow-2xl flex items-center justify-center text-white hover:scale-110 hover:shadow-blue-300 transition-all duration-300 absolute bottom-0 right-0">

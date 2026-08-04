@@ -38,8 +38,8 @@
         </div>
 
         <!-- Right Side: Form -->
-        <div class="w-full lg:w-1/2 flex flex-col justify-center py-12 px-6 sm:px-16 lg:px-24">
-            <div class="w-full max-w-md mx-auto">
+        <div class="w-full lg:w-1/2 flex flex-col justify-center py-12 px-6 sm:px-16 lg:px-24 bg-white">
+            <div class="w-full max-w-lg mx-auto">
                 <!-- Logo -->
                 <div class="text-center sm:text-left mb-8 flex justify-center sm:justify-start">
                     <a href="/" class="inline-flex items-center gap-3 hover:opacity-80 transition-opacity">
@@ -49,7 +49,7 @@
                 </div>
 
                 <!-- Form Container -->
-                <div class="bg-white sm:shadow-xl sm:shadow-gray-200/50 sm:border sm:border-gray-100 rounded-2xl p-6 sm:p-10">
+                <div class="w-full">
                     {{ $slot }}
                 </div>
             </div>
