@@ -37,7 +37,7 @@ class SocialAuthController extends Controller
     public function callback($provider)
     {
         try {
-            $socialUser = Socialite::driver($provider)->user();
+            $socialUser = Socialite::driver($provider)->stateless()->user();
 
             $user = User::where($provider . '_id', $socialUser->getId())
                         ->orWhere('email', $socialUser->getEmail())
@@ -77,7 +77,7 @@ class SocialAuthController extends Controller
                     'last_name' => $lastName,
                     'name' => $fullName,
                     'email' => $socialUser->getEmail(),
-                    'password' => Hash::make(Str::random(24)), // Password acak
+                    'password' => null, // Password belum diset (agar bisa di-set saat lupa password)
                     $provider . '_id' => $socialUser->getId(),
                     'avatar' => $socialUser->getAvatar(),
                     'email_verified_at' => now(),

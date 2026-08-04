@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-split-auth-layout image="assets/login.png">
     {{-- Load Remix Icon --}}
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 
@@ -7,33 +7,8 @@
             font-family: 'Poppins', sans-serif;
         }
 
-        /* Background halaman */
-        body {
-            background-color: #f3f4f6;
-        }
-
-        .login-card {
-            background: white;
-            width: 100%;
-            max-width: 480px;
-            /* Sedikit lebih lebar dari login karena ada 2 kolom nama */
-            border-radius: 16px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-
-        /* Logo kotak biru */
         .fcloud-logo-box {
-            background-color: #2563eb;
-            border-radius: 10px;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 22px;
-            font-weight: 700;
-            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
+            display: none;
         }
 
         /* Input fields styling container */
@@ -219,18 +194,13 @@
         }
     </style>
 
-    <div class="login-card-wrapper font-poppins">
+    <div class="font-poppins">
 
-        <div class="login-card p-6 sm:p-10">
-            <!-- Logo dan Judul -->
+        <div>
+            <!-- Judul -->
             <div class="mb-8 sm:text-left">
-                <a href="{{ url('/') }}"
-                    class="inline-flex items-center gap-3 mb-6 justify-center sm:justify-start">
-                    <div class="fcloud-logo-box">F</div>
-                    <span class="font-bold text-2xl text-gray-900 tracking-tight">FutureCloud</span>
-                </a>
-                <h1 class="text-2xl font-bold text-gray-900">Create an account</h1>
-                <p class="text-sm text-gray-500 mt-2 mb-6">Enter your information to get started.</p>
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Create an account</h1>
+                <p class="text-base text-gray-500">Enter your information to get started.</p>
             </div>
 
             <form method="POST" action="{{ route('register') }}">
@@ -391,4 +361,4 @@
             setupPasswordToggle('toggleConfirmPassword', 'password_confirmation');
         });
     </script>
-</x-guest-layout>
+</x-split-auth-layout>

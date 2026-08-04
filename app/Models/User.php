@@ -80,4 +80,19 @@ class User extends Authenticatable
         // Parameter 'd=mp' artinya: Default = Mystery Person (Siluet User)
         return "https://www.gravatar.com/avatar/{$hash}?s=200&d=mp";
     }
+
+    /**
+     * Send the password reset notification.
+     *
+     * @param  string  $token
+     * @return void
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        if (is_null($this->password)) {
+            $this->notify(new \App\Notifications\SetAccountNotification($token));
+        } else {
+            $this->notify(new \Illuminate\Auth\Notifications\ResetPassword($token));
+        }
+    }
 }

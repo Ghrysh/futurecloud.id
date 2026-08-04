@@ -20,7 +20,13 @@ class NewPasswordController extends Controller
      */
     public function create(Request $request): View
     {
-        return view('auth.reset-password', ['request' => $request]);
+        $user = User::where('email', $request->email)->first();
+        $isGoogleUser = $user && !empty($user->google_id);
+
+        return view('auth.reset-password', [
+            'request' => $request,
+            'isGoogleUser' => $isGoogleUser
+        ]);
     }
 
     /**
@@ -30,11 +36,20 @@ class NewPasswordController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
+        $rules = [
             'token' => ['required'],
             'email' => ['required', 'email'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+        ];
+
+        $user = User::where('email', $request->email)->first();
+        if ($user && !empty($user->google_id)) {
+            $rules['username'] = ['required', 'string', 'max:255', 'unique:users,username,'.$user->id];
+            $rules['first_name'] = ['required', 'string', 'max:255'];
+            $rules['last_name'] = ['required', 'string', 'max:255'];
+        }
+
+        $request->validate($rules);
 
         // Here we will attempt to reset the user's password. If it is successful we
         // will update the password on an actual user model and persist it to the
@@ -42,10 +57,24 @@ class NewPasswordController extends Controller
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function (User $user) use ($request) {
-                $user->forceFill([
+                $fillData = [
                     'password' => Hash::make($request->password),
                     'remember_token' => Str::random(60),
-                ])->save();
+                ];
+
+                if (!empty($user->google_id)) {
+                    if ($request->filled('username')) {
+                        $fillData['username'] = $request->username;
+                    }
+                    if ($request->filled('first_name')) {
+                        $fillData['first_name'] = $request->first_name;
+                    }
+                    if ($request->filled('last_name')) {
+                        $fillData['last_name'] = $request->last_name;
+                    }
+                }
+
+                $user->forceFill($fillData)->save();
 
                 event(new PasswordReset($user));
             }

@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-split-auth-layout image="assets/login.png">
     {{-- Load Remix Icon --}}
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 
@@ -13,17 +13,7 @@
         }
 
         .fcloud-logo-box {
-            background-color: #2563eb;
-            border-radius: 10px;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 22px;
-            font-weight: 700;
-            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
+            display: none;
         }
 
         .input-with-icon {
@@ -171,17 +161,12 @@
         }
     </style>
 
-    <div class="login-card-wrapper font-poppins">
-        <div class="login-card p-6 sm:p-10">
-            <!-- Logo dan Judul -->
+    <div class="font-poppins">
+        <div>
+            <!-- Judul -->
             <div class="mb-8 sm:text-left">
-                <a href="{{ url('/') }}"
-                    class="inline-flex items-center gap-3 mb-6 justify-center sm:justify-start">
-                    <div class="fcloud-logo-box">F</div>
-                    <span class="font-bold text-2xl text-gray-900 tracking-tight ml-4">FutureCloud</span>
-                </a>
-                <h1 class="text-2xl font-bold text-gray-900">Welcome Back!</h1>
-                <p class="text-sm text-gray-500 mt-2 mb-6">Please enter your details to sign in.</p>
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Welcome Back!</h1>
+                <p class="text-base text-gray-500">Please enter your details to sign in.</p>
             </div>
 
             <!-- Session Status -->
@@ -300,4 +285,4 @@
             }
         });
     </script>
-</x-guest-layout>
+</x-split-auth-layout>

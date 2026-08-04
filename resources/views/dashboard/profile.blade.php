@@ -97,7 +97,61 @@
             </div>
         </div>
 
-        <!-- CARD 2: Hapus Akun (Danger Zone) -->
+        <!-- CARD 2: PASSWORD -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-6 border-b border-gray-100 bg-gray-50/50 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
+                    <i class="ri-lock-password-line text-xl"></i>
+                </div>
+                <div>
+                    @if(is_null(Auth::user()->password))
+                        <h3 class="font-bold text-gray-800">Set Password</h3>
+                        <p class="text-xs text-gray-500">Atur password agar dapat login menggunakan email dan password.</p>
+                    @else
+                        <h3 class="font-bold text-gray-800">Ubah Password</h3>
+                        <p class="text-xs text-gray-500">Pastikan akun Anda menggunakan password yang panjang dan aman.</p>
+                    @endif
+                </div>
+            </div>
+            
+            <div class="p-6 md:p-8">
+                <form method="post" action="{{ route('password.update') }}" class="max-w-xl space-y-5">
+                    @csrf
+                    @method('put')
+
+                    @if(!is_null(Auth::user()->password))
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
+                            <input type="password" name="current_password" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm">
+                            @error('current_password', 'updatePassword') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
+                        </div>
+                    @endif
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+                        <input type="password" name="password" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm">
+                        @error('password', 'updatePassword') <span class="text-red-500 text-xs mt-1 block">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+                        <input type="password" name="password_confirmation" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-sm">
+                    </div>
+
+                    <div class="pt-2 flex items-center gap-4">
+                        <button type="submit" class="px-6 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition shadow-sm">
+                            Simpan Password
+                        </button>
+                        
+                        @if (session('status') === 'password-updated')
+                            <p class="text-sm text-green-600 font-medium">Password berhasil disimpan.</p>
+                        @endif
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- CARD 3: Hapus Akun (Danger Zone) -->
         <div class="bg-white rounded-xl shadow-sm border border-red-100 overflow-hidden">
             <div class="p-6 border-b border-red-50 bg-red-50/30 flex items-center gap-3">
                 <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600">
