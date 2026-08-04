@@ -9,7 +9,7 @@
         /* CSS Khusus untuk menimpa style bawaan */
         
         /* Input Fields Normal */
-        input[type="text"] {
+        input[type="text"], input[type="password"] {
             border: 1px solid #e5e7eb;
             border-radius: 0.5rem;
             padding: 0.625rem 1rem;
@@ -19,7 +19,7 @@
             background-color: #ffffff;
         }
 
-        input[type="text"]:focus {
+        input[type="text"]:focus, input[type="password"]:focus {
             border-color: #2563eb;
             box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
             outline: none;
