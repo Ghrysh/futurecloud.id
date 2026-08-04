@@ -117,7 +117,7 @@
                             <div class="bg-slate-50 border border-slate-100 rounded-xl p-3.5 shadow-sm">
                                 <div class="flex justify-between items-start mb-1.5 gap-2">
                                     <span class="font-bold text-blue-700 text-sm break-all leading-tight" x-text="step.path === '/' ? '/ (Home)' : step.path"></span>
-                                    <span class="text-xs font-bold text-slate-500 bg-white border border-slate-200 px-2 py-0.5 rounded-md whitespace-nowrap shadow-sm" x-text="step.time"></span>
+                                    <span class="text-xs font-bold text-slate-500 bg-white border border-slate-200 px-2 py-0.5 rounded-md whitespace-nowrap shadow-sm" x-text="window.formatLocalTime(step.time)"></span>
                                 </div>
                                 <p class="text-xs text-slate-400 font-medium uppercase tracking-wider">Langkah ke-<span x-text="index + 1"></span></p>
                             </div>
@@ -167,6 +167,15 @@
             });
         }
     });
+
+    window.formatLocalTime = function(timeStr) {
+        if(!timeStr) return '';
+        var parts = timeStr.split(':');
+        if(parts.length < 2) return timeStr;
+        var d = new Date();
+        d.setUTCHours(parseInt(parts[0], 10), parseInt(parts[1], 10), 0, 0);
+        return d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0');
+    };
 
     // Jalankan konversi waktu lokal terpisah agar tidak terganggu jika Chart.js gagal dimuat
     document.addEventListener('DOMContentLoaded', function() {
