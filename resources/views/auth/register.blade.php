@@ -199,8 +199,8 @@
         <div>
             <!-- Judul -->
             <div class="mb-8 sm:text-left">
-                <h1 class="text-3xl font-bold text-gray-900 mb-2">Create an account</h1>
-                <p class="text-base text-gray-500">Enter your information to get started.</p>
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Buat Akun</h1>
+                <p class="text-base text-gray-500">Masukkan informasi Anda untuk memulai.</p>
             </div>
 
             <form method="POST" action="{{ route('register') }}">
@@ -221,39 +221,39 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                     <!-- First Name -->
                     <div>
-                        <label for="first_name">First Name</label>
+                        <label for="first_name">Nama Depan</label>
                         <input id="first_name" class="no-icon" type="text" name="first_name"
-                            value="{{ old('first_name') }}" required placeholder="John" />
+                            value="{{ old('first_name') }}" required placeholder="Budi" />
                         <x-input-error :messages="$errors->get('first_name')" class="mt-2 text-xs text-red-500" />
                     </div>
 
                     <!-- Last Name -->
                     <div>
-                        <label for="last_name">Last Name</label>
+                        <label for="last_name">Nama Belakang</label>
                         <input id="last_name" class="no-icon" type="text" name="last_name"
-                            value="{{ old('last_name') }}" required placeholder="Doe" />
+                            value="{{ old('last_name') }}" required placeholder="Santoso" />
                         <x-input-error :messages="$errors->get('last_name')" class="mt-2 text-xs text-red-500" />
                     </div>
                 </div>
 
                 <!-- Email Address -->
                 <div class="mb-4">
-                    <label for="email">Email Address</label>
+                    <label for="email">Alamat Email</label>
                     <div class="input-with-icon">
                         <i class="ri-mail-line input-icon-left"></i>
                         <input id="email" type="email" name="email" value="{{ old('email') }}" required
-                            placeholder="name@example.com" />
+                            placeholder="nama@contoh.com" />
                     </div>
                     <x-input-error :messages="$errors->get('email')" class="mt-2 text-xs text-red-500" />
                 </div>
 
                 <!-- Password -->
                 <div class="mb-4">
-                    <label for="password">Password</label>
+                    <label for="password">Kata Sandi</label>
                     <div class="input-with-icon">
                         <i class="ri-lock-2-line input-icon-left"></i>
                         <input id="password" type="password" name="password" required autocomplete="new-password"
-                            placeholder="Create a strong password" />
+                            placeholder="Buat kata sandi yang kuat" />
                         <i id="togglePassword" class="ri-eye-off-line input-icon-right"></i>
                     </div>
                     <x-input-error :messages="$errors->get('password')" class="mt-2 text-xs text-red-500" />
@@ -261,11 +261,11 @@
 
                 <!-- Confirm Password -->
                 <div class="mb-6">
-                    <label for="password_confirmation">Confirm Password</label>
+                    <label for="password_confirmation">Konfirmasi Kata Sandi</label>
                     <div class="input-with-icon">
                         <i class="ri-lock-2-line input-icon-left"></i>
                         <input id="password_confirmation" type="password" name="password_confirmation" required
-                            placeholder="Repeat password" />
+                            placeholder="Ulangi kata sandi" />
                         <i id="toggleConfirmPassword" class="ri-eye-off-line input-icon-right"></i>
                     </div>
                 </div>
@@ -275,23 +275,23 @@
                     <label for="terms_agreed" class="inline-flex items-start gap-3 cursor-pointer group">
                         <input id="terms_agreed" type="checkbox" name="terms_agreed" required class="mt-1">
                         <span class="terms-label text-gray-600 group-hover:text-gray-800 transition">
-                            I agree to the <a href="#"
-                                class="text-blue-600 hover:text-blue-700 font-semibold hover:underline">Terms of
-                                Service</a> and <a href="#"
-                                class="text-blue-600 hover:text-blue-700 font-semibold hover:underline">Privacy
-                                Policy</a>
+                            Saya setuju dengan <a href="#"
+                                class="text-blue-600 hover:text-blue-700 font-semibold hover:underline">Syarat
+                                Layanan</a> dan <a href="#"
+                                class="text-blue-600 hover:text-blue-700 font-semibold hover:underline">Kebijakan
+                                Privasi</a>
                         </span>
                     </label>
                 </div>
 
                 <!-- Submit Button -->
                 <button type="submit" class="btn-create-account">
-                    Create Account
+                    Buat Akun
                 </button>
             </form>
 
             <!-- Social Login Divider -->
-            <div class="divider">OR SIGN UP WITH</div>
+            <div class="divider">ATAU DAFTAR DENGAN</div>
 
             <!-- Social Buttons -->
             <div>
@@ -310,15 +310,15 @@
                             d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                             fill="#EA4335" />
                     </svg>
-                    <span>Sign up with Google</span>
+                    <span>Daftar dengan Google</span>
                 </a>
             </div>
 
             <!-- Sign in link -->
             <div class="text-center mt-8 text-sm text-gray-600">
-                Already have an account?
+                Sudah punya akun?
                 <a href="{{ route('login') }}" class="text-blue-600 font-bold hover:text-blue-700 hover:underline">
-                    Sign in
+                    Masuk
                 </a>
             </div>
 
@@ -326,7 +326,7 @@
             <div class="text-center mt-4">
                 <a href="{{ url('/') }}"
                     class="text-xs text-gray-400 hover:text-gray-600 transition flex items-center justify-center gap-1">
-                    <i class="ri-arrow-left-line"></i> Back to Homepage
+                    <i class="ri-arrow-left-line"></i> Kembali ke Beranda
                 </a>
             </div>
         </div>

@@ -60,16 +60,15 @@
 
             <span
                 class="inline-flex items-center gap-2 text-[13px] font-semibold text-blue-600 bg-blue-100 px-3.5 py-1.5 rounded-full mb-6 shadow-sm">
-                Our Services
+                Layanan Kami
             </span>
 
             <h1 class="text-4xl md:text-5xl lg:text-[54px] font-extrabold mt-2 text-gray-900 leading-[1.15] tracking-tight">
-                Comprehensive <br> <span class="text-blue-600">IT Solutions</span>
+                Solusi IT <br> <span class="text-blue-600">Komprehensif</span>
             </h1>
 
             <p class="mt-6 text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-                From cloud infrastructure to custom development and strategic consulting, we provide everything you need for
-                your digital transformation journey.
+                Dari infrastruktur cloud hingga pengembangan khusus dan konsultasi strategis, kami menyediakan semua yang Anda butuhkan untuk perjalanan transformasi digital Anda.
             </p>
 
         </div>
@@ -102,81 +101,81 @@
                 $cards = [
                     [
                         'icon' => 'ri-cloud-line',
-                        'title' => 'Cloud Services',
-                        'desc' => 'Complete cloud infrastructure for your hosting and application needs',
+                        'title' => 'Layanan Cloud',
+                        'desc' => 'Infrastruktur cloud lengkap untuk kebutuhan hosting dan aplikasi Anda',
                         'link' => '/services/cloud-services',
                         'items' => [
                             [
-                                'title' => 'Domain Registration',
+                                'title' => 'Registrasi Domain',
                                 'detail' =>
-                                    'Register domain with various extensions (.com, .id, .net, etc) and free privacy protection',
+                                    'Daftarkan domain dengan berbagai ekstensi (.com, .id, .net, dll) dan perlindungan privasi gratis',
                             ],
                             [
-                                'title' => 'VPS Hosting',
+                                'title' => 'Hosting VPS',
                                 'detail' =>
-                                    'Virtual Private Server with ultra-fast SSD NVMe, full root access, and flexible scalability',
+                                    'Server Virtual Privat dengan SSD NVMe super cepat, akses root penuh, dan skalabilitas fleksibel',
                             ],
                             [
-                                'title' => 'cPanel Hosting',
-                                'detail' => 'Web hosting with cPanel for easy website, email, and database management',
+                                'title' => 'Hosting cPanel',
+                                'detail' => 'Web hosting dengan cPanel untuk manajemen website, email, dan database yang mudah',
                             ],
                             [
-                                'title' => 'SaaS Platform',
+                                'title' => 'Platform SaaS',
                                 'detail' =>
-                                    'Ready-to-use software-as-a-service solutions with API integration and automatic updates',
+                                    'Solusi perangkat lunak sebagai layanan siap pakai dengan integrasi API dan pembaruan otomatis',
                             ],
                         ],
                     ],
                     [
                         'icon' => 'ri-code-s-slash-line',
-                        'title' => 'Custom Development',
-                        'desc' => 'Custom application development tailored to your specific business needs',
+                        'title' => 'Pengembangan Kustom',
+                        'desc' => 'Pengembangan aplikasi kustom yang disesuaikan dengan kebutuhan bisnis spesifik Anda',
                         'link' => '/services/custom-development',
                         'items' => [
                             [
-                                'title' => 'Mobile App Development',
-                                'detail' => 'Native and hybrid mobile applications for iOS & Android with modern UI/UX',
+                                'title' => 'Pengembangan Aplikasi Mobile',
+                                'detail' => 'Aplikasi seluler native dan hybrid untuk iOS & Android dengan UI/UX modern',
                             ],
                             [
-                                'title' => 'Web Application',
+                                'title' => 'Aplikasi Web',
                                 'detail' =>
-                                    'Progressive web apps, admin dashboards, and custom information systems with cutting-edge technology',
+                                    'Progressive web apps, dasbor admin, dan sistem informasi kustom dengan teknologi mutakhir',
                             ],
                             [
-                                'title' => 'API Development',
-                                'detail' => 'RESTful API and microservices for system integration and high scalability',
+                                'title' => 'Pengembangan API',
+                                'detail' => 'RESTful API dan layanan mikro untuk integrasi sistem dan skalabilitas tinggi',
                             ],
                             [
-                                'title' => 'UI/UX Design',
-                                'detail' => 'Design system, prototyping, and user testing for optimal user experience',
+                                'title' => 'Desain UI/UX',
+                                'detail' => 'Sistem desain, pembuatan prototipe, dan pengujian pengguna untuk pengalaman pengguna yang optimal',
                             ],
                         ],
                     ],
                     [
                         'icon' => 'ri-bar-chart-2-line',
-                        'title' => 'Consulting & Strategy',
-                        'desc' => 'Consulting services for digital transformation and human resource management',
+                        'title' => 'Konsultasi & Strategi',
+                        'desc' => 'Layanan konsultasi untuk transformasi digital dan manajemen sumber daya manusia',
                         'link' => '/services/consulting',
                         'items' => [
                             [
-                                'title' => 'IT/IS Strategy Consulting',
+                                'title' => 'Konsultasi Strategi TI/SI',
                                 'detail' =>
-                                    'Digital transformation roadmap planning, IT infrastructure assessment, and technology stack selection',
+                                    'Perencanaan peta jalan transformasi digital, penilaian infrastruktur TI, dan pemilihan teknologi',
                             ],
                             [
-                                'title' => 'System Integration',
+                                'title' => 'Integrasi Sistem',
                                 'detail' =>
-                                    'Enterprise system integration consulting, migration strategy, and legacy system modernization',
+                                    'Konsultasi integrasi sistem perusahaan, strategi migrasi, dan modernisasi sistem lama',
                             ],
                             [
-                                'title' => 'HC Management – KPI System',
+                                'title' => 'Manajemen HC – Sistem KPI',
                                 'detail' =>
-                                    'Key Performance Indicators system implementation for employee performance evaluation and monitoring',
+                                    'Implementasi sistem Indikator Kinerja Utama untuk evaluasi dan pemantauan kinerja karyawan',
                             ],
                             [
-                                'title' => 'HC Management – OKR Framework',
+                                'title' => 'Manajemen HC – Framework OKR',
                                 'detail' =>
-                                    'Objectives and Key Results implementation for organizational goal alignment and progress tracking',
+                                    'Implementasi Tujuan dan Hasil Utama untuk penyelarasan tujuan organisasi dan pelacakan kemajuan',
                             ],
                         ],
                     ],
@@ -251,11 +250,11 @@
         <div class="max-w-4xl mx-auto text-center">
 
             <h2 class="text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
-                Need Help Choosing the Right Service?
+                Butuh Bantuan Memilih Layanan yang Tepat?
             </h2>
 
             <p class="text-gray-600 mt-4 max-w-xl mx-auto leading-relaxed">
-                Our expert team is ready to help you find the perfect solution for your business needs.
+                Tim ahli kami siap membantu Anda menemukan solusi sempurna untuk kebutuhan bisnis Anda.
             </p>
 
             <div class="flex gap-4 justify-center mt-10 flex-wrap">
@@ -263,7 +262,7 @@
                 <a href="https://wa.me/6281289537549?text=Halo%20Tim%20Sales%20FutureCloud%2C%20saya%20tertarik%20dengan%20layanan%20Anda%20dan%20ingin%20berkonsultasi.%20Terima%20kasih."
                     target="_blank"
                     class="px-7 py-3 bg-blue-600 text-white rounded-lg shadow font-semibold hover:bg-blue-700 transition flex items-center gap-2">
-                    <i class="ri-whatsapp-line text-lg"></i> Contact Sales
+                    <i class="ri-whatsapp-line text-lg"></i> Hubungi Sales
                 </a>
 
             </div>

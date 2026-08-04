@@ -64,19 +64,18 @@
 
                     <ul class="hidden lg:flex items-center gap-6 text-sm font-medium text-gray-600">
                         <li><a href="{{ url('/') }}"
-                                class="hover:text-blue-600 transition-colors {{ request()->is('/') ? 'text-blue-600' : '' }}">Home</a>
+                                class="hover:text-blue-600 transition-colors {{ request()->is('/') ? 'text-blue-600' : '' }}">Beranda</a>
                         </li>
                         <li><a href="{{ url('/catalog') }}"
-                                class="hover:text-blue-600 transition-colors {{ request()->is('catalog') ? 'text-blue-600' : '' }}">Catalog</a>
+                                class="hover:text-blue-600 transition-colors {{ request()->is('catalog') ? 'text-blue-600' : '' }}">Katalog</a>
                         </li>
                         <li><a href="{{ url('/services') }}"
-                                class="hover:text-blue-600 transition-colors {{ request()->is('services') ? 'text-blue-600' : '' }}">Services</a>
+                                class="hover:text-blue-600 transition-colors {{ request()->is('services') ? 'text-blue-600' : '' }}">Layanan</a>
                         </li>
                         <li><a href="{{ url('about-us') }}"
-                                class="hover:text-blue-600 transition-colors {{ request()->is('about-us') ? 'text-blue-600' : '' }}">About
-                                Us</a></li>
+                                class="hover:text-blue-600 transition-colors {{ request()->is('about-us') ? 'text-blue-600' : '' }}">Tentang Kami</a></li>
                         <li><a href="{{ url('/contact') }}"
-                                class="hover:text-blue-600 transition-colors {{ request()->is('contact') ? 'text-blue-600' : '' }}">Contact</a>
+                                class="hover:text-blue-600 transition-colors {{ request()->is('contact') ? 'text-blue-600' : '' }}">Kontak</a>
                         </li>
                         <li><a href="{{ url('/faq') }}"
                                 class="hover:text-blue-600 transition-colors {{ request()->is('faq') ? 'text-blue-600' : '' }}">FAQ</a>
@@ -197,7 +196,7 @@
                                 <a href="{{ route('home') }}"
                                     class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition"><i
                                         class="ri-home-4-line mr-3 text-gray-400 group-hover:text-blue-600 text-lg"></i>
-                                    Home</a>
+                                    Beranda</a>
                                 <a href="{{ route('profile.edit') }}"
                                     class="group flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition"><i
                                         class="ri-user-settings-line mr-3 text-gray-400 group-hover:text-blue-600 text-lg"></i>
@@ -214,7 +213,7 @@
                                         onclick="event.preventDefault(); this.closest('form').submit();"
                                         class="group flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition font-medium"><i
                                             class="ri-logout-box-r-line mr-3 text-red-400 group-hover:text-red-600 text-lg"></i>
-                                        Log Out</a>
+                                        Keluar</a>
                                 </form>
                             </div>
                         </div>
@@ -222,10 +221,9 @@
                         {{-- Guest Desktop --}}
                         <div class="flex items-center gap-4">
                             <a href="{{ route('login') }}"
-                                class="text-sm font-semibold text-gray-600 hover:text-blue-600 transition">Sign In</a>
+                                class="text-sm font-semibold text-gray-600 hover:text-blue-600 transition">Masuk</a>
                             <a href="{{ route('register') }}"
-                                class="px-5 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition shadow-md shadow-blue-200">Get
-                                Started</a>
+                                class="px-5 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition shadow-md shadow-blue-200">Daftar</a>
                         </div>
                     @endauth
                 </div>
@@ -352,7 +350,7 @@
                                         class="group flex items-center px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition font-medium">
                                         <i
                                             class="ri-logout-box-r-line mr-3 text-red-400 group-hover:text-red-600 text-lg"></i>
-                                        Log Out
+                                        Keluar
                                     </a>
                                 </form>
                             </div>
@@ -410,18 +408,17 @@
             class="lg:hidden bg-white border-t border-gray-100 w-full absolute top-20 left-0 shadow-lg h-[calc(100vh-80px)] overflow-y-auto z-40">
             <div class="px-4 pt-4 pb-6 space-y-1">
                 <a href="{{ url('/') }}"
-                    class="block px-3 py-3 rounded-md text-base font-medium {{ request()->is('/') ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50' }}">Home</a>
+                    class="block px-3 py-3 rounded-md text-base font-medium {{ request()->is('/') ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50' }}">Beranda</a>
                 <a href="{{ url('/catalog') }}"
-                    class="block px-3 py-3 rounded-md text-base font-medium {{ request()->is('catalog') ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50' }}">Catalog</a>
+                    class="block px-3 py-3 rounded-md text-base font-medium {{ request()->is('catalog') ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50' }}">Katalog</a>
                 <a href="{{ url('/services') }}"
-                    class="block px-3 py-3 rounded-md text-base font-medium {{ request()->is('services') ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50' }}">Services</a>
+                    class="block px-3 py-3 rounded-md text-base font-medium {{ request()->is('services') ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50' }}">Layanan</a>
                 <a href="{{ url('/#why-choose-us') }}"
-                    class="block px-3 py-3 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50">Solutions</a>
+                    class="block px-3 py-3 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50">Solusi</a>
                 <a href="{{ url('about-us') }}"
-                    class="block px-3 py-3 rounded-md text-base font-medium {{ request()->is('about-us') ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50' }}">About
-                    Us</a>
+                    class="block px-3 py-3 rounded-md text-base font-medium {{ request()->is('about-us') ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50' }}">Tentang Kami</a>
                 <a href="{{ url('/contact') }}"
-                    class="block px-3 py-3 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50">Contact</a>
+                    class="block px-3 py-3 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50">Kontak</a>
                 <a href="{{ url('/faq') }}"
                     class="block px-3 py-3 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50">FAQ</a>
             </div>
@@ -464,35 +461,35 @@
                     </div>
                 </div>
                 <div class="md:col-span-1">
-                    <h4 class="font-bold text-gray-900 mb-4">Company</h4>
+                    <h4 class="font-bold text-gray-900 mb-4">Perusahaan</h4>
                     <ul class="space-y-3 text-sm text-gray-600">
-                        <li><a href="{{ url('about-us') }}" class="hover:text-blue-600">About Us</a></li>
-                        <li><a href="{{ url('contact') }}" class="hover:text-blue-600">Contact</a></li>
+                        <li><a href="{{ url('about-us') }}" class="hover:text-blue-600">Tentang Kami</a></li>
+                        <li><a href="{{ url('contact') }}" class="hover:text-blue-600">Kontak</a></li>
                     </ul>
                 </div>
                 <div class="md:col-span-1">
-                    <h4 class="font-bold text-gray-900 mb-4">Services</h4>
+                    <h4 class="font-bold text-gray-900 mb-4">Layanan</h4>
                     <ul class="space-y-3 text-sm text-gray-600">
-                        <li><a href="{{ url('/service') }}" class="hover:text-blue-600">Cloud Services</a></li>
-                        <li><a href="{{ url('/service') }}" class="hover:text-blue-600">Custom Development</a></li>
-                        <li><a href="{{ url('/service') }}" class="hover:text-blue-600">IT Consulting</a></li>
+                        <li><a href="{{ url('/service') }}" class="hover:text-blue-600">Layanan Cloud</a></li>
+                        <li><a href="{{ url('/service') }}" class="hover:text-blue-600">Pengembangan Kustom</a></li>
+                        <li><a href="{{ url('/service') }}" class="hover:text-blue-600">Konsultasi TI</a></li>
                     </ul>
                 </div>
                 <div class="md:col-span-1">
-                    <h4 class="font-bold text-gray-900 mb-4">Resources</h4>
+                    <h4 class="font-bold text-gray-900 mb-4">Sumber Daya</h4>
                     <ul class="space-y-3 text-sm text-gray-600">
-                        <li><a href="{{ url('/portfolio') }}" class="hover:text-blue-600">Documentation</a></li>
-                        <li><a href="{{ url('/contact') }}" class="hover:text-blue-600">Help Center</a></li>
+                        <li><a href="{{ url('/portfolio') }}" class="hover:text-blue-600">Dokumentasi</a></li>
+                        <li><a href="{{ url('/contact') }}" class="hover:text-blue-600">Pusat Bantuan</a></li>
                         <li><a href="{{ url('/faq') }}" class="hover:text-blue-600">FAQ</a></li>
                     </ul>
                 </div>
             </div>
             <div
                 class="border-t mt-16 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-600">
-                <p>© 2025 FutureCloud.id. All rights reserved.</p>
+                <p>© 2025 FutureCloud.id. Hak cipta dilindungi undang-undang.</p>
                 <div class="flex space-x-6 mt-4 md:mt-0">
-                    <a href="{{ url('/refund-policy') }}" class="hover:text-blue-600">Refund Policy</a>
-                    <a href="{{ url('/terms') }}" class="hover:text-blue-600">Terms of Service</a>
+                    <a href="{{ url('/refund-policy') }}" class="hover:text-blue-600">Kebijakan Pengembalian</a>
+                    <a href="{{ url('/terms') }}" class="hover:text-blue-600">Syarat Layanan</a>
                 </div>
             </div>
         </div>

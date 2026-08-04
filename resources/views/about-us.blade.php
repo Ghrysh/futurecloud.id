@@ -1,6 +1,6 @@
 @extends('layouts.landing')
 
-@section('title', 'About Us - Building the Future of Cloud Technology')
+@section('title', 'Tentang Kami - Membangun Masa Depan Teknologi Cloud')
 
 @section('styles')
 <style>
@@ -22,14 +22,14 @@
         <div class="max-w-4xl mx-auto">
             
             <span class="inline-flex items-center gap-2 text-[10px] md:text-[13px] font-semibold text-blue-600 bg-blue-100 px-3 py-1.5 rounded-full mb-6 shadow-sm">
-                About Us
+                Tentang Kami
             </span>
             
             <h1 class="text-3xl md:text-5xl lg:text-[54px] font-extrabold mt-2 text-gray-900 leading-[1.15] tracking-tight">
-                Building the Future of <br><span class="text-blue-600">Cloud Technology</span>
+                Membangun Masa Depan <br><span class="text-blue-600">Teknologi Cloud</span>
             </h1>
             <p class="mt-6 text-sm md:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed px-2">
-                PT Berkah Teknologi Terdepan (FutureCloud.id) is Indonesia's leading provider of next-generation cloud infrastructure, custom development, and strategic IT consulting services.
+                PT Berkah Teknologi Terdepan (FutureCloud.id) adalah penyedia terkemuka di Indonesia untuk infrastruktur cloud generasi mendatang, pengembangan kustom, dan layanan konsultasi TI strategis.
             </p>
         </div>
     </section>
@@ -53,9 +53,9 @@
                     <i class="ri-target-line"></i>
                 </div>
                 <div>
-                    <h2 class="font-bold text-lg md:text-2xl text-gray-900 mt-1">Our Mission</h2>
+                    <h2 class="font-bold text-lg md:text-2xl text-gray-900 mt-1">Misi Kami</h2>
                     <p class="text-gray-600 text-sm md:text-base mt-2 leading-relaxed">
-                        To empower businesses with cutting-edge cloud technology and innovative solutions that drive digital transformation, enhance operational efficiency, and accelerate growth.
+                        Memberdayakan bisnis dengan teknologi cloud mutakhir dan solusi inovatif yang mendorong transformasi digital, meningkatkan efisiensi operasional, dan mempercepat pertumbuhan.
                     </p>
                 </div>
             </div>
@@ -67,9 +67,9 @@
                     <i class="ri-eye-line"></i>
                 </div>
                 <div>
-                    <h2 class="font-bold text-lg md:text-2xl text-gray-900 mt-1">Our Vision</h2>
+                    <h2 class="font-bold text-lg md:text-2xl text-gray-900 mt-1">Visi Kami</h2>
                     <p class="text-gray-600 text-sm md:text-base mt-2 leading-relaxed">
-                        To be Southeast Asia's most trusted technology partner, recognized for delivering exceptional cloud solutions, fostering innovation, and creating lasting value.
+                        Menjadi mitra teknologi paling tepercaya di Asia Tenggara, dikenal karena memberikan solusi cloud yang luar biasa, mendorong inovasi, dan menciptakan nilai yang bertahan lama.
                     </p>
                 </div>
             </div>
@@ -82,37 +82,37 @@
             
             <div class="border-r border-gray-200 md:border-none p-2">
                 <h3 class="text-3xl md:text-4xl font-extrabold text-blue-600">500+</h3>
-                <p class="text-gray-700 mt-1 text-xs md:text-base font-medium">Projects Delivered</p>
+                <p class="text-gray-700 mt-1 text-xs md:text-base font-medium">Proyek Diselesaikan</p>
             </div>
             <div class="md:border-r md:border-gray-200 p-2"> {{-- Border logic adjusted --}}
                 <h3 class="text-3xl md:text-4xl font-extrabold text-blue-600">98%</h3>
-                <p class="text-gray-700 mt-1 text-xs md:text-base font-medium">Client Satisfaction</p>
+                <p class="text-gray-700 mt-1 text-xs md:text-base font-medium">Kepuasan Klien</p>
             </div>
             <div class="border-r border-gray-200 md:border-none p-2">
                 <h3 class="text-3xl md:text-4xl font-extrabold text-blue-600">50+</h3>
-                <p class="text-gray-700 mt-1 text-xs md:text-base font-medium">Expert Team</p>
+                <p class="text-gray-700 mt-1 text-xs md:text-base font-medium">Tim Ahli</p>
             </div>
             <div class="p-2">
                 <h3 class="text-3xl md:text-4xl font-extrabold text-blue-600">24/7</h3>
-                <p class="text-gray-700 mt-1 text-xs md:text-base font-medium">Support Available</p>
+                <p class="text-gray-700 mt-1 text-xs md:text-base font-medium">Dukungan Tersedia</p>
             </div>
         </div>
     </section>
 
     {{-- 4. Core Values (Grid 2 Kolom Mobile) --}}
     <section class="w-full py-16 md:py-20 px-4 bg-white border-t border-b border-gray-100">
-        <h2 class="text-center text-2xl md:text-3xl font-bold text-gray-900 mb-2">Our Core Values</h2>
-        <p class="text-center text-sm md:text-base text-gray-600 mb-10 md:mb-12">The principles that guide everything we do</p>
+        <h2 class="text-center text-2xl md:text-3xl font-bold text-gray-900 mb-2">Nilai Inti Kami</h2>
+        <p class="text-center text-sm md:text-base text-gray-600 mb-10 md:mb-12">Prinsip-prinsip yang memandu segala yang kami lakukan</p>
 
         <!-- Grid: 2 Kolom Mobile, 4 Kolom Desktop -->
         <div class="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-8">
             
             @php
                 $values = [
-                    ['icon' => 'ri-compasses-line', 'title' => 'Innovation', 'detail' => 'Pushing boundaries to deliver cutting-edge solutions.'],
-                    ['icon' => 'ri-shield-line', 'title' => 'Security', 'detail' => 'Enterprise-grade protection is our top priority.'],
-                    ['icon' => 'ri-group-line', 'title' => 'Success', 'detail' => 'Dedicated support to ensure your business goals.'],
-                    ['icon' => 'ri-medal-line', 'title' => 'Excellence', 'detail' => 'Highest standards in code quality and service.'],
+                    ['icon' => 'ri-compasses-line', 'title' => 'Inovasi', 'detail' => 'Melampaui batas untuk memberikan solusi mutakhir.'],
+                    ['icon' => 'ri-shield-line', 'title' => 'Keamanan', 'detail' => 'Perlindungan tingkat perusahaan adalah prioritas utama kami.'],
+                    ['icon' => 'ri-group-line', 'title' => 'Kesuksesan', 'detail' => 'Dukungan penuh dedikasi untuk memastikan tujuan bisnis Anda.'],
+                    ['icon' => 'ri-medal-line', 'title' => 'Keunggulan', 'detail' => 'Standar tertinggi dalam kualitas kode dan layanan.'],
                 ];
             @endphp
 
@@ -130,16 +130,16 @@
 
     {{-- 5. Our Journey (Timeline Responsive) --}}
     <section class="w-full py-16 md:py-20 px-4 bg-gray-50">
-        <h2 class="text-center text-2xl md:text-3xl font-bold text-gray-900 mb-2">Our Journey</h2>
-        <p class="text-center text-sm md:text-base text-gray-600 mb-10 md:mb-12">Key milestones in our continuous evolution</p>
+        <h2 class="text-center text-2xl md:text-3xl font-bold text-gray-900 mb-2">Perjalanan Kami</h2>
+        <p class="text-center text-sm md:text-base text-gray-600 mb-10 md:mb-12">Pencapaian utama dalam evolusi berkelanjutan kami</p>
 
         @php
             $milestones = [
-                ['year' => 2018, 'title' => 'Founded', 'detail' => 'Established with a vision to revolutionize cloud in Indonesia'],
-                ['year' => 2019, 'title' => 'Partnership', 'detail' => 'Secured partnerships with leading global cloud providers'],
-                ['year' => 2021, 'title' => 'ISO Certified', 'detail' => 'Achieved ISO 27001 for information security management'],
-                ['year' => 2023, 'title' => 'Expansion', 'detail' => 'Expanded operations across Southeast Asia (5 countries)'],
-                ['year' => 2024, 'title' => 'AI Lab', 'detail' => 'Launched dedicated R&D division focusing on AI solutions'],
+                ['year' => 2018, 'title' => 'Didirikan', 'detail' => 'Didirikan dengan visi untuk merevolusi cloud di Indonesia'],
+                ['year' => 2019, 'title' => 'Kemitraan', 'detail' => 'Mengamankan kemitraan dengan penyedia cloud global terkemuka'],
+                ['year' => 2021, 'title' => 'Sertifikasi ISO', 'detail' => 'Meraih ISO 27001 untuk manajemen keamanan informasi'],
+                ['year' => 2023, 'title' => 'Ekspansi', 'detail' => 'Memperluas operasi di seluruh Asia Tenggara (5 negara)'],
+                ['year' => 2024, 'title' => 'Lab AI', 'detail' => 'Meluncurkan divisi R&D khusus yang berfokus pada solusi AI'],
             ];
         @endphp
 
@@ -184,8 +184,8 @@
         <div class="max-w-4xl mx-auto">
             <div class="bg-white p-6 md:p-10 rounded-2xl shadow-xl border border-gray-100 text-center">
 
-                <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Visit Our Office</h2>
-                <p class="text-sm md:text-base text-gray-600 mb-8 md:mb-10">We would love to meet you in person</p>
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Kunjungi Kantor Kami</h2>
+                <p class="text-sm md:text-base text-gray-600 mb-8 md:mb-10">Kami akan sangat senang bertemu Anda secara langsung</p>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 text-left">
                     
@@ -204,7 +204,7 @@
                         <div class="flex items-center gap-3">
                             <i class="ri-phone-line text-lg md:text-xl text-blue-600"></i>
                             <div>
-                                <p class="font-bold text-sm md:text-base text-gray-900">Phone</p>
+                                <p class="font-bold text-sm md:text-base text-gray-900">Telepon</p>
                                 <p class="text-gray-600 text-xs md:text-sm">(+62) 815-2022-225</p>
                             </div>
                         </div>

@@ -84,15 +84,15 @@
             <span
                 class="inline-flex items-center gap-2 bg-white/80 backdrop-blur px-5 py-2 rounded-full shadow-lg text-sm md:text-base font-semibold text-gray-800 animate-fade-in-up">
                 <i class="ri-sparkling-line text-blue-600 text-lg"></i>
-                {{ $hero->tagline ?? 'Next-Generation Cloud Platform' }}
+                {{ $hero->tagline ?? 'Platform Cloud Generasi Baru' }}
             </span>
 
             <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold mt-8 text-gray-900 leading-tight">
-                {!! $hero->title ?? 'Future-Ready Cloud<br /><span class="text-blue-600">Infrastructure & Solutions</span>' !!}
+                {!! $hero->title ?? 'Infrastruktur & Solusi Cloud<br /><span class="text-blue-600">Masa Depan</span>' !!}
             </h1>
 
             <p class="mt-6 text-base md:text-lg text-gray-700 max-w-2xl mx-auto px-2 font-medium">
-                {{ $hero->subtitle ?? 'Empower your business with cutting‑edge cloud technology, custom development, and strategic IT consulting.' }}
+                {{ $hero->subtitle ?? 'Berdayakan bisnis Anda dengan teknologi cloud terdepan, pengembangan kustom, dan konsultasi TI strategis.' }}
             </p>
 
             {{-- SEARCH DOMAIN --}}
@@ -103,7 +103,7 @@
                         <div class="flex items-center pr-3">
                             <i class="ri-search-2-line text-2xl text-gray-500"></i>
                         </div>
-                        <input id="domain-search-input" type="text" placeholder="Search domain... (ex: business.com)"
+                        <input id="domain-search-input" type="text" placeholder="Cari domain... (contoh: bisnis.com)"
                             class="flex-1 outline-none py-2 text-sm w-full placeholder:text-gray-500 text-gray-800 font-medium" />
                     </div>
                     <button id="check-domain-button"
@@ -141,7 +141,7 @@
             <div class="flex flex-col sm:flex-row gap-4 justify-center mt-10 px-4 w-full sm:w-auto relative z-10">
                 <a href="{{ url('/services') }}"
                     class="w-full sm:w-auto px-8 py-3 bg-white/90 backdrop-blur shadow-lg rounded-xl border outline outline-2 outline-blue-600 text-blue-600 font-semibold hover:bg-white transition text-base text-center">
-                    Explore Services
+                    Jelajahi Layanan
                 </a>
             </div>
         </div>
@@ -159,10 +159,10 @@
     </section>
 
     <section class="w-full py-12 md:py-20 bg-gray-50 px-0 md:px-4">
-        <h2 class="text-center text-3xl md:text-4xl font-bold text-gray-900 px-4">Cloud <span
-                class="text-blue-600">Services</span></h2>
+        <h2 class="text-center text-3xl md:text-4xl font-bold text-gray-900 px-4">Layanan <span
+                class="text-blue-600">Cloud</span></h2>
         <p class="text-center text-gray-600 mt-3 max-w-2xl mx-auto px-4">
-            Choose from our comprehensive range of cloud infrastructure and hosting solutions
+            Pilih dari berbagai solusi infrastruktur cloud dan hosting kami
         </p>
 
         <div class="flex justify-center mt-6 md:mt-10">
@@ -315,7 +315,7 @@
                         <i class="ri-server-line text-xl"></i>
                     </div>
                     <h3 class="text-2xl font-bold mt-4">VPS Hosting</h3>
-                    <p class="text-gray-600 mt-1 max-w-xl mx-auto">High-performance virtual private servers</p>
+                    <p class="text-gray-600 mt-1 max-w-xl mx-auto">Virtual private server dengan performa tinggi</p>
                 </div>
                 
                 <div class="mt-12 max-w-6xl mx-auto flex flex-nowrap overflow-x-auto snap-x snap-mandatory gap-6 pt-6 px-6 pb-8 scrollbar-hide md:grid md:grid-cols-3 md:gap-8 md:px-4 md:pb-0 md:overflow-visible">
@@ -434,7 +434,7 @@
                         <i class="ri-settings-3-line text-xl"></i>
                     </div>
                     <h3 class="text-2xl font-bold mt-4">Shared Hosting</h3>
-                    <p class="text-gray-600 mt-1 max-w-xl mx-auto">User-friendly web hosting with powerful cPanel</p>
+                    <p class="text-gray-600 mt-1 max-w-xl mx-auto">Web hosting yang ramah pengguna dengan cPanel yang kuat</p>
                 </div>
                 
                 <div class="mt-12 max-w-6xl mx-auto flex flex-nowrap overflow-x-auto snap-x snap-mandatory gap-6 pt-6 px-6 pb-8 scrollbar-hide md:grid md:grid-cols-3 md:gap-8 md:px-4 md:pb-0 md:overflow-visible">
@@ -608,19 +608,19 @@
     </section>
 
     <section id="why-choose-us" class="w-full py-20 bg-white px-4">
-        <h2 class="text-center text-3xl md:text-4xl font-bold text-gray-900">Why Choose <span
+        <h2 class="text-center text-3xl md:text-4xl font-bold text-gray-900">Mengapa Memilih <span
                 class="text-blue-600">FutureCloud.id?</span></h2>
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 max-w-6xl mx-auto mt-12">
             @php
                 $reasons = [
                     [
                         'icon' => 'ri-shield-check-line',
-                        'title' => 'Enterprise Security',
-                        'desc' => 'Bank-grade security protocols',
+                        'title' => 'Keamanan Perusahaan',
+                        'desc' => 'Protokol keamanan tingkat bank',
                     ],
-                    ['icon' => 'ri-flashlight-line', 'title' => 'Lightning Fast', 'desc' => 'Optimized infrastructure'],
-                    ['icon' => 'ri-user-star-line', 'title' => 'Expert Team', 'desc' => 'Certified professionals'],
-                    ['icon' => 'ri-medal-line', 'title' => 'Proven Track Record', 'desc' => '500+ successful projects'],
+                    ['icon' => 'ri-flashlight-line', 'title' => 'Sangat Cepat', 'desc' => 'Infrastruktur yang dioptimalkan'],
+                    ['icon' => 'ri-user-star-line', 'title' => 'Tim Ahli', 'desc' => 'Profesional bersertifikat'],
+                    ['icon' => 'ri-medal-line', 'title' => 'Rekam Jejak Terbukti', 'desc' => '500+ proyek sukses'],
                 ];
             @endphp
             @foreach ($reasons as $r)
@@ -640,11 +640,11 @@
     <section id="contact" class="w-full py-16 px-4">
         <div
             class="max-w-4xl mx-auto bg-white p-6 md:p-10 rounded-2xl shadow border text-center hover:shadow-xl transition">
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Ready to Get Started?</h2>
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Siap untuk Memulai?</h2>
             <div class="flex flex-col sm:flex-row gap-4 justify-center mt-8">
                 <button
                     class="px-6 py-3 bg-blue-600 text-white rounded-lg shadow flex items-center justify-center gap-2 hover:bg-blue-700 transition w-full sm:w-auto"
-                    onclick="window.location='{{ route('contact') }}'">Contact Us <i
+                    onclick="window.location='{{ route('contact') }}'">Hubungi Kami <i
                         class="ri-arrow-right-line"></i></button>
             </div>
         </div>

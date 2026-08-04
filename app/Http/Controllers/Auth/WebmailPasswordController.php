@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\EmailAccount;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rules\Password;
 
 class WebmailPasswordController extends Controller
 {
@@ -26,7 +27,7 @@ class WebmailPasswordController extends Controller
         // 1. Validasi Input
         $request->validate([
             'email'    => 'required|email',
-            'password' => 'required|string|min:8|confirmed', // min:8 disesuaikan dengan policy Mailcow
+            'password' => ['required', 'string', 'confirmed', Password::defaults()],
         ], [
             'email.required'     => 'Alamat email wajib diisi.',
             'password.required'  => 'Password baru wajib diisi.',

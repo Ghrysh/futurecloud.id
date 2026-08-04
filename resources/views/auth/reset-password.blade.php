@@ -1,7 +1,7 @@
 <x-split-auth-layout image="assets/reset_password.jpg">
     <div class="mb-8">
-        <h1 class="text-2xl font-bold text-gray-900 mb-2">Create New Password</h1>
-        <p class="text-sm text-gray-600">Please enter your new password below.</p>
+        <h1 class="text-2xl font-bold text-gray-900 mb-2">Buat Kata Sandi Baru</h1>
+        <p class="text-sm text-gray-600">Silakan masukkan kata sandi baru Anda di bawah ini.</p>
     </div>
     <form method="POST" action="{{ route('password.store') }}">
         @csrf
@@ -30,14 +30,14 @@
 
             <!-- First Name -->
             <div class="mt-4">
-                <x-input-label for="first_name" :value="__('First Name')" />
+                <x-input-label for="first_name" :value="__('Nama Depan')" />
                 <x-text-input id="first_name" class="block mt-1 w-full" type="text" name="first_name" :value="old('first_name')" required />
                 <x-input-error :messages="$errors->get('first_name')" class="mt-2" />
             </div>
 
             <!-- Last Name -->
             <div class="mt-4">
-                <x-input-label for="last_name" :value="__('Last Name')" />
+                <x-input-label for="last_name" :value="__('Nama Belakang')" />
                 <x-text-input id="last_name" class="block mt-1 w-full" type="text" name="last_name" :value="old('last_name')" required />
                 <x-input-error :messages="$errors->get('last_name')" class="mt-2" />
             </div>
@@ -45,14 +45,14 @@
 
         <!-- Password -->
         <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+            <x-input-label for="password" :value="__('Kata Sandi')" />
             <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
         <!-- Confirm Password -->
         <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+            <x-input-label for="password_confirmation" :value="__('Konfirmasi Kata Sandi')" />
 
             <x-text-input id="password_confirmation" class="block mt-1 w-full"
                                 type="password"
@@ -64,9 +64,9 @@
         <div class="flex items-center justify-end mt-6">
             <x-primary-button class="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto flex justify-center">
                 @if(isset($isGoogleUser) && $isGoogleUser)
-                    {{ __('Set Account & Password') }}
+                    {{ __('Atur Akun & Kata Sandi') }}
                 @else
-                    {{ __('Reset Password') }}
+                    {{ __('Atur Ulang Kata Sandi') }}
                 @endif
             </x-primary-button>
         </div>

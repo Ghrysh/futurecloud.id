@@ -165,8 +165,8 @@
         <div>
             <!-- Judul -->
             <div class="mb-8 sm:text-left">
-                <h1 class="text-3xl font-bold text-gray-900 mb-2">Welcome Back!</h1>
-                <p class="text-base text-gray-500">Please enter your details to sign in.</p>
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Selamat Datang Kembali!</h1>
+                <p class="text-base text-gray-500">Silakan masukkan data Anda untuk masuk.</p>
             </div>
 
             <!-- Session Status -->
@@ -177,14 +177,14 @@
 
                 <!-- Login Field (Email or Username) -->
                 <div class="mb-6">
-                    <label for="login">Email or Username</label>
+                    <label for="login">Email atau Username</label>
                     <div class="input-with-icon">
                         {{-- Icon User --}}
                         <i class="ri-user-line input-icon-left"></i>
 
                         {{-- PERUBAHAN DI SINI: name="login", type="text" --}}
                         <input id="login" type="text" name="login" value="{{ old('login') }}" required
-                            autofocus autocomplete="username" placeholder="Enter email or username" />
+                            autofocus autocomplete="username" placeholder="Masukkan email atau username" />
                     </div>
                     {{-- Error message mengambil key 'login' --}}
                     <x-input-error :messages="$errors->get('login')" class="mt-2 text-xs text-red-500" />
@@ -193,11 +193,11 @@
                 <!-- Password -->
                 <div class="mb-2">
                     <div class="flex justify-between items-center mb-1.5">
-                        <label for="password" class="!mb-0">Password</label>
+                        <label for="password" class="!mb-0">Kata Sandi</label>
                         @if (Route::has('password.request'))
                             <a class="text-xs text-blue-600 hover:text-blue-700 font-semibold"
                                 href="{{ route('password.request') }}">
-                                Forgot password?
+                                Lupa kata sandi?
                             </a>
                         @endif
                     </div>
@@ -205,7 +205,7 @@
                     <div class="input-with-icon">
                         <i class="ri-lock-2-line input-icon-left"></i>
                         <input id="password" type="password" name="password" required autocomplete="current-password"
-                            placeholder="Enter your password" />
+                            placeholder="Masukkan kata sandi Anda" />
                         <i id="togglePassword" class="ri-eye-off-line input-icon-right"></i>
                     </div>
 
@@ -217,16 +217,16 @@
                     <label for="remember_me" class="inline-flex items-center !mb-0 cursor-pointer">
                         <input id="remember_me" type="checkbox"
                             class="rounded border-gray-300 text-blue-600 shadow-sm focus:ring-blue-500" name="remember">
-                        <span class="ml-6 text-sm text-gray-600 font-normal">Remember Me</span>
+                        <span class="ml-6 text-sm text-gray-600 font-normal">Ingat Saya</span>
                     </label>
                 </div>
 
                 <!-- Tombol Sign In -->
-                <button type="submit" class="btn-sign-in">Sign In</button>
+                <button type="submit" class="btn-sign-in">Masuk</button>
             </form>
 
             <!-- Social Login Divider -->
-            <div class="divider">OR CONTINUE WITH</div>
+            <div class="divider">ATAU LANJUTKAN DENGAN</div>
 
             <!-- Social Buttons -->
             <div>
@@ -245,20 +245,20 @@
                             d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                             fill="#EA4335" />
                     </svg>
-                    <span>Sign in with Google</span>
+                    <span>Masuk dengan Google</span>
                 </a>
             </div>
 
             <div class="text-center mt-8 text-sm text-gray-600">
-                Don't have an account?
+                Belum punya akun?
                 <a href="{{ route('register') }}"
-                    class="text-blue-600 font-bold hover:text-blue-700 hover:underline">Create account</a>
+                    class="text-blue-600 font-bold hover:text-blue-700 hover:underline">Buat akun</a>
             </div>
 
             <div class="text-center mt-4">
                 <a href="{{ url('/') }}"
                     class="text-xs text-gray-400 hover:text-gray-600 transition flex items-center justify-center gap-1">
-                    <i class="ri-arrow-left-line"></i> Back to Homepage
+                    <i class="ri-arrow-left-line"></i> Kembali ke Beranda
                 </a>
             </div>
         </div>

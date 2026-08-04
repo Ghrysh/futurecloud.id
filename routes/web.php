@@ -145,6 +145,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    // Set Password via OTP (Google Accounts)
+    Route::post('/profile/set-password-otp/send', [ProfileController::class, 'sendSetPasswordOtp'])->name('profile.set-password-otp.send');
+    Route::post('/profile/set-password-otp/verify', [ProfileController::class, 'verifySetPasswordOtp'])->name('profile.set-password-otp.verify');
+    Route::post('/profile/set-password', [ProfileController::class, 'setPassword'])->name('profile.set-password');
+
     Route::get('auth/google/switch', [SocialAuthController::class, 'switchAccount'])->name('auth.google.switch');
 
     // Cart & Order
