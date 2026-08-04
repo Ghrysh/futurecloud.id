@@ -76,7 +76,7 @@
                                 @endif
                             </div>
                         </td>
-                        <td class="px-6 py-4 local-time" data-timestamp="{{ $log->created_at->toIso8601String() }}">{{ $log->created_at->format('H:i:s') }}</td>
+                        <td class="px-6 py-4 local-time" data-timestamp="{{ $log->created_at->toIso8601String() }}">{{ $log->created_at->format('H:i') }}</td>
                         <td class="px-6 py-4">
                             <span class="px-2.5 py-1 bg-blue-50 text-blue-600 rounded-lg text-xs font-bold">{{ $log->updated_at->diffForHumans() }}</span>
                         </td>
@@ -166,16 +166,18 @@
                 }
             });
         }
-        
-        // Convert timestamp to local timezone
+    });
+
+    // Jalankan konversi waktu lokal terpisah agar tidak terganggu jika Chart.js gagal dimuat
+    document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.local-time').forEach(function(el) {
             var timestamp = el.getAttribute('data-timestamp');
             if(timestamp) {
+                // Konversi timestamp ISO 8601 (UTC jika berakhiran Z/+00:00) ke zona waktu lokal pengguna
                 var date = new Date(timestamp);
                 var hours = date.getHours().toString().padStart(2, '0');
                 var minutes = date.getMinutes().toString().padStart(2, '0');
-                var seconds = date.getSeconds().toString().padStart(2, '0');
-                el.innerText = hours + ':' + minutes + ':' + seconds;
+                el.innerText = hours + ':' + minutes;
             }
         });
     });
