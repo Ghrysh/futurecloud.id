@@ -175,6 +175,11 @@
                                                         </div>
                                                         <p class="text-xs text-gray-500 mt-2">Pilih warna yang sesuai dengan brand website Anda.</p>
                                                     </div>
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Nomor WhatsApp (Opsional)</label>
+                                                        <input type="text" name="whatsapp_number" value="{{ $plugin->configuration['whatsapp_number'] ?? '' }}" class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none transition" placeholder="Contoh: 628123456789">
+                                                        <p class="text-xs text-gray-500 mt-2">Isi jika Anda ingin menampilkan tombol WhatsApp pada Chatbot. Kosongkan jika tidak ingin menampilkan tombol WhatsApp.</p>
+                                                    </div>
                                                     <div class="pt-4 border-t border-gray-200">
                                                         <button type="submit" class="px-5 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition shadow-sm hover:shadow w-full sm:w-auto">
                                                             Simpan Perubahan

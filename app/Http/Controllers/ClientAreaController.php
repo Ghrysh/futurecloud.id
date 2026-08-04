@@ -280,6 +280,7 @@ class ClientAreaController extends Controller implements HasMiddleware
         $request->validate([
             'bot_name' => 'required|string|max:255',
             'bot_color' => 'required|string|max:7',
+            'whatsapp_number' => 'nullable|string|max:25',
         ]);
 
         $plugin = OrderItem::whereHas('order', function($q) {
@@ -308,6 +309,7 @@ class ClientAreaController extends Controller implements HasMiddleware
                     'license_key' => $licenseKey,
                     'bot_name' => $request->bot_name,
                     'bot_color' => $request->bot_color,
+                    'whatsapp_number' => $request->whatsapp_number,
                 ]);
             } catch (\Exception $e) {
                 \Illuminate\Support\Facades\Log::error("Gagal sinkronisasi config chatbot {$licenseKey}: " . $e->getMessage());
@@ -317,6 +319,7 @@ class ClientAreaController extends Controller implements HasMiddleware
             // Simpan lokal di configuration
             $config['bot_name'] = $request->bot_name;
             $config['bot_color'] = $request->bot_color;
+            $config['whatsapp_number'] = $request->whatsapp_number;
             $plugin->configuration = $config;
             $plugin->save();
             
