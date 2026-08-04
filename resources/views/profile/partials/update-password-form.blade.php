@@ -30,7 +30,7 @@
             </div>
 
             <div class="flex items-center gap-4">
-                <button type="submit" class="btn-primary">
+                <button type="submit" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
                     Simpan Kata Sandi
                 </button>
 
@@ -48,7 +48,7 @@
                 <p class="text-sm text-gray-600 mb-4">
                     Anda masuk menggunakan akun Google dan belum mengatur kata sandi untuk akun ini. Atur kata sandi agar Anda juga bisa login secara langsung menggunakan email.
                 </p>
-                <button @click="sendOtp()" type="button" class="btn-primary" :disabled="isLoading">
+                <button @click="sendOtp()" type="button" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150" :disabled="isLoading">
                     <span x-text="isLoading ? 'Mengirim...' : 'Kirim OTP ke Email'"></span>
                 </button>
                 <p x-show="errorMessage" class="text-red-600 text-sm mt-2" x-text="errorMessage"></p>
@@ -65,7 +65,7 @@
                     <input type="text" x-model="otpCode" maxlength="6" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" placeholder="123456" />
                 </div>
                 <div class="flex items-center gap-4">
-                    <button @click="verifyOtp()" type="button" class="btn-primary" :disabled="isLoading">
+                    <button @click="verifyOtp()" type="button" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150" :disabled="isLoading">
                         <span x-text="isLoading ? 'Memverifikasi...' : 'Verifikasi OTP'"></span>
                     </button>
                     <button @click="step = 1; successMessage = ''" type="button" class="text-sm text-gray-500 hover:text-gray-700">
@@ -86,7 +86,7 @@
                     <input type="password" x-model="confirmPassword" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
                 </div>
                 <div class="flex items-center gap-4">
-                    <button @click="savePassword()" type="button" class="btn-primary" :disabled="isLoading">
+                    <button @click="savePassword()" type="button" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150" :disabled="isLoading">
                         <span x-text="isLoading ? 'Menyimpan...' : 'Simpan Kata Sandi'"></span>
                     </button>
                 </div>
