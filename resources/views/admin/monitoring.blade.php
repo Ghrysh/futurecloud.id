@@ -3,14 +3,21 @@
 @section('header_title', 'Monitoring Visitor')
 
 @section('content')
+<!-- Flatpickr CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/airbnb.css">
 <div class="max-w-[100rem] mx-auto w-full" x-data="{ showJourneyModal: false, activeJourney: null }">
 
     <div class="mb-6 flex flex-col md:flex-row justify-between md:items-end gap-4">
-        <div class="flex bg-white shadow-sm border border-slate-200 p-1 rounded-xl w-fit">
+        <div class="flex flex-wrap bg-white shadow-sm border border-slate-200 p-1 rounded-xl w-fit gap-1">
             <a href="{{ route('admin.monitoring', ['filter' => 'today']) }}" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all {{ $filter == 'today' ? 'bg-blue-50 text-blue-600' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50' }}">Hari Ini</a>
             <a href="{{ route('admin.monitoring', ['filter' => 'week']) }}" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all {{ $filter == 'week' ? 'bg-blue-50 text-blue-600' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50' }}">Minggu Ini</a>
             <a href="{{ route('admin.monitoring', ['filter' => 'month']) }}" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all {{ $filter == 'month' ? 'bg-blue-50 text-blue-600' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50' }}">Bulan Ini</a>
             <a href="{{ route('admin.monitoring', ['filter' => 'year']) }}" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all {{ $filter == 'year' ? 'bg-blue-50 text-blue-600' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50' }}">Tahun Ini</a>
+            <button id="customRangeBtn" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 {{ $filter == 'custom' ? 'bg-blue-50 text-blue-600' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50' }}">
+                <i class="ri-calendar-line"></i> Custom Range
+            </button>
+            <input type="text" id="customRangePicker" class="hidden">
         </div>
     </div>
 
@@ -188,6 +195,29 @@
                 var minutes = date.getMinutes().toString().padStart(2, '0');
                 el.innerText = hours + ':' + minutes;
             }
+        });
+    });
+</script>
+
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        flatpickr("#customRangePicker", {
+            mode: "range",
+            maxDate: "today",
+            dateFormat: "Y-m-d",
+            onClose: function(selectedDates, dateStr, instance) {
+                if (selectedDates.length === 2) {
+                    let start = instance.formatDate(selectedDates[0], "Y-m-d");
+                    let end = instance.formatDate(selectedDates[1], "Y-m-d");
+                    window.location.href = "{{ route('admin.monitoring') }}?filter=custom&start_date=" + start + "&end_date=" + end;
+                }
+            }
+        });
+
+        document.getElementById('customRangeBtn').addEventListener('click', function() {
+            document.getElementById('customRangePicker')._flatpickr.open();
         });
     });
 </script>

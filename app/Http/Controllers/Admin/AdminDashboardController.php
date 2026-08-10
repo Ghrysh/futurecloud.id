@@ -211,6 +211,27 @@ class AdminDashboardController extends Controller
                 $chartLabels[] = Carbon::create()->month($i)->format('M');
                 $chartValues[] = VisitorLog::whereMonth('date', $i)->whereYear('date', $now->year)->count();
             }
+        } elseif ($filter == 'custom' && $request->has('start_date') && $request->has('end_date')) {
+            $startDate = Carbon::parse($request->start_date)->startOfDay();
+            $endDate = Carbon::parse($request->end_date)->endOfDay();
+            $query->whereBetween('date', [$startDate->toDateString(), $endDate->toDateString()]);
+            $totalVisitors = $query->count();
+            
+            $days = $startDate->diffInDays($endDate);
+            if ($days <= 31) {
+                for ($i = 0; $i <= $days; $i++) {
+                    $date = $startDate->copy()->addDays($i);
+                    $chartLabels[] = $date->format('d M');
+                    $chartValues[] = VisitorLog::whereDate('date', $date)->count();
+                }
+            } else {
+                $months = $startDate->diffInMonths($endDate);
+                for ($i = 0; $i <= $months; $i++) {
+                    $date = $startDate->copy()->addMonths($i);
+                    $chartLabels[] = $date->format('M Y');
+                    $chartValues[] = VisitorLog::whereMonth('date', $date->month)->whereYear('date', $date->year)->count();
+                }
+            }
         }
 
         $chartData = [
