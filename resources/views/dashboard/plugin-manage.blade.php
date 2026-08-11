@@ -404,7 +404,25 @@
             },
 
             async disconnect() {
-                if (!confirm('Apakah Anda yakin ingin memutuskan koneksi WhatsApp Bot?')) return;
+                let confirmed = false;
+                if (typeof Swal !== 'undefined') {
+                    const result = await Swal.fire({
+                        title: 'Putuskan Koneksi?',
+                        text: 'Jika diputuskan, Anda harus men-scan ulang QR Code jika ingin menghubungkannya kembali.',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#ef4444',
+                        cancelButtonColor: '#6b7280',
+                        confirmButtonText: 'Ya, Putuskan!',
+                        cancelButtonText: 'Batal'
+                    });
+                    confirmed = result.isConfirmed;
+                } else {
+                    confirmed = confirm('Apakah Anda yakin ingin memutuskan koneksi WhatsApp Bot? Anda harus men-scan ulang QR Code jika ingin menghubungkannya kembali.');
+                }
+                
+                if (!confirmed) return;
+                
                 this.loading = true;
 
                 try {
