@@ -150,7 +150,7 @@
             async fetchUsers() {
                 this.loading = true;
                 try {
-                    let res = await fetch(`/helpdesk-users?license=${this.licenseKey}`);
+                    let res = await fetch(`/client-area/helpdesk-users?license=${this.licenseKey}`);
                     let json = await res.json();
                     if (json.data) {
                         this.users = json.data;
@@ -186,12 +186,12 @@
                 this.submitting = true;
                 
                 try {
-                    let url = '/helpdesk-users';
+                    let url = '/client-area/helpdesk-users';
                     let method = 'POST';
                     let body = { ...this.form, license_key: this.licenseKey };
                     
                     if (this.isEditing) {
-                        url = `/helpdesk-users/${this.form.id}`;
+                        url = `/client-area/helpdesk-users/${this.form.id}`;
                         method = 'PUT';
                     }
 
@@ -229,7 +229,7 @@
                 if (!confirm('Yakin ingin menghapus akun helpdesk ini?')) return;
                 
                 try {
-                    let res = await fetch(`/helpdesk-users/${id}`, {
+                    let res = await fetch(`/client-area/helpdesk-users/${id}`, {
                         method: 'DELETE',
                         headers: {
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
@@ -249,7 +249,7 @@
 
             async toggleStatus(id) {
                 try {
-                    let res = await fetch(`/helpdesk-users/${id}/toggle`, {
+                    let res = await fetch(`/client-area/helpdesk-users/${id}/toggle`, {
                         method: 'POST',
                         headers: {
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
