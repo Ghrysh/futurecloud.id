@@ -64,11 +64,11 @@
             <div class="flex bg-white border-b border-gray-100">
                 <button @click="activeTab = 'all'" class="flex-1 py-3 text-[13px] font-semibold border-b-2 transition-colors relative" :class="activeTab === 'all' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'">
                     <i class="ri-message-3-line mr-1"></i> Semua Chat
-                    <span x-show="allChats.length > 0" class="absolute top-2 right-3 bg-blue-500 text-white text-[9px] font-bold w-5 h-5 rounded-full flex items-center justify-center" x-text="allChats.length"></span>
+                    <span x-show="getUnreadRoomCount(allChats) > 0" class="absolute top-2 right-3 bg-blue-500 text-white text-[9px] font-bold w-5 h-5 rounded-full flex items-center justify-center" x-text="getUnreadRoomCount(allChats)"></span>
                 </button>
                 <button @click="activeTab = 'active'" class="flex-1 py-3 text-[13px] font-semibold border-b-2 transition-colors relative" :class="activeTab === 'active' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'">
                     <i class="ri-chat-check-line mr-1"></i> Ditangani
-                    <span x-show="activeLeads.length > 0" class="absolute top-2 right-3 bg-green-500 text-white text-[9px] font-bold w-5 h-5 rounded-full flex items-center justify-center" x-text="activeLeads.length"></span>
+                    <span x-show="getUnreadRoomCount(activeLeads) > 0" class="absolute top-2 right-3 bg-green-500 text-white text-[9px] font-bold w-5 h-5 rounded-full flex items-center justify-center" x-text="getUnreadRoomCount(activeLeads)"></span>
                 </button>
                 <button @click="activeTab = 'history'" class="flex-1 py-3 text-[13px] font-semibold border-b-2 transition-colors" :class="activeTab === 'history' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'">
                     <i class="ri-history-line mr-1"></i> Riwayat
@@ -99,7 +99,10 @@
                             <div class="flex-1 min-w-0">
                                 <div class="flex justify-between items-center mb-0.5">
                                     <h3 class="font-semibold text-gray-800 text-sm truncate" x-text="getLeadName(lead)"></h3>
-                                    <span class="text-[10px] text-gray-400 shrink-0 ml-2" x-text="getLeadTime(lead)"></span>
+                                    <div class="flex items-center gap-1.5 shrink-0 ml-2">
+                                        <span class="text-[10px] text-gray-400" x-text="getLeadTime(lead)"></span>
+                                        <span x-show="getUnreadCount(lead) > 0" class="bg-blue-500 text-white text-[9px] font-bold w-5 h-5 rounded-full flex items-center justify-center" x-text="getUnreadCount(lead)"></span>
+                                    </div>
                                 </div>
                                 <div class="flex items-center gap-1.5">
                                     <span class="px-1.5 py-0.5 rounded text-[9px] font-bold shrink-0" :class="lead.live_chat_status === 'pending' ? 'bg-yellow-100 text-yellow-700' : (lead.helpdesk_id ? 'bg-orange-100 text-orange-700' : 'bg-blue-100 text-blue-700')" x-text="lead.helpdesk_id ? ('🧑 ' + lead.helpdesk_name) : (lead.live_chat_status === 'pending' ? '⏳ Live Chat Request' : '🤖 Chatbot AI')"></span>
@@ -130,7 +133,10 @@
                             <div class="flex-1 min-w-0">
                                 <div class="flex justify-between items-center mb-0.5">
                                     <h3 class="font-semibold text-gray-800 text-sm truncate" x-text="getLeadName(lead)"></h3>
-                                    <span class="text-[10px] text-gray-400 shrink-0 ml-2" x-text="getLeadTime(lead)"></span>
+                                    <div class="flex items-center gap-1.5 shrink-0 ml-2">
+                                        <span class="text-[10px] text-gray-400" x-text="getLeadTime(lead)"></span>
+                                        <span x-show="getUnreadCount(lead) > 0" class="bg-green-500 text-white text-[9px] font-bold w-5 h-5 rounded-full flex items-center justify-center" x-text="getUnreadCount(lead)"></span>
+                                    </div>
                                 </div>
                                 <p class="text-xs text-gray-500 truncate" x-text="getLastMessagePreview(lead)"></p>
                             </div>
@@ -441,6 +447,7 @@
                             if (updated) {
                                 let oldHistory = this.currentChat.chat_history;
                                 this.currentChat = updated;
+                                this.markAsRead(updated); // auto-mark read since chat is open
                                 if (updated.chat_history !== oldHistory) {
                                     this.scrollToBottom();
                                     // Sound for new user message
@@ -482,6 +489,7 @@
 
                 selectChat(lead) {
                     this.currentChat = lead;
+                    this.markAsRead(lead);
                     this.scrollToBottom();
                 },
 
@@ -548,6 +556,42 @@
                     }
                 },
 
+                // ===== Unread Tracking (localStorage) =====
+                _getReadState() {
+                    try {
+                        return JSON.parse(localStorage.getItem('helpdesk_read_' + this.myId) || '{}');
+                    } catch(e) { return {}; }
+                },
+
+                _saveReadState(state) {
+                    try {
+                        localStorage.setItem('helpdesk_read_' + this.myId, JSON.stringify(state));
+                    } catch(e) {}
+                },
+
+                markAsRead(lead) {
+                    let history = this.getChatHistory(lead);
+                    let state = this._getReadState();
+                    state['lead_' + lead.id] = history.length;
+                    this._saveReadState(state);
+                },
+
+                getUnreadCount(lead) {
+                    let history = this.getChatHistory(lead);
+                    let state = this._getReadState();
+                    let lastRead = state['lead_' + lead.id] || 0;
+                    let unread = history.length - lastRead;
+                    return unread > 0 ? unread : 0;
+                },
+
+                getUnreadRoomCount(leads) {
+                    let count = 0;
+                    for (let lead of leads) {
+                        if (this.getUnreadCount(lead) > 0) count++;
+                    }
+                    return count;
+                },
+
                 // ===== Helper Methods =====
                 getChatHistory(lead) {
                     if (!lead || !lead.chat_history) return [];
@@ -586,13 +630,15 @@
                 },
 
                 isOutgoing(msg) {
-                    return msg.sender === 'admin';
+                    // Bot dan Admin = sisi kanan (tim kita)
+                    // User = sisi kiri (pelanggan)
+                    return msg.sender === 'admin' || msg.sender === 'bot';
                 },
 
                 getSenderLabel(msg) {
                     if (msg.sender === 'user') return this.currentChat ? this.getLeadName(this.currentChat) : 'Pelanggan';
                     if (msg.sender === 'bot') return '🤖 Chatbot AI';
-                    if (msg.sender === 'admin') return msg.agent || 'Helpdesk';
+                    if (msg.sender === 'admin') return '✅ ' + (msg.agent || 'Helpdesk');
                     return msg.sender;
                 },
 
@@ -605,11 +651,9 @@
 
                 formatMessage(text) {
                     if (!text) return '';
-                    // Escape HTML first for safety
                     text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
                     text = text.replace(/\n/g, '<br>');
                     text = text.replace(/\*([^\*]+)\*/g, '<strong>$1</strong>');
-                    // Simple link detection
                     text = text.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" class="text-blue-600 underline">$1</a>');
                     return text;
                 },
