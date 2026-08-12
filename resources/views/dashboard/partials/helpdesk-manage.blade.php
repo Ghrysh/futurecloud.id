@@ -176,7 +176,9 @@
             async fetchUsers() {
                 this.loading = true;
                 try {
-                    let res = await fetch(`/client-area/helpdesk-users?license=${this.licenseKey}`);
+                    let res = await fetch(`/client-area/helpdesk-users?license=${this.licenseKey}&t=${Date.now()}`, {
+                        cache: 'no-store'
+                    });
                     let json = await res.json();
                     if (json.data) {
                         this.users = json.data;
