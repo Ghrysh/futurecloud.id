@@ -44,6 +44,10 @@ return [
             'driver' => 'session',
             'provider' => 'admins',
         ],
+        'helpdesk' => [
+            'driver' => 'session',
+            'provider' => 'helpdesk_users',
+        ],
     ],
 
     /*
@@ -71,6 +75,10 @@ return [
         'admins' => [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
+        ],
+        'helpdesk_users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\HelpdeskUser::class,
         ],
     ],
 

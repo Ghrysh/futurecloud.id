@@ -210,6 +210,26 @@ Route::middleware('auth')->prefix('client-area')->name('client.')->group(functio
     Route::get('/others', [ClientAreaController::class, 'showProduct'])->defaults('type', 'others')->name('others');
 
     Route::get('/invoices/{id}/download', [ClientAreaController::class, 'downloadInvoice'])->name('invoices.download');
+
+    // Helpdesk User Management (from Client Area)
+    Route::get('/helpdesk-users', [App\Http\Controllers\HelpdeskManageController::class, 'index'])->name('helpdesk.users');
+    Route::post('/helpdesk-users', [App\Http\Controllers\HelpdeskManageController::class, 'store'])->name('helpdesk.users.store');
+    Route::put('/helpdesk-users/{id}', [App\Http\Controllers\HelpdeskManageController::class, 'update'])->name('helpdesk.users.update');
+    Route::delete('/helpdesk-users/{id}', [App\Http\Controllers\HelpdeskManageController::class, 'destroy'])->name('helpdesk.users.destroy');
+    Route::post('/helpdesk-users/{id}/toggle', [App\Http\Controllers\HelpdeskManageController::class, 'toggleStatus'])->name('helpdesk.users.toggle');
+});
+
+// --- HELPDESK AREA ---
+Route::get('/helpdesk/login', [App\Http\Controllers\HelpdeskAuthController::class, 'showLogin'])->name('helpdesk.login');
+Route::post('/helpdesk/login', [App\Http\Controllers\HelpdeskAuthController::class, 'login'])->name('helpdesk.login.submit');
+Route::post('/helpdesk/logout', [App\Http\Controllers\HelpdeskAuthController::class, 'logout'])->name('helpdesk.logout');
+
+Route::middleware('auth:helpdesk')->prefix('helpdesk')->name('helpdesk.')->group(function () {
+    Route::get('/', [App\Http\Controllers\HelpdeskController::class, 'dashboard'])->name('dashboard');
+    Route::get('/poll', [App\Http\Controllers\HelpdeskController::class, 'poll'])->name('poll');
+    Route::post('/claim', [App\Http\Controllers\HelpdeskController::class, 'claim'])->name('claim');
+    Route::post('/send', [App\Http\Controllers\HelpdeskController::class, 'send'])->name('send');
+    Route::post('/end', [App\Http\Controllers\HelpdeskController::class, 'endChat'])->name('end');
 });
 
 // --- PARTNER AREA ---

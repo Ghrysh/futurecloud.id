@@ -134,6 +134,9 @@
                                             <button @click="tab = 'livechat'" class="px-5 py-3.5 text-sm font-medium border-b-2 whitespace-nowrap transition-colors" :class="tab === 'livechat' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'">
                                                 <i class="ri-customer-service-2-line mr-1.5"></i> Live Chat
                                             </button>
+                                            <button @click="tab = 'helpdesk'" class="px-5 py-3.5 text-sm font-medium border-b-2 whitespace-nowrap transition-colors" :class="tab === 'helpdesk' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'">
+                                                <i class="ri-user-add-line mr-1.5"></i> Helpdesk Users
+                                            </button>
                                         @else
                                             <button @click="tab = 'dashboard'" class="px-5 py-3.5 text-sm font-medium border-b-2 whitespace-nowrap transition-colors" :class="tab === 'dashboard' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'">
                                                 <i class="ri-dashboard-line mr-1.5"></i> Dashboard Analytics
@@ -276,6 +279,9 @@
                                         </div>
                                         <div x-show="tab === 'livechat'" style="display: none; height: 800px;" class="bg-gray-50 p-2">
                                             <iframe src="https://api-chatbot.futurecloud.id/embed/livechat?license={{ $licenseKey }}" width="100%" height="100%" class="rounded-lg shadow-sm border border-gray-200 bg-white"></iframe>
+                                        </div>
+                                        <div x-show="tab === 'helpdesk'" style="display: none;" class="p-6">
+                                            @include('dashboard.partials.helpdesk-manage', ['licenseKey' => $licenseKey])
                                         </div>
                                     @else
                                         <!-- MONITORING TAB -->
