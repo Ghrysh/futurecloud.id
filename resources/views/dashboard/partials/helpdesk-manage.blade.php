@@ -199,7 +199,7 @@
                         method: method,
                         headers: {
                             'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
                             'Accept': 'application/json'
                         },
                         body: JSON.stringify(body)
@@ -232,7 +232,7 @@
                     let res = await fetch(`/client-area/helpdesk-users/${id}`, {
                         method: 'DELETE',
                         headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
                         }
                     });
                     
@@ -252,7 +252,7 @@
                     let res = await fetch(`/client-area/helpdesk-users/${id}/toggle`, {
                         method: 'POST',
                         headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
                         }
                     });
                     
