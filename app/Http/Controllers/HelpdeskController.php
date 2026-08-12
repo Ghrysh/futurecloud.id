@@ -45,8 +45,9 @@ class HelpdeskController extends Controller
         }
 
         return response()->json([
-            'pending' => [],
+            'all_chats' => [],
             'active' => [],
+            'active_others' => [],
             'ended' => [],
         ]);
     }
