@@ -63,7 +63,7 @@
                                 <button @click="openEditModal(user)" class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors" title="Edit">
                                     <i class="ri-edit-line"></i>
                                 </button>
-                                <button @click="deleteUser(user.id)" class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors" title="Hapus">
+                                <button @click="confirmDeleteModal(user.id)" class="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors" title="Hapus">
                                     <i class="ri-delete-bin-line"></i>
                                 </button>
                             </div>
@@ -116,6 +116,30 @@
             </form>
         </div>
     </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div x-show="showDeleteModal" class="fixed inset-0 z-[60] flex items-center justify-center" style="display: none;">
+        <!-- Backdrop -->
+        <div x-show="showDeleteModal" x-transition.opacity class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="closeDeleteModal()"></div>
+        
+        <!-- Modal Content -->
+        <div x-show="showDeleteModal" x-transition.scale class="relative bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden text-center p-6">
+            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="ri-alert-line text-3xl text-red-600"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Hapus Akun?</h3>
+            <p class="text-gray-500 mb-6 text-sm">Apakah Anda yakin ingin menghapus akun helpdesk ini? Tindakan ini tidak dapat dibatalkan.</p>
+            
+            <div class="flex gap-3 justify-center">
+                <button @click="closeDeleteModal()" type="button" class="px-5 py-2.5 bg-gray-100 text-gray-700 font-medium rounded-xl hover:bg-gray-200 transition-colors w-full" :disabled="submitting">Batal</button>
+                <button @click="confirmDelete()" type="button" class="px-5 py-2.5 bg-red-600 text-white font-medium rounded-xl hover:bg-red-700 transition-colors w-full flex justify-center items-center gap-2" :disabled="submitting">
+                    <span x-show="submitting"><i class="ri-loader-4-line animate-spin"></i></span>
+                    <span x-text="submitting ? 'Menghapus...' : 'Ya, Hapus'"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <script>
@@ -129,6 +153,8 @@
             submitting: false,
             alertMessage: '',
             alertType: 'success',
+            showDeleteModal: false,
+            deleteId: null,
             form: {
                 id: null,
                 name: '',
@@ -225,26 +251,45 @@
                 this.submitting = false;
             },
 
-            async deleteUser(id) {
-                if (!confirm('Yakin ingin menghapus akun helpdesk ini?')) return;
+            confirmDeleteModal(id) {
+                this.deleteId = id;
+                this.showDeleteModal = true;
+            },
+
+            closeDeleteModal() {
+                this.showDeleteModal = false;
+                this.deleteId = null;
+            },
+
+            async confirmDelete() {
+                if (!this.deleteId) return;
+                this.submitting = true;
                 
                 try {
-                    let res = await fetch(`/client-area/helpdesk-users/${id}`, {
+                    let res = await fetch(`/client-area/helpdesk-users/${this.deleteId}`, {
                         method: 'DELETE',
                         headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
                             'X-CSRF-TOKEN': '{{ csrf_token() }}'
                         }
                     });
                     
+                    let json = await res.json().catch(() => ({}));
+                    
                     if (res.ok) {
                         this.showAlert('Akun helpdesk berhasil dihapus');
                         this.fetchUsers();
+                        this.closeDeleteModal();
                     } else {
-                        this.showAlert('Gagal menghapus akun', 'error');
+                        this.showAlert(json.error || 'Gagal menghapus akun', 'error');
+                        this.closeDeleteModal();
                     }
                 } catch(e) {
                     this.showAlert('Terjadi kesalahan jaringan', 'error');
+                    this.closeDeleteModal();
                 }
+                this.submitting = false;
             },
 
             async toggleStatus(id) {
