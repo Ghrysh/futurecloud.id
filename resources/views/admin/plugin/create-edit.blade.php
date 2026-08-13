@@ -65,8 +65,27 @@
                     <select name="cycle" x-model="form.cycle" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-gray-700">
                         <option value="monthly">Bulanan (Monthly)</option>
                         <option value="annually">Tahunan (Annually)</option>
+                        <option value="monthly_yearly">Bulanan & Tahunan (Bisa Pilih)</option>
                         <option value="lifetime">Sekali Bayar (Lifetime)</option>
                     </select>
+                </div>
+                
+                <div x-show="form.cycle === 'monthly_yearly' || form.cycle === 'annually'" class="p-4 bg-gray-50 rounded-lg border border-gray-200 mt-4 space-y-4">
+                    <p class="text-sm text-gray-600 mb-2"><strong>Pengaturan Diskon Tahunan</strong><br>Jika memilih opsi tahunan, harga dasar (per bulan) akan dikali 12, lalu dikurangi diskon berikut.</p>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Tipe Diskon</label>
+                            <select name="annual_discount_type" x-model="form.annual_discount_type" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-gray-700">
+                                <option value="percent">Persentase (%)</option>
+                                <option value="fixed">Nominal (Rp)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nilai Diskon</label>
+                            <input type="number" name="annual_discount_value" x-model="form.annual_discount_value" placeholder="Contoh: 10 atau 50000" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-gray-700">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -88,6 +107,8 @@
                 tagline: data.tagline || '',
                 description: data.description || '',
                 cycle: (data.plans && data.plans.cycle) ? data.plans.cycle : 'lifetime',
+                annual_discount_type: (data.plans && data.plans.annual_discount_type) ? data.plans.annual_discount_type : 'percent',
+                annual_discount_value: (data.plans && data.plans.annual_discount_value) ? data.plans.annual_discount_value : 0,
             },
 
             init() {

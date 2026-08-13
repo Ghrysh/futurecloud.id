@@ -52,6 +52,8 @@ class AdminPluginController extends Controller
         // Simpan cycle di array plans
         $data['plans'] = [
             'cycle' => $request->cycle ?? 'lifetime',
+            'annual_discount_type' => $request->annual_discount_type ?? 'percent',
+            'annual_discount_value' => $request->annual_discount_value ?? 0,
         ];
 
         SaasProduct::create($data);
@@ -88,6 +90,8 @@ class AdminPluginController extends Controller
         // Simpan cycle di array plans
         $data['plans'] = [
             'cycle' => $request->cycle ?? 'lifetime',
+            'annual_discount_type' => $request->annual_discount_type ?? 'percent',
+            'annual_discount_value' => $request->annual_discount_value ?? 0,
         ];
 
         $app->update($data);

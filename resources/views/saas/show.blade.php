@@ -358,22 +358,73 @@
                                         @if(strtolower($app->category) == 'plugin')
                                             @php
                                                 $pluginCycle = 'lifetime';
-                                                if (is_array($app->plans) && isset($app->plans['cycle'])) {
-                                                    $pluginCycle = $app->plans['cycle'];
-                                                } elseif (is_object($app->plans) && isset($app->plans->cycle)) {
-                                                    $pluginCycle = $app->plans->cycle;
+                                                $discountType = 'percent';
+                                                $discountValue = 0;
+                                                
+                                                if (is_array($app->plans)) {
+                                                    $pluginCycle = $app->plans['cycle'] ?? 'lifetime';
+                                                    $discountType = $app->plans['annual_discount_type'] ?? 'percent';
+                                                    $discountValue = $app->plans['annual_discount_value'] ?? 0;
+                                                } elseif (is_object($app->plans)) {
+                                                    $pluginCycle = $app->plans->cycle ?? 'lifetime';
+                                                    $discountType = $app->plans->annual_discount_type ?? 'percent';
+                                                    $discountValue = $app->plans->annual_discount_value ?? 0;
                                                 }
-                                                $cycleText = $pluginCycle == 'monthly' ? '/bln' : ($pluginCycle == 'annually' ? '/thn' : '');
+                                                
+                                                $monthlyPrice = $app->price;
+                                                $yearlyBasePrice = $monthlyPrice * 12;
+                                                $discountAmount = 0;
+                                                
+                                                if ($discountType === 'percent') {
+                                                    $discountAmount = $yearlyBasePrice * ($discountValue / 100);
+                                                } else {
+                                                    $discountAmount = $discountValue;
+                                                }
+                                                
+                                                $yearlyFinalPrice = max(0, $yearlyBasePrice - $discountAmount);
                                             @endphp
-                                            <div class="border-2 border-blue-500 rounded-2xl p-6 relative bg-white shadow-xl">
+                                            
+                                            <div class="border-2 border-blue-500 rounded-2xl p-6 relative bg-white shadow-xl" x-data="{ pluginBilling: '{{ $pluginCycle === 'monthly_yearly' ? 'monthly' : $pluginCycle }}' }">
                                                 <div class="absolute -top-3 inset-x-0 flex justify-center">
                                                     <span class="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">LISENSI PLUGIN</span>
                                                 </div>
                                                 <h3 class="font-bold text-gray-800 text-lg text-center mt-2">{{ $app->name }}</h3>
+                                                
+                                                @if($pluginCycle === 'monthly_yearly')
+                                                    <div class="flex justify-center mt-4">
+                                                        <div class="bg-gray-100 p-1 rounded-lg inline-flex">
+                                                            <button type="button" @click="pluginBilling = 'monthly'" :class="pluginBilling === 'monthly' ? 'bg-white shadow text-blue-600' : 'text-gray-500 hover:text-gray-700'" class="px-4 py-1.5 text-sm font-bold rounded-md transition-all">Bulanan</button>
+                                                            <button type="button" @click="pluginBilling = 'annually'" :class="pluginBilling === 'annually' ? 'bg-white shadow text-blue-600' : 'text-gray-500 hover:text-gray-700'" class="px-4 py-1.5 text-sm font-bold rounded-md transition-all">Tahunan <span class="text-[10px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full ml-1">Hemat</span></button>
+                                                        </div>
+                                                    </div>
+                                                @endif
+
                                                 <div class="mt-4 mb-6 text-center">
-                                                    <div class="flex items-baseline justify-center gap-1">
-                                                        <span class="text-4xl font-extrabold text-blue-800">Rp {{ number_format($app->price, 0, ',', '.') }}</span>
-                                                        <span class="text-sm text-gray-500">{{ $cycleText }}</span>
+                                                    {{-- Bulanan --}}
+                                                    <div x-show="pluginBilling === 'monthly'">
+                                                        <div class="flex items-baseline justify-center gap-1">
+                                                            <span class="text-4xl font-extrabold text-blue-800">Rp {{ number_format($monthlyPrice, 0, ',', '.') }}</span>
+                                                            <span class="text-sm text-gray-500">/bln</span>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    {{-- Tahunan --}}
+                                                    <div x-show="pluginBilling === 'annually'" style="display: none;">
+                                                        @if($pluginCycle === 'monthly_yearly' && $discountAmount > 0)
+                                                            <div class="text-xs text-gray-400 line-through mb-1">Rp {{ number_format($yearlyBasePrice, 0, ',', '.') }}</div>
+                                                        @endif
+                                                        <div class="flex items-baseline justify-center gap-1">
+                                                            <span class="text-4xl font-extrabold text-blue-800">Rp {{ number_format($yearlyFinalPrice, 0, ',', '.') }}</span>
+                                                            <span class="text-sm text-gray-500">/thn</span>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    {{-- Lifetime --}}
+                                                    <div x-show="pluginBilling === 'lifetime'" style="display: none;">
+                                                        <div class="flex items-baseline justify-center gap-1">
+                                                            <span class="text-4xl font-extrabold text-blue-800">Rp {{ number_format($monthlyPrice, 0, ',', '.') }}</span>
+                                                            <span class="text-sm text-gray-500"></span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 
@@ -381,20 +432,19 @@
                                                     @csrf
                                                     <input type="hidden" name="type" value="saas">
                                                     <input type="hidden" name="product_name" value="{{ $app->name }}">
-                                                    <input type="hidden" name="price" value="{{ $app->price }}">
-                                                    <input type="hidden" name="cycle" value="{{ $pluginCycle }}">
+                                                    
+                                                    {{-- Hidden inputs bound to Alpine logic --}}
+                                                    <input type="hidden" name="price" :value="pluginBilling === 'annually' ? {{ $yearlyFinalPrice }} : {{ $monthlyPrice }}">
+                                                    <input type="hidden" name="cycle" :value="pluginBilling">
+                                                    
                                                     <input type="hidden" name="domain_mode" value="skip">
                                                     <button type="submit" class="btn-action w-full py-3 text-lg">Beli Sekarang</button>
                                                 </form>
                                                 
                                                 <div class="text-sm text-gray-500 border-t border-gray-100 pt-4 mt-4 text-center font-medium">
-                                                    @if($pluginCycle == 'monthly')
-                                                        Pembayaran per bulan, lisensi perlu diperbarui setiap bulan.
-                                                    @elseif($pluginCycle == 'annually')
-                                                        Pembayaran per tahun, lisensi aktif selama 1 tahun penuh.
-                                                    @else
-                                                        Hanya bayar sekali, lisensi aktif selamanya (Lifetime).
-                                                    @endif
+                                                    <span x-show="pluginBilling === 'monthly'">Pembayaran per bulan, lisensi perlu diperbarui setiap bulan.</span>
+                                                    <span x-show="pluginBilling === 'annually'" style="display: none;">Pembayaran per tahun, lisensi aktif selama 1 tahun penuh.</span>
+                                                    <span x-show="pluginBilling === 'lifetime'" style="display: none;">Hanya bayar sekali, lisensi aktif selamanya (Lifetime).</span>
                                                 </div>
                                             </div>
                                         @else
