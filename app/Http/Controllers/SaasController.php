@@ -33,6 +33,8 @@ class SaasController extends Controller
                 'partner_name' => 'FutureCloud Official',
                 'partner_verified' => true,
                 'cycle' => is_array($app->plans) && isset($app->plans['cycle']) ? $app->plans['cycle'] : 'monthly',
+                'is_external_url_active' => is_array($app->plans) && isset($app->plans['is_external_url_active']) ? $app->plans['is_external_url_active'] == '1' : false,
+                'external_url' => is_array($app->plans) && isset($app->plans['external_url']) ? $app->plans['external_url'] : null,
             ];
         };
 
@@ -47,6 +49,14 @@ class SaasController extends Controller
         $slug = strtolower($slug);
         
         $dbApp = \App\Models\SaasProduct::with('user')->where('slug', $slug)->where('status', 'approved')->firstOrFail();
+
+        // Cek redirect eksternal
+        $isExternalUrlActive = is_array($dbApp->plans) && isset($dbApp->plans['is_external_url_active']) ? $dbApp->plans['is_external_url_active'] == '1' : false;
+        $externalUrl = is_array($dbApp->plans) && isset($dbApp->plans['external_url']) ? $dbApp->plans['external_url'] : null;
+
+        if ($isExternalUrlActive && $externalUrl) {
+            return redirect()->away($externalUrl);
+        }
 
         // --- LOGIKA PEMISAHAN DESKRIPSI & FITUR (FIXED) ---
         $rawLines = explode("\n", str_replace("\r", "", $dbApp->description));

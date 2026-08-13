@@ -70,6 +70,25 @@
             </div>
         </div>
 
+        {{-- KOLOM PENGATURAN URL EKSTERNAL --}}
+        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+            <h3 class="font-bold text-gray-800 mb-4 border-b pb-2">Pengaturan URL Eksternal</h3>
+            
+            <div class="space-y-4">
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="hidden" name="plans[is_external_url_active]" value="0">
+                    <input type="checkbox" name="plans[is_external_url_active]" value="1" x-model="form.is_external_url_active" class="rounded text-blue-600 focus:ring-blue-500 w-5 h-5">
+                    <span class="text-sm font-medium text-gray-700">Aktifkan Redirect ke URL Eksternal</span>
+                </label>
+                
+                <div x-show="form.is_external_url_active" class="mt-3">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">URL Eksternal Tujuan</label>
+                    <input type="url" name="plans[external_url]" x-model="form.external_url" placeholder="https://contoh.com/beli" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-gray-700">
+                    <p class="text-xs text-gray-500 mt-1">Jika diaktifkan, saat diklik pada marketplace pengunjung akan langsung diarahkan ke URL ini alih-alih masuk ke halaman detail aplikasi.</p>
+                </div>
+            </div>
+        </div>
+
         <div class="flex justify-end gap-3">
             <a href="{{ route('admin.saas.index') }}" class="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg font-bold hover:bg-gray-200 transition">Batal</a>
             <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700 transition shadow-lg">Simpan Aplikasi</button>
@@ -85,7 +104,9 @@
                 slug: data.slug || '',
                 price: data.price || 0,
                 tagline: data.tagline || '',
-                description: data.description || ''
+                description: data.description || '',
+                is_external_url_active: (data.plans && data.plans.is_external_url_active == '1') ? true : false,
+                external_url: (data.plans && data.plans.external_url) ? data.plans.external_url : ''
             },
             // Struktur Default Plans
             plans: {
@@ -99,7 +120,7 @@
                 if (data.plans) {
                     // Mapping features array ke string koma
                     for (const [key, val] of Object.entries(data.plans)) {
-                        if(this.plans[key]) {
+                        if(this.plans[key] && key !== 'is_external_url_active' && key !== 'external_url') {
                             this.plans[key].name = val.name;
                             this.plans[key].price = val.price;
                             this.plans[key].features_raw = Array.isArray(val.features) ? val.features.join(', ') : '';
