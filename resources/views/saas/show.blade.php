@@ -465,10 +465,10 @@
                                                 </div>
                                             </div>
                                         @else
-                                            @foreach(['ultimate', 'pro', 'starter'] as $planKey)
-                                                @if(isset($app->plans->$planKey))
+                                            @foreach((array)$app->plans as $planKey => $plan)
+                                                @if(!in_array($planKey, ['cycle', 'annual_discount_type', 'annual_discount_value', 'is_external_url_active', 'external_url']) && (is_array($plan) || is_object($plan)))
                                                     @php 
-                                                        $plan = $app->plans->$planKey; 
+                                                        $plan = (object) $plan;
                                                         $monthlyPrice = $plan->price ?? 0;
                                                         $yearlyBasePrice = $monthlyPrice * 12;
                                                         $discountAmount = 0;
@@ -479,8 +479,8 @@
                                                         }
                                                         $yearlyFinalPrice = max(0, $yearlyBasePrice - $discountAmount);
                                                     @endphp
-                                                    <div class="border-2 {{ $planKey === 'pro' ? 'border-blue-500' : 'border-gray-200' }} rounded-2xl p-6 relative bg-white {{ $planKey === 'pro' ? 'shadow-xl scale-[1.02]' : '' }} transition-transform">
-                                                        @if($planKey === 'pro')<div class="absolute -top-3 inset-x-0 flex justify-center"><span class="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Paling Populer</span></div>@endif
+                                                    <div class="border-2 {{ $loop->iteration == 2 ? 'border-blue-500' : 'border-gray-200' }} rounded-2xl p-6 relative bg-white {{ $loop->iteration == 2 ? 'shadow-xl scale-[1.02]' : '' }} transition-transform">
+                                                        @if($loop->iteration == 2)<div class="absolute -top-3 inset-x-0 flex justify-center"><span class="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Paling Populer</span></div>@endif
                                                         
                                                         <template x-if="billing === 'annually' && {{ $discountAmount }} > 0">
                                                             <span class="discount-badge text-xs bg-red-100 text-red-600 px-2 py-1 rounded font-bold absolute right-4 top-4">Diskon Tahunan</span>

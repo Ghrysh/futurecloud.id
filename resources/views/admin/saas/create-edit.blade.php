@@ -4,7 +4,39 @@
 @section('header_title', isset($saas) ? 'Edit Aplikasi' : 'Tambah Aplikasi Baru')
 
 @section('content')
-<div class="max-w-5xl mx-auto" x-data="saasForm({{ isset($saas) ? json_encode($saas) : '{}' }})">
+@php
+    $initialData = old() ?: (isset($saas) ? $saas->toArray() : []);
+    
+    // Process plans into an array for Alpine
+    $plansArray = [];
+    if (isset($initialData['plans']) && is_array($initialData['plans'])) {
+        foreach($initialData['plans'] as $key => $plan) {
+            if (!in_array($key, ['is_external_url_active', 'external_url', 'cycle', 'annual_discount_type', 'annual_discount_value'])) {
+                if (isset($plan['features']) && is_array($plan['features'])) {
+                    $plan['features_raw'] = implode(', ', $plan['features']);
+                }
+                $plansArray[] = array_merge($plan, ['key' => $key]);
+            }
+        }
+    }
+    
+    $initialData['plans_array'] = empty($plansArray) ? null : $plansArray;
+@endphp
+<div class="max-w-5xl mx-auto" x-data="saasForm({{ json_encode($initialData) }})">
+
+    @if ($errors->any())
+        <div class="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg">
+            <div class="flex items-center mb-2">
+                <i class="ri-error-warning-fill text-red-500 text-xl mr-2"></i>
+                <h3 class="text-red-800 font-bold">Terjadi Kesalahan!</h3>
+            </div>
+            <ul class="list-disc list-inside text-sm text-red-700 ml-1">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     
     <form action="{{ isset($saas) ? route('admin.saas.update', $saas->id) : route('admin.saas.store') }}" method="POST" class="space-y-6">
         @csrf
@@ -26,10 +58,11 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
                     <select name="category" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-gray-700">
-                        <option>Productivity</option>
-                        <option>Security</option>
-                        <option>Marketing</option>
-                        <option>Finance</option>
+                        @php $cat = old('category', $saas->category ?? ''); @endphp
+                        <option value="Productivity" {{ $cat == 'Productivity' ? 'selected' : '' }}>Productivity</option>
+                        <option value="Security" {{ $cat == 'Security' ? 'selected' : '' }}>Security</option>
+                        <option value="Marketing" {{ $cat == 'Marketing' ? 'selected' : '' }}>Marketing</option>
+                        <option value="Finance" {{ $cat == 'Finance' ? 'selected' : '' }}>Finance</option>
                     </select>
                 </div>
                 <div>
@@ -50,21 +83,23 @@
 
         {{-- KOLOM KANAN: PAKET HARGA (JSON BUILDER) --}}
         <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-            <h3 class="font-bold text-gray-800 mb-4 border-b pb-2">Konfigurasi Paket (Plans)</h3>
+            <div class="flex justify-between items-center mb-4 border-b pb-2">
+                <h3 class="font-bold text-gray-800">Konfigurasi Paket (Plans)</h3>
+                <button type="button" @click="addPlan()" class="text-sm bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg font-bold hover:bg-blue-100 transition"><i class="ri-add-line mr-1"></i>Tambah Paket</button>
+            </div>
             
             <div class="space-y-6">
-                {{-- Loop Plans (Starter, Pro, etc) --}}
-                <template x-for="(plan, key) in plans" :key="key">
-                    <div class="p-4 border border-gray-200 rounded-lg bg-gray-50">
-                        <div class="flex justify-between mb-2">
-                            <span class="font-bold uppercase text-xs text-blue-600" x-text="key"></span>
-                        </div>
-                        <div class="grid grid-cols-2 gap-3 mb-2">
-                            <input type="text" :name="`plans[${key}][name]`" x-model="plan.name" placeholder="Nama Paket (ex: Starter)" class="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-gray-700">
-                            <input type="number" :name="`plans[${key}][price]`" x-model="plan.price" placeholder="Harga" class="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-gray-700">
+                {{-- Loop Plans --}}
+                <template x-for="(plan, index) in plans" :key="plan.key">
+                    <div class="p-4 border border-gray-200 rounded-lg bg-gray-50 relative">
+                        <button type="button" @click="removePlan(index)" class="absolute top-3 right-3 text-red-400 hover:text-red-600 bg-white rounded-md p-1 shadow-sm border border-gray-100"><i class="ri-delete-bin-line text-lg"></i></button>
+                        
+                        <div class="grid grid-cols-2 gap-3 mb-2 pr-8">
+                            <input type="text" :name="`plans[${plan.key}][name]`" x-model="plan.name" placeholder="Nama Paket (ex: Starter)" class="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-gray-700">
+                            <input type="number" :name="`plans[${plan.key}][price]`" x-model="plan.price" placeholder="Harga" class="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-gray-700">
                         </div>
                         {{-- Fitur Paket --}}
-                        <textarea :name="`plans[${key}][features_raw]`" x-model="plan.features_raw" rows="2" class="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-gray-700 mt-2" placeholder="Fitur dipisah koma (ex: 5 User, 10GB)"></textarea>
+                        <textarea :name="`plans[${plan.key}][features_raw]`" x-model="plan.features_raw" rows="2" class="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-gray-700 mt-2" placeholder="Fitur dipisah koma (ex: 5 User, 10GB)"></textarea>
                     </div>
                 </template>
             </div>
@@ -145,28 +180,26 @@
                 annual_discount_value: (data.plans && data.plans.annual_discount_value) ? data.plans.annual_discount_value : 0,
             },
             // Struktur Default Plans
-            plans: {
-                starter: { name: 'Starter', price: 0, features_raw: '' },
-                pro: { name: 'Pro', price: 0, features_raw: '' },
-                enterprise: { name: 'Enterprise', price: 0, features_raw: '' }
+            plans: data.plans_array || [
+                { key: 'plan_' + Date.now(), name: 'Paket Dasar', price: 0, features_raw: '' }
+            ],
+
+            addPlan() {
+                this.plans.push({ key: 'plan_' + Date.now(), name: '', price: 0, features_raw: '' });
+            },
+
+            removePlan(index) {
+                if(this.plans.length > 1) {
+                    this.plans.splice(index, 1);
+                } else {
+                    alert('Minimal harus ada 1 paket.');
+                }
             },
 
             init() {
-                // Jika Edit, Load data plans dari DB
-                if (data.plans) {
-                    // Mapping features array ke string koma
-                    for (const [key, val] of Object.entries(data.plans)) {
-                        if(this.plans[key] && !['is_external_url_active', 'external_url', 'cycle', 'annual_discount_type', 'annual_discount_value'].includes(key)) {
-                            this.plans[key].name = val.name;
-                            this.plans[key].price = val.price;
-                            this.plans[key].features_raw = Array.isArray(val.features) ? val.features.join(', ') : '';
-                        }
-                    }
-                }
-                
                 // Auto slug
                 this.$watch('form.name', (val) => {
-                    if (!data.id) { // Hanya auto slug saat create
+                    if (!data.id && val) { // Hanya auto slug saat create
                         this.form.slug = val.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
                     }
                 });
