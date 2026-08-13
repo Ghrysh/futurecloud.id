@@ -343,13 +343,30 @@
                             </div>
                         
                         {{-- 2. EMAIL & LAINNYA (TOGGLE) --}}
+                        {{-- 2. EMAIL & LAINNYA (TOGGLE) --}}
                         @else
-                            <div x-data="{ billing: 'yearly' }">
-                                @if(isset($app->plans->starter->yearly))
-                                <div class="flex justify-center w-full">
-                                    <div class="toggle-container">
-                                        <button @click="billing = 'trial'" :class="billing === 'trial' ? 'active trial' : ''" class="toggle-btn">Free trial</button>
-                                        <button @click="billing = 'yearly'" :class="billing === 'yearly' ? 'active' : ''" class="toggle-btn">Bill yearly</button>
+                            @php
+                                $saasCycle = 'lifetime';
+                                $saasDiscountType = 'percent';
+                                $saasDiscountValue = 0;
+                                
+                                if (is_array($app->plans)) {
+                                    $saasCycle = $app->plans['cycle'] ?? 'monthly_yearly';
+                                    $saasDiscountType = $app->plans['annual_discount_type'] ?? 'percent';
+                                    $saasDiscountValue = $app->plans['annual_discount_value'] ?? 0;
+                                } elseif (is_object($app->plans)) {
+                                    $saasCycle = $app->plans->cycle ?? 'monthly_yearly';
+                                    $saasDiscountType = $app->plans->annual_discount_type ?? 'percent';
+                                    $saasDiscountValue = $app->plans->annual_discount_value ?? 0;
+                                }
+                            @endphp
+                            
+                            <div x-data="{ billing: '{{ $saasCycle === 'monthly_yearly' ? 'monthly' : $saasCycle }}' }">
+                                @if($saasCycle === 'monthly_yearly')
+                                <div class="flex justify-center w-full mb-8">
+                                    <div class="toggle-container bg-gray-100 p-1 rounded-lg inline-flex">
+                                        <button @click="billing = 'monthly'" :class="billing === 'monthly' ? 'bg-white shadow text-blue-600' : 'text-gray-500 hover:text-gray-700'" class="px-6 py-2 text-sm font-bold rounded-md transition-all">Bulanan</button>
+                                        <button @click="billing = 'annually'" :class="billing === 'annually' ? 'bg-white shadow text-blue-600' : 'text-gray-500 hover:text-gray-700'" class="px-6 py-2 text-sm font-bold rounded-md transition-all">Tahunan <span class="text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full ml-1">Hemat</span></button>
                                     </div>
                                 </div>
                                 @endif
@@ -450,27 +467,83 @@
                                         @else
                                             @foreach(['ultimate', 'pro', 'starter'] as $planKey)
                                                 @if(isset($app->plans->$planKey))
-                                                    @php $plan = $app->plans->$planKey; @endphp
+                                                    @php 
+                                                        $plan = $app->plans->$planKey; 
+                                                        $monthlyPrice = $plan->price ?? 0;
+                                                        $yearlyBasePrice = $monthlyPrice * 12;
+                                                        $discountAmount = 0;
+                                                        if ($saasDiscountType === 'percent') {
+                                                            $discountAmount = $yearlyBasePrice * ($saasDiscountValue / 100);
+                                                        } else {
+                                                            $discountAmount = $saasDiscountValue;
+                                                        }
+                                                        $yearlyFinalPrice = max(0, $yearlyBasePrice - $discountAmount);
+                                                    @endphp
                                                     <div class="border-2 {{ $planKey === 'pro' ? 'border-blue-500' : 'border-gray-200' }} rounded-2xl p-6 relative bg-white {{ $planKey === 'pro' ? 'shadow-xl scale-[1.02]' : '' }} transition-transform">
                                                         @if($planKey === 'pro')<div class="absolute -top-3 inset-x-0 flex justify-center"><span class="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Paling Populer</span></div>@endif
                                                         
-                                                        <template x-if="billing === 'yearly'"><span class="discount-badge">{{ $plan->yearly->save_text ?? 'SAVE' }}</span></template>
+                                                        <template x-if="billing === 'annually' && {{ $discountAmount }} > 0">
+                                                            <span class="discount-badge text-xs bg-red-100 text-red-600 px-2 py-1 rounded font-bold absolute right-4 top-4">Diskon Tahunan</span>
+                                                        </template>
                                                         
                                                         @if(isset($plan->tag) && $plan->tag)<span class="best-value-badge">{{ $plan->tag }}</span>@endif
                                                         
                                                         <h3 class="font-bold text-gray-800 text-lg">{{ $plan->name }}</h3>
                                                         
                                                         <div class="mt-2 mb-4">
-                                                            <template x-if="billing === 'yearly'"><div><div class="flex items-baseline gap-1"><span class="text-3xl font-extrabold text-blue-800">Rp {{ number_format(($plan->yearly->price_mo ?? $plan->price) / 1000, 0) }}rb</span><span class="text-sm text-gray-500">/mo</span></div><p class="text-xs text-green-600 mt-1 font-bold">{{ $plan->yearly->save_text ?? '' }} promo</p></div></template>
-                                                            <template x-if="billing === 'trial'"><div><div class="flex items-baseline gap-1"><span class="text-3xl font-extrabold text-gray-800">Rp 0</span><span class="text-sm text-gray-500">/mo</span></div><p class="text-xs text-blue-500 mt-1 font-bold">Gratis 2 bulan</p></div></template>
+                                                            {{-- Monthly view --}}
+                                                            <template x-if="billing === 'monthly'">
+                                                                <div>
+                                                                    <div class="flex items-baseline gap-1">
+                                                                        <span class="text-3xl font-extrabold text-blue-800">Rp {{ number_format($monthlyPrice / 1000, 0) }}rb</span>
+                                                                        <span class="text-sm text-gray-500">/bln</span>
+                                                                    </div>
+                                                                </div>
+                                                            </template>
+                                                            {{-- Yearly view --}}
+                                                            <template x-if="billing === 'annually'">
+                                                                <div>
+                                                                    @if($saasCycle === 'monthly_yearly' && $discountAmount > 0)
+                                                                        <div class="text-xs text-gray-400 line-through">Rp {{ number_format($yearlyBasePrice / 1000, 0) }}rb</div>
+                                                                    @endif
+                                                                    <div class="flex items-baseline gap-1">
+                                                                        <span class="text-3xl font-extrabold text-blue-800">Rp {{ number_format($yearlyFinalPrice / 1000, 0) }}rb</span>
+                                                                        <span class="text-sm text-gray-500">/thn</span>
+                                                                    </div>
+                                                                </div>
+                                                            </template>
+                                                            {{-- Lifetime view --}}
+                                                            <template x-if="billing === 'lifetime'">
+                                                                <div>
+                                                                    <div class="flex items-baseline gap-1">
+                                                                        <span class="text-3xl font-extrabold text-blue-800">Rp {{ number_format($monthlyPrice / 1000, 0) }}rb</span>
+                                                                    </div>
+                                                                </div>
+                                                            </template>
                                                         </div>
                                                         
-                                                        <a href="{{ route('order.config.saas', ['product_name' => $app->name.' - '.$plan->name, 'price' => $plan->yearly->total_year ?? $plan->price, 'cycle' => 'annually']) }}" class="btn-action mb-3">Pilih Paket</a>
+                                                        <form action="{{ route('order.config.saas') }}" method="GET" class="w-full">
+                                                            <input type="hidden" name="product_name" value="{{ $app->name . ' - ' . $plan->name }}">
+                                                            <input type="hidden" name="price" :value="billing === 'annually' ? {{ $yearlyFinalPrice }} : {{ $monthlyPrice }}">
+                                                            <input type="hidden" name="cycle" :value="billing">
+                                                            <button type="submit" class="btn-action w-full mb-3">Pilih Paket</button>
+                                                        </form>
                                                         
-                                                        @if(isset($plan->features) && is_iterable($plan->features))
-                                                        <ul class="space-y-2 text-sm text-gray-600 border-t border-gray-100 pt-4">
-                                                            @foreach($plan->features as $feature)<li class="flex items-start gap-2"><i class="ri-check-line text-blue-500 mt-0.5"></i><span class="leading-tight">{{ $feature }}</span></li>@endforeach
-                                                        </ul>
+                                                        @if(isset($plan->features_raw))
+                                                            @php $features = array_map('trim', explode(',', $plan->features_raw)); @endphp
+                                                            <ul class="space-y-2 text-sm text-gray-600 border-t border-gray-100 pt-4">
+                                                                @foreach($features as $feature)
+                                                                    @if($feature)
+                                                                    <li class="flex items-start gap-2"><i class="ri-check-line text-blue-500 mt-0.5"></i><span class="leading-tight">{{ $feature }}</span></li>
+                                                                    @endif
+                                                                @endforeach
+                                                            </ul>
+                                                        @elseif(isset($plan->features) && is_iterable($plan->features))
+                                                            <ul class="space-y-2 text-sm text-gray-600 border-t border-gray-100 pt-4">
+                                                                @foreach($plan->features as $feature)
+                                                                    <li class="flex items-start gap-2"><i class="ri-check-line text-blue-500 mt-0.5"></i><span class="leading-tight">{{ $feature }}</span></li>
+                                                                @endforeach
+                                                            </ul>
                                                         @endif
                                                     </div>
                                                 @endif

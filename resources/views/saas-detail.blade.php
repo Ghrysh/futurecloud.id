@@ -154,7 +154,7 @@
                                 <div>
                                     <p class="text-[10px] text-gray-400 font-medium uppercase tracking-wide">Mulai dari</p>
                                     <p class="text-blue-600 font-bold text-sm md:text-lg">
-                                        Rp {{ number_format($app->price, 0, ',', '.') }}<span class="text-xs font-normal text-gray-400">{{ $app->cycle == 'monthly' ? '/bln' : ($app->cycle == 'annually' ? '/thn' : '') }}</span>
+                                        Rp {{ number_format($app->price, 0, ',', '.') }}<span class="text-xs font-normal text-gray-400">{{ in_array($app->cycle, ['monthly', 'monthly_yearly']) ? '/bln' : ($app->cycle == 'annually' ? '/thn' : '') }}</span>
                                     </p>
                                 </div>
                                 <span class="bg-gray-50 hover:bg-blue-600 hover:text-white text-blue-600 border border-blue-100 text-xs md:text-sm font-bold px-4 py-2 rounded-lg transition-colors duration-300">
@@ -235,7 +235,7 @@
                                     <div>
                                         <p class="text-[10px] text-gray-400 font-medium uppercase tracking-wide">Mulai dari</p>
                                         <p class="text-blue-600 font-bold text-sm md:text-lg">
-                                            Rp {{ number_format($plugin->price, 0, ',', '.') }}<span class="text-xs font-normal text-gray-400">{{ $plugin->cycle == 'monthly' ? '/bln' : ($plugin->cycle == 'annually' ? '/thn' : '') }}</span>
+                                            Rp {{ number_format($plugin->price, 0, ',', '.') }}<span class="text-xs font-normal text-gray-400">{{ in_array($plugin->cycle, ['monthly', 'monthly_yearly']) ? '/bln' : ($plugin->cycle == 'annually' ? '/thn' : '') }}</span>
                                         </p>
                                     </div>
                                     <span class="bg-gray-50 hover:bg-blue-600 hover:text-white text-blue-600 border border-blue-100 text-xs md:text-sm font-bold px-4 py-2 rounded-lg transition-colors duration-300">

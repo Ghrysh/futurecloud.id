@@ -68,6 +68,39 @@
                     </div>
                 </template>
             </div>
+            
+            <div class="mt-8 border-t border-gray-200 pt-6">
+                <h3 class="font-bold text-gray-800 mb-4">Pengaturan Siklus Tagihan Global</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Siklus Tagihan</label>
+                        <select name="plans[cycle]" x-model="form.cycle" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-gray-700">
+                            <option value="monthly">Bulanan (Monthly)</option>
+                            <option value="annually">Tahunan (Annually)</option>
+                            <option value="monthly_yearly">Bulanan & Tahunan (Bisa Pilih)</option>
+                            <option value="lifetime">Sekali Bayar (Lifetime)</option>
+                        </select>
+                    </div>
+                    
+                    <div x-show="form.cycle === 'monthly_yearly' || form.cycle === 'annually'" class="p-4 bg-gray-50 rounded-lg border border-gray-200 mt-4 space-y-4">
+                        <p class="text-sm text-gray-600 mb-2"><strong>Pengaturan Diskon Tahunan</strong><br>Jika memilih opsi tahunan, harga dasar (per bulan dari masing-masing paket) akan dikali 12, lalu dikurangi diskon berikut.</p>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Tipe Diskon</label>
+                                <select name="plans[annual_discount_type]" x-model="form.annual_discount_type" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-gray-700">
+                                    <option value="percent">Persentase (%)</option>
+                                    <option value="fixed">Nominal (Rp)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Nilai Diskon</label>
+                                <input type="number" name="plans[annual_discount_value]" x-model="form.annual_discount_value" placeholder="Contoh: 10 atau 50000" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-gray-700">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         {{-- KOLOM PENGATURAN URL EKSTERNAL --}}
@@ -106,7 +139,10 @@
                 tagline: data.tagline || '',
                 description: data.description || '',
                 is_external_url_active: (data.plans && data.plans.is_external_url_active == '1') ? true : false,
-                external_url: (data.plans && data.plans.external_url) ? data.plans.external_url : ''
+                external_url: (data.plans && data.plans.external_url) ? data.plans.external_url : '',
+                cycle: (data.plans && data.plans.cycle) ? data.plans.cycle : 'monthly_yearly',
+                annual_discount_type: (data.plans && data.plans.annual_discount_type) ? data.plans.annual_discount_type : 'percent',
+                annual_discount_value: (data.plans && data.plans.annual_discount_value) ? data.plans.annual_discount_value : 0,
             },
             // Struktur Default Plans
             plans: {
@@ -120,7 +156,7 @@
                 if (data.plans) {
                     // Mapping features array ke string koma
                     for (const [key, val] of Object.entries(data.plans)) {
-                        if(this.plans[key] && key !== 'is_external_url_active' && key !== 'external_url') {
+                        if(this.plans[key] && !['is_external_url_active', 'external_url', 'cycle', 'annual_discount_type', 'annual_discount_value'].includes(key)) {
                             this.plans[key].name = val.name;
                             this.plans[key].price = val.price;
                             this.plans[key].features_raw = Array.isArray(val.features) ? val.features.join(', ') : '';

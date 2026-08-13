@@ -42,6 +42,7 @@ class AdminSaasController extends Controller
         $data['user_id'] = Auth::guard('admin')->id() ?? Auth::id() ?? 1; 
         $data['status'] = 'approved'; // Admin auto approve
         $data['thumbnail'] = 'assets/img/placeholder.jpg'; // Default dulu
+        $data['features'] = $data['features'] ?? []; // Fix SQL error
 
         SaasProduct::create($data);
 
@@ -65,8 +66,13 @@ class AdminSaasController extends Controller
             'slug' => 'required|string|unique:saas_products,slug,'.$id,
             'price' => 'required|numeric',
         ]);
+        
+        $data = $request->all();
+        if (!isset($data['features'])) {
+            $data['features'] = [];
+        }
 
-        $app->update($request->all());
+        $app->update($data);
 
         return redirect()->route('admin.saas.index')->with('success', 'Aplikasi berhasil diperbarui.');
     }
