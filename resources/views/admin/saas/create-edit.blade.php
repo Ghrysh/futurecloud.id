@@ -38,7 +38,7 @@
         </div>
     @endif
     
-    <form action="{{ isset($saas) ? route('admin.saas.update', $saas->id) : route('admin.saas.store') }}" method="POST" class="space-y-6">
+    <form action="{{ isset($saas) ? route('admin.saas.update', $saas->id) : route('admin.saas.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
         @csrf
         @if(isset($saas)) @method('PUT') @endif
 
@@ -72,6 +72,17 @@
                 <div class="md:col-span-2">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Tagline Singkat</label>
                     <input type="text" name="tagline" x-model="form.tagline" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-gray-700">
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Gambar/Thumbnail</label>
+                    <input type="file" name="thumbnail" accept="image/*" class="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                    <p class="text-xs text-gray-400 mt-1">Kosongkan jika tidak ingin mengubah gambar.</p>
+                    @if(isset($saas) && $saas->thumbnail && $saas->thumbnail !== 'assets/img/placeholder.jpg')
+                        <div class="mt-2">
+                            <p class="text-xs text-gray-500 mb-1">Thumbnail saat ini:</p>
+                            <img src="{{ asset($saas->thumbnail) }}" alt="Thumbnail" class="h-20 rounded-md border border-gray-200">
+                        </div>
+                    @endif
                 </div>
                 <div class="md:col-span-2">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi Lengkap & Fitur</label>

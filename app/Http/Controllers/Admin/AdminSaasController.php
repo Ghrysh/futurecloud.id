@@ -41,7 +41,16 @@ class AdminSaasController extends Controller
         $data = $request->all();
         $data['user_id'] = Auth::guard('admin')->id() ?? Auth::id() ?? 1; 
         $data['status'] = 'approved'; // Admin auto approve
-        $data['thumbnail'] = 'assets/img/placeholder.jpg'; // Default dulu
+        
+        if ($request->hasFile('thumbnail')) {
+            $file = $request->file('thumbnail');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('assets/img/saas'), $filename);
+            $data['thumbnail'] = 'assets/img/saas/' . $filename;
+        } else {
+            $data['thumbnail'] = 'assets/img/placeholder.jpg'; // Default dulu
+        }
+        
         $data['features'] = $data['features'] ?? []; // Fix SQL error
 
         SaasProduct::create($data);
@@ -70,6 +79,13 @@ class AdminSaasController extends Controller
         $data = $request->all();
         if (!isset($data['features'])) {
             $data['features'] = [];
+        }
+        
+        if ($request->hasFile('thumbnail')) {
+            $file = $request->file('thumbnail');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('assets/img/saas'), $filename);
+            $data['thumbnail'] = 'assets/img/saas/' . $filename;
         }
 
         $app->update($data);
