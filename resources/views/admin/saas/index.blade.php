@@ -37,12 +37,7 @@
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-4">
                                     @php
-                                        $imgSrc = $app->thumbnail;
-                                        if (!Str::startsWith($imgSrc, 'http') && !Str::startsWith($imgSrc, 'assets')) {
-                                            $imgSrc = asset('storage/' . $imgSrc);
-                                        } else {
-                                            $imgSrc = asset($imgSrc);
-                                        }
+                                        $imgSrc = asset($app->thumbnail ?? 'assets/img/placeholder.jpg');
                                     @endphp
                                     <img src="{{ $imgSrc }}"
                                         class="w-10 h-10 rounded-lg object-cover border border-gray-200 shadow-sm">

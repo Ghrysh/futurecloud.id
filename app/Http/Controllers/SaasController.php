@@ -54,10 +54,6 @@ class SaasController extends Controller
         $isExternalUrlActive = is_array($dbApp->plans) && isset($dbApp->plans['is_external_url_active']) ? $dbApp->plans['is_external_url_active'] == '1' : false;
         $externalUrl = is_array($dbApp->plans) && isset($dbApp->plans['external_url']) ? $dbApp->plans['external_url'] : null;
 
-        if ($isExternalUrlActive && $externalUrl) {
-            return redirect()->away($externalUrl);
-        }
-
         // --- LOGIKA PEMISAHAN DESKRIPSI & FITUR (FIXED) ---
         $rawLines = explode("\n", str_replace("\r", "", $dbApp->description));
         

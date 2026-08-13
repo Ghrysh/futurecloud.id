@@ -455,7 +455,11 @@
                                                     <input type="hidden" name="cycle" :value="pluginBilling">
                                                     
                                                     <input type="hidden" name="domain_mode" value="skip">
-                                                    <button type="submit" class="btn-action w-full py-3 text-lg">Beli Sekarang</button>
+                                                    @if($isExternalUrlActive && $externalUrl)
+                                                        <a href="{{ $externalUrl }}" class="btn-action w-full py-3 text-lg block text-center mt-6">Beli Sekarang</a>
+                                                    @else
+                                                        <button type="submit" class="btn-action w-full py-3 text-lg mt-6">Beli Sekarang</button>
+                                                    @endif
                                                 </form>
                                                 
                                                 <div class="text-sm text-gray-500 border-t border-gray-100 pt-4 mt-4 text-center font-medium">
@@ -522,12 +526,16 @@
                                                             </template>
                                                         </div>
                                                         
-                                                        <form action="{{ route('order.config.saas') }}" method="GET" class="w-full">
-                                                            <input type="hidden" name="product_name" value="{{ $app->name . ' - ' . $plan->name }}">
-                                                            <input type="hidden" name="price" :value="billing === 'annually' ? {{ $yearlyFinalPrice }} : {{ $monthlyPrice }}">
-                                                            <input type="hidden" name="cycle" :value="billing">
-                                                            <button type="submit" class="btn-action w-full mb-3">Pilih Paket</button>
-                                                        </form>
+                                                        @if($isExternalUrlActive && $externalUrl)
+                                                            <a href="{{ $externalUrl }}" class="btn-action w-full mb-3 block text-center">Pilih Paket</a>
+                                                        @else
+                                                            <form action="{{ route('order.config.saas') }}" method="GET" class="w-full">
+                                                                <input type="hidden" name="product_name" value="{{ $app->name . ' - ' . $plan->name }}">
+                                                                <input type="hidden" name="price" :value="billing === 'annually' ? {{ $yearlyFinalPrice }} : {{ $monthlyPrice }}">
+                                                                <input type="hidden" name="cycle" :value="billing">
+                                                                <button type="submit" class="btn-action w-full mb-3">Pilih Paket</button>
+                                                            </form>
+                                                        @endif
                                                         
                                                         @if(isset($plan->features_raw))
                                                             @php $features = array_map('trim', explode(',', $plan->features_raw)); @endphp

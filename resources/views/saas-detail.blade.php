@@ -103,7 +103,7 @@
             <div id="saas-grid" class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
                 
                 @foreach ($apps as $app)
-                    <div onclick="window.location='{{ $app->is_external_url_active && $app->external_url ? $app->external_url : route('saas.show', $app->slug) }}'"
+                    <div onclick="window.location='{{ route('saas.show', $app->slug) }}'"
                         class="saas-card bg-white rounded-2xl border border-gray-200 overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 group flex flex-col hover:-translate-y-1 h-full"
                         data-name="{{ strtolower($app->name) }}" 
                         data-category="{{ $app->category }}">
@@ -184,7 +184,7 @@
 
                 <div id="plugin-grid" class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
                     @foreach ($plugins as $plugin)
-                        <div onclick="window.location='{{ $plugin->is_external_url_active && $plugin->external_url ? $plugin->external_url : route('saas.show', $plugin->slug) }}'"
+                        <div onclick="window.location='{{ route('saas.show', $plugin->slug) }}'"
                             class="saas-card bg-white rounded-2xl border border-gray-200 overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 group flex flex-col hover:-translate-y-1 h-full"
                             data-name="{{ strtolower($plugin->name) }}" 
                             data-category="{{ $plugin->category }}">
