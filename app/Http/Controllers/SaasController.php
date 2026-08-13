@@ -113,7 +113,7 @@ class SaasController extends Controller
 
         $realReviews = SaasReview::with('user')->where('saas_slug', $slug)->latest()->get();
 
-        return view('saas.show', compact('app', 'realReviews', 'slug'));
+        return view('saas.show', compact('app', 'realReviews', 'slug', 'isExternalUrlActive', 'externalUrl'));
     }
 
     public function storeReview(Request $request, $slug)
