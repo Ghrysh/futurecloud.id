@@ -43,10 +43,8 @@ class AdminSaasController extends Controller
         $data['status'] = 'approved'; // Admin auto approve
         
         if ($request->hasFile('thumbnail')) {
-            $file = $request->file('thumbnail');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('assets/img/saas'), $filename);
-            $data['thumbnail'] = 'assets/img/saas/' . $filename;
+            $path = $request->file('thumbnail')->store('saas', 'public');
+            $data['thumbnail'] = 'storage/' . $path;
         } else {
             $data['thumbnail'] = 'assets/img/placeholder.jpg'; // Default dulu
         }
@@ -82,10 +80,8 @@ class AdminSaasController extends Controller
         }
         
         if ($request->hasFile('thumbnail')) {
-            $file = $request->file('thumbnail');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('assets/img/saas'), $filename);
-            $data['thumbnail'] = 'assets/img/saas/' . $filename;
+            $path = $request->file('thumbnail')->store('saas', 'public');
+            $data['thumbnail'] = 'storage/' . $path;
         }
 
         $app->update($data);
