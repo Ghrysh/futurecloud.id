@@ -572,7 +572,7 @@
 
                 // Update URL Order
                 let orderRoute = (sectionId === 'vps') ? 'vps' : 'cpanel';
-                const baseUrl = `/order/config/${orderRoute}`; // Sesuaikan dengan route Anda
+                const baseUrl = `/order/${orderRoute}`; // Sesuaikan dengan route Anda
                 btnEl.href = `${baseUrl}?product_name=${encodeURIComponent(planName)}&price=${finalPrice}&cycle=${cycle}`;
 
             } catch (error) {
