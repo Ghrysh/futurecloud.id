@@ -167,7 +167,7 @@ class NamecheapService
         ];
 
         try {
-            $response = Http::withoutVerifying()->get($this->baseUrl, $params);
+            $response = Http::withoutVerifying()->timeout(120)->get($this->baseUrl, $params);
 
             if ($response->failed()) {
                 throw new Exception("HTTP Error saat getPricing.");
