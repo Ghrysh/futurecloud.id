@@ -86,6 +86,25 @@ class SyncDomainPricing extends Command
                         'renew' => ['type' => 'none', 'value' => '0', 'label' => null],
                         'transfer' => ['type' => 'none', 'value' => '0', 'label' => null]
                     ];
+                } elseif ($renewUsd > 0 && $priceUsd > 0 && $priceUsd < $renewUsd) {
+                    // Fallback: Jika Namecheap tidak mengirim PromotionPrice, tapi harga Register lebih murah dari Renew
+                    // Anggap Harga Normal = Harga Renew, dan Harga Promo = Harga Register
+                    
+                    // Simpan harga asli Register sebagai harga Promo
+                    $finalDiscountPrice = $finalPrice; 
+                    
+                    // Ubah harga Normal menjadi harga Renew
+                    $finalPrice = $finalRenewPrice;
+                    
+                    $discountConfig = [
+                        'register' => [
+                            'type' => 'fixed',
+                            'value' => $finalDiscountPrice,
+                            'label' => 'Off 1st Year'
+                        ],
+                        'renew' => ['type' => 'none', 'value' => '0', 'label' => null],
+                        'transfer' => ['type' => 'none', 'value' => '0', 'label' => null]
+                    ];
                 }
 
                 // Update atau Create di DB
