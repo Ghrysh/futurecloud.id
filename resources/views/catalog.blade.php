@@ -26,52 +26,68 @@
 @section('content')
 
     {{-- HERO SECTION --}}
-    <section class="w-full pt-32 pb-20 px-4 text-center bg-[#0a192f] text-white relative overflow-hidden">
-        <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+    <section class="w-full pt-32 pb-20 px-4 bg-[#0a192f] text-white relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-full opacity-20 pointer-events-none">
             <div class="absolute top-10 left-10 w-32 h-32 bg-blue-500 rounded-full blur-3xl"></div>
-            <div class="absolute bottom-10 right-10 w-64 h-64 bg-purple-500 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-10 right-10 w-64 h-64 bg-cyan-500 rounded-full blur-3xl"></div>
         </div>
 
-        <div class="max-w-5xl mx-auto relative z-10">
-            <span class="inline-block py-1 px-3 rounded-full bg-blue-900/50 border border-blue-500/30 text-blue-300 text-xs font-semibold tracking-wider mb-4 uppercase">One Stop Solution</span>
+        <div class="max-w-7xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             
-            <h1 class="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-6">
-                Katalog Lengkap<br>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Layanan Digital</span>
-            </h1>
+            {{-- Text Content --}}
+            <div class="text-center lg:text-left">
+                <span class="inline-block py-1 px-3 rounded-full bg-blue-900/50 border border-blue-500/30 text-blue-300 text-xs font-semibold tracking-wider mb-4 uppercase">One Stop Solution</span>
+                
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6">
+                    Katalog Lengkap<br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Layanan Digital</span>
+                </h1>
 
-            <p class="text-blue-100 text-lg mb-8 font-light max-w-2xl mx-auto leading-relaxed px-4">
-                Semua kebutuhan infrastruktur digital Anda ada di sini. Pilih layanan terbaik untuk pertumbuhan bisnis Anda.
-            </p>
+                <p class="text-blue-100 text-lg mb-8 font-light max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                    Semua kebutuhan infrastruktur digital Anda ada di sini. Pilih layanan terbaik untuk pertumbuhan bisnis Anda.
+                </p>
 
-            {{-- Trust Badges --}}
-            <div class="flex flex-wrap justify-center gap-6 mb-10 text-sm font-medium text-blue-200">
-                <div class="flex items-center gap-2">
-                    <i class="ri-checkbox-circle-fill text-green-400 text-lg"></i> <span>Aktivasi Instan</span>
+                {{-- Trust Badges --}}
+                <div class="flex flex-wrap justify-center lg:justify-start gap-6 mb-10 text-sm font-medium text-blue-200">
+                    <div class="flex items-center gap-2">
+                        <i class="ri-checkbox-circle-fill text-green-400 text-lg"></i> <span>Aktivasi Instan</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="ri-shield-check-fill text-green-400 text-lg"></i> <span>Uptime 99.9%</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="ri-customer-service-2-fill text-green-400 text-lg"></i> <span>Support 24/7</span>
+                    </div>
                 </div>
-                <div class="flex items-center gap-2">
-                    <i class="ri-shield-check-fill text-green-400 text-lg"></i> <span>Uptime 99.9%</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <i class="ri-customer-service-2-fill text-green-400 text-lg"></i> <span>Support 24/7</span>
+
+                {{-- Anchor Navigation --}}
+                <div class="flex flex-wrap justify-center lg:justify-start gap-3 mt-8">
+                    <a href="#domain" class="px-5 py-2.5 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-full text-sm font-semibold hover:bg-blue-600 hover:border-transparent transition flex items-center gap-2">
+                        <i class="ri-global-line"></i> Domain
+                    </a>
+                    <a href="#hosting" class="px-5 py-2.5 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-full text-sm font-semibold hover:bg-blue-600 hover:border-transparent transition flex items-center gap-2">
+                        <i class="ri-hard-drive-2-line"></i> Hosting
+                    </a>
+                    <a href="#vps" class="px-5 py-2.5 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-full text-sm font-semibold hover:bg-blue-600 hover:border-transparent transition flex items-center gap-2">
+                        <i class="ri-server-line"></i> VPS
+                    </a>
+                    <a href="#saas" class="px-5 py-2.5 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-full text-sm font-semibold hover:bg-blue-600 hover:border-transparent transition flex items-center gap-2">
+                        <i class="ri-apps-line"></i> SaaS
+                    </a>
                 </div>
             </div>
 
-            {{-- Anchor Navigation --}}
-            <div class="flex flex-wrap justify-center gap-3 mt-8">
-                <a href="#domain" class="px-5 py-2.5 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-full text-sm font-semibold hover:bg-blue-600 hover:border-transparent transition flex items-center gap-2">
-                    <i class="ri-global-line"></i> Domain
-                </a>
-                <a href="#hosting" class="px-5 py-2.5 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-full text-sm font-semibold hover:bg-blue-600 hover:border-transparent transition flex items-center gap-2">
-                    <i class="ri-hard-drive-2-line"></i> Hosting
-                </a>
-                <a href="#vps" class="px-5 py-2.5 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-full text-sm font-semibold hover:bg-blue-600 hover:border-transparent transition flex items-center gap-2">
-                    <i class="ri-server-line"></i> VPS
-                </a>
-                <a href="#saas" class="px-5 py-2.5 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-full text-sm font-semibold hover:bg-blue-600 hover:border-transparent transition flex items-center gap-2">
-                    <i class="ri-apps-line"></i> SaaS
-                </a>
+            {{-- Image / Illustration --}}
+            <div class="relative hidden lg:block">
+                {{-- Glow effect behind image --}}
+                <div class="absolute inset-0 bg-blue-500/10 rounded-full blur-[100px]"></div>
+                
+                {{-- The generated image with mask to hide left side text and blend in --}}
+                <img src="{{ asset('img/catalog-hero.jpg') }}" alt="Cloud Infrastructure" 
+                     class="relative z-10 w-full h-auto object-cover rounded-3xl transform hover:scale-[1.02] transition duration-700 opacity-90 mix-blend-screen" 
+                     style="-webkit-mask-image: linear-gradient(to right, transparent 5%, black 40%); mask-image: linear-gradient(to right, transparent 5%, black 40%);">
             </div>
+
         </div>
     </section>
 
