@@ -40,9 +40,22 @@
                 <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Layanan Digital</span>
             </h1>
 
-            <p class="text-blue-100 text-lg mb-10 font-light max-w-2xl mx-auto leading-relaxed px-4">
+            <p class="text-blue-100 text-lg mb-8 font-light max-w-2xl mx-auto leading-relaxed px-4">
                 Semua kebutuhan infrastruktur digital Anda ada di sini. Pilih layanan terbaik untuk pertumbuhan bisnis Anda.
             </p>
+
+            {{-- Trust Badges --}}
+            <div class="flex flex-wrap justify-center gap-6 mb-10 text-sm font-medium text-blue-200">
+                <div class="flex items-center gap-2">
+                    <i class="ri-checkbox-circle-fill text-green-400 text-lg"></i> <span>Aktivasi Instan</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <i class="ri-shield-check-fill text-green-400 text-lg"></i> <span>Uptime 99.9%</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <i class="ri-customer-service-2-fill text-green-400 text-lg"></i> <span>Support 24/7</span>
+                </div>
+            </div>
 
             {{-- Anchor Navigation --}}
             <div class="flex flex-wrap justify-center gap-3 mt-8">
@@ -326,6 +339,64 @@
                 <span>Jelajahi Marketplace</span>
                 <i class="ri-arrow-right-line"></i>
             </a>
+        </div>
+    </section>
+
+    {{-- SEO / INFORMATIVE SECTION --}}
+    <section class="w-full py-20 px-4 bg-white border-t border-gray-100">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div>
+                <h2 class="text-3xl font-extrabold text-gray-900 mb-6">Mengapa Memilih Layanan FutureCloud?</h2>
+                <div class="space-y-6">
+                    <div class="flex gap-4">
+                        <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center shrink-0">
+                            <i class="ri-rocket-line text-2xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-900 text-lg">Performa Super Cepat</h4>
+                            <p class="text-gray-600 mt-1">Server kami dioptimalkan dengan teknologi NVMe SSD dan LiteSpeed untuk menjamin kecepatan loading website Anda maksimal.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center shrink-0">
+                            <i class="ri-lock-2-line text-2xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-900 text-lg">Keamanan Tingkat Tinggi</h4>
+                            <p class="text-gray-600 mt-1">Dilengkapi dengan Imunify360, SSL Gratis, dan proteksi Anti-DDoS untuk menjaga data Anda dari ancaman siber.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center shrink-0">
+                            <i class="ri-wallet-3-line text-2xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-900 text-lg">Harga Transparan</h4>
+                            <p class="text-gray-600 mt-1">Tidak ada biaya tersembunyi. Dapatkan fitur premium dengan harga yang sangat terjangkau untuk semua kalangan.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-50 rounded-2xl p-8 border border-gray-100">
+                <h3 class="text-xl font-bold text-gray-900 mb-4">Butuh Bantuan Memilih Paket?</h3>
+                <p class="text-gray-600 mb-6">
+                    Tim ahli kami siap membantu Anda menentukan layanan yang paling pas untuk skala dan kebutuhan bisnis Anda saat ini.
+                </p>
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-center gap-2 text-gray-700">
+                        <i class="ri-check-line text-green-500"></i> Konsultasi Infrastruktur Gratis
+                    </li>
+                    <li class="flex items-center gap-2 text-gray-700">
+                        <i class="ri-check-line text-green-500"></i> Bantuan Migrasi Website
+                    </li>
+                    <li class="flex items-center gap-2 text-gray-700">
+                        <i class="ri-check-line text-green-500"></i> Rekomendasi Skalabilitas
+                    </li>
+                </ul>
+                <a href="{{ route('contact') }}" class="block w-full py-3 text-center bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700 transition">
+                    Hubungi Tim Support
+                </a>
+            </div>
         </div>
     </section>
 

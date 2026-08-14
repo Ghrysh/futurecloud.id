@@ -47,7 +47,7 @@
 <body class="antialiased bg-gray-50">
 
     <!-- Navbar -->
-    <nav x-data="{ mobileMenuOpen: false, atTop: true, isHome: {{ request()->is('/') ? 'true' : 'false' }} }" 
+    <nav x-data="{ mobileMenuOpen: false, atTop: true, isHome: {{ request()->is('/') || request()->is('catalog') ? 'true' : 'false' }} }" 
          @scroll.window="atTop = (window.pageYOffset < 20)"
          :class="{ 
              'bg-transparent border-transparent': atTop && isHome, 
@@ -431,7 +431,7 @@
         </div>
     </nav>
 
-    <div class="{{ request()->is('/') ? '' : 'pt-20' }}">
+    <div class="{{ request()->is('/') || request()->is('catalog') ? '' : 'pt-20' }}">
         @yield('content')
     </div>
 
