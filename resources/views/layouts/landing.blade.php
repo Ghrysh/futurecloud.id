@@ -51,7 +51,7 @@
          @scroll.window="atTop = (window.pageYOffset < 20)"
          :class="{ 
              'bg-transparent border-transparent': atTop && isHome, 
-             'bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-100': !atTop || !isHome 
+             'bg-white/50 backdrop-blur-xl backdrop-saturate-150 shadow-sm border-b border-gray-200/50': !atTop || !isHome 
          }"
          class="w-full fixed top-0 left-0 z-50 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
