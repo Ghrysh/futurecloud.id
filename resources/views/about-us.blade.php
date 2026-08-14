@@ -68,18 +68,11 @@
             <div>
                 <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-6 leading-tight">Siapa <span class="text-blue-600">FutureCloud?</span></h2>
                 <p class="text-gray-600 text-lg mb-6 leading-relaxed">
-                    Di bawah naungan <strong>PT Berkah Teknologi Terdepan</strong>, FutureCloud.id lahir dari keinginan untuk mendemokratisasi akses ke infrastruktur cloud berkualitas enterprise bagi perusahaan dari segala ukuran di Indonesia.
+                    <strong>PT Berkah Teknologi Terdepan (FutureCloud.id)</strong> adalah penyedia terkemuka di Indonesia untuk infrastruktur cloud generasi mendatang, pengembangan aplikasi kustom, dan layanan konsultasi TI strategis.
                 </p>
-                <p class="text-gray-600 text-lg mb-8 leading-relaxed">
-                    Tim kami terdiri dari insinyur bersertifikat, pengembang kreatif, dan ahli strategi bisnis yang bekerja sama untuk memecahkan masalah paling kompleks menggunakan teknologi terkini.
+                <p class="text-gray-600 text-lg leading-relaxed">
+                    Misi utama kami adalah memberdayakan bisnis dengan teknologi cloud mutakhir dan solusi inovatif yang mendorong transformasi digital, meningkatkan efisiensi operasional, serta mempercepat pertumbuhan perusahaan Anda.
                 </p>
-                <div class="flex items-center gap-4">
-                    <img src="https://ui-avatars.com/api/?name=CEO&background=0D8ABC&color=fff" alt="CEO" class="w-12 h-12 rounded-full ring-2 ring-blue-100">
-                    <div>
-                        <h4 class="font-bold text-gray-900">Budi Santoso</h4>
-                        <p class="text-sm text-gray-500">CEO & Pendiri</p>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
