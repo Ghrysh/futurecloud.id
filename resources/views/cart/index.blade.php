@@ -38,7 +38,7 @@
                 </div>
                 <h2 class="text-2xl font-bold text-slate-900 mb-2">Keranjang Kosong</h2>
                 <p class="text-slate-500 mb-8 font-medium">Anda belum menambahkan layanan apa pun ke dalam keranjang.</p>
-                <a href="{{ route('landing') }}" class="inline-flex px-8 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-600/30 transition-all hover:-translate-y-0.5">
+                <a href="{{ route('home') }}" class="inline-flex px-8 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-600/30 transition-all hover:-translate-y-0.5">
                     Mulai Belanja <i class="ri-arrow-right-line ml-2"></i>
                 </a>
             </div>

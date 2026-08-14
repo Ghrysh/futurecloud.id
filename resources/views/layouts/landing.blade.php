@@ -205,7 +205,8 @@
                                     src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
                                 <div class="flex items-center gap-2">
                                     <span
-                                        class="text-sm font-semibold text-gray-700 max-w-[100px] truncate">{{ Auth::user()->name }}</span>
+                                        class="text-sm font-semibold max-w-[100px] truncate transition-colors"
+                                        :class="(atTop && isDarkTheme) ? 'text-gray-200' : 'text-gray-700'">{{ Auth::user()->name }}</span>
                                     <i class="ri-arrow-down-s-line text-gray-400 text-lg transition-transform duration-200"
                                         :class="{ 'rotate-180': open }"></i>
                                 </div>
