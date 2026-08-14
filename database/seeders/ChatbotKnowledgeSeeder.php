@@ -72,6 +72,36 @@ class ChatbotKnowledgeSeeder extends Seeder
                 'intent_name' => 'saas_info',
                 'keywords' => json_encode(['saas', 'aplikasi jadi', 'bikin aplikasi', 'pesan website', 'custom app']),
                 'response' => 'Layanan SaaS (Software as a Service) kami menawarkan berbagai aplikasi siap pakai seperti Sistem ERP, Aplikasi POS/Kasir, dan Web Company Profile. Kami juga melayani pembuatan aplikasi kustom (Custom Development) sesuai alur bisnis Anda.'
+            ],
+            [
+                'topic' => 'Jam Operasional',
+                'intent_name' => 'operational_hours',
+                'keywords' => json_encode(['jam kerja', 'jam operasional', 'buka jam', 'tutup jam', 'kapan buka']),
+                'response' => 'Tim Technical Support kami beroperasi 24/7 (24 Jam sehari, 7 hari seminggu). Sementara untuk layanan billing dan administrasi beroperasi pada hari kerja (Senin - Jumat) pukul 09.00 - 17.00 WIB.'
+            ],
+            [
+                'topic' => 'Keamanan dan Backup',
+                'intent_name' => 'security_backup',
+                'keywords' => json_encode(['aman', 'backup', 'keamanan', 'data hilang', 'hacker', 'virus', 'ddos']),
+                'response' => 'Keamanan Anda adalah prioritas kami. Layanan Hosting FutureCloud dilengkapi dengan Imunify360, perlindungan Anti-DDoS, dan Backup otomatis 2 kali seminggu untuk paket standar, serta fitur AutoBackup khusus untuk paket tertentu. VPS juga memiliki dukungan firewall canggih.'
+            ],
+            [
+                'topic' => 'Upgrade dan Downgrade Layanan',
+                'intent_name' => 'upgrade_downgrade',
+                'keywords' => json_encode(['upgrade', 'downgrade', 'naik paket', 'turun paket', 'tambah ram', 'tambah disk']),
+                'response' => 'Anda bisa melakukan Upgrade layanan (seperti naik paket Hosting atau VPS) kapan saja melalui Client Area. Prosesnya cepat dan tanpa downtime yang berarti. Untuk downgrade, silakan hubungi tim Support kami terlebih dahulu.'
+            ],
+            [
+                'topic' => 'Promosi dan Diskon',
+                'intent_name' => 'promo_discount',
+                'keywords' => json_encode(['promo', 'diskon', 'potongan harga', 'murah', 'kupon', 'voucher']),
+                'response' => 'FutureCloud sering mengadakan promo spesial! Anda bisa melihat diskon terbaru untuk Domain, Hosting, maupun VPS langsung di halaman utama website kami. Beberapa paket bahkan memiliki diskon hingga 50% untuk penagihan tahunan.'
+            ],
+            [
+                'topic' => 'Program Reseller dan Afiliasi',
+                'intent_name' => 'reseller_affiliate',
+                'keywords' => json_encode(['reseller', 'afiliasi', 'kerjasama', 'jual lagi', 'untung']),
+                'response' => 'Saat ini kami memiliki program Afiliasi yang memungkinkan Anda mendapatkan komisi dengan mereferensikan FutureCloud. Kami juga menyediakan paket khusus jika Anda tertarik untuk menjadi Reseller layanan kami. Hubungi Sales untuk info lebih lanjut.'
             ]
         ];
 
