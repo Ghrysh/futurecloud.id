@@ -47,7 +47,7 @@
 <body class="antialiased bg-gray-50">
 
     <!-- Navbar -->
-    <nav x-data="{ mobileMenuOpen: false, atTop: true, isHome: {{ request()->is('/') || request()->is('catalog') ? 'true' : 'false' }} }" 
+    <nav x-data="{ mobileMenuOpen: false, atTop: true, isHome: {{ request()->is('/') || request()->is('catalog') ? 'true' : 'false' }}, isDarkTheme: {{ request()->is('catalog') ? 'true' : 'false' }} }" 
          @scroll.window="atTop = (window.pageYOffset < 20)"
          :class="{ 
              'bg-transparent border-transparent': atTop && isHome, 
@@ -64,11 +64,11 @@
                         <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center text-blue-600">
                             <i class="ri-cloud-fill text-2xl"></i>
                         </div>
-                        <h1 class="font-bold text-xl tracking-tight text-gray-900 block">FutureCloud<span
+                        <h1 class="font-bold text-xl tracking-tight block" :class="(atTop && isDarkTheme) ? 'text-white' : 'text-gray-900'">FutureCloud<span
                                 class="text-blue-600">.id</span></h1>
                     </div>
 
-                    <ul class="hidden lg:flex items-center gap-6 text-sm font-medium text-gray-600">
+                    <ul class="hidden lg:flex items-center gap-6 text-sm font-medium" :class="(atTop && isDarkTheme) ? 'text-gray-300' : 'text-gray-600'">
                         <li><a href="{{ url('/') }}"
                                 class="hover:text-blue-600 transition-colors {{ request()->is('/') ? 'text-blue-600' : '' }}">Beranda</a>
                         </li>
@@ -124,7 +124,8 @@
 
                         {{-- [BARU] KERANJANG DESKTOP --}}
                         <a href="{{ route('cart.index') }}"
-                            class="relative p-2 text-gray-500 hover:text-blue-600 transition rounded-full hover:bg-gray-100 ml-1">
+                            class="relative p-2 hover:text-blue-600 transition rounded-full hover:bg-gray-100/20 ml-1"
+                            :class="(atTop && isDarkTheme) ? 'text-gray-200' : 'text-gray-500'">
                             <i class="ri-shopping-cart-2-line text-xl"></i>
                             @php $cartCount = \App\Models\Cart::where('user_id', auth()->id())->count(); @endphp
                             @if ($cartCount > 0)
@@ -137,7 +138,8 @@
                         <div x-data="{ open: false }" class="relative">
                             <button
                                 @click="open = !open; if(open){ fetch('{{ route('notifications.read') }}', {method: 'POST', headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'}}); }"
-                                class="relative p-2 text-gray-500 hover:text-blue-600 transition rounded-full hover:bg-gray-100 focus:outline-none">
+                                class="relative p-2 hover:text-blue-600 transition rounded-full hover:bg-gray-100/20 focus:outline-none"
+                                :class="(atTop && isDarkTheme) ? 'text-gray-200' : 'text-gray-500'">
                                 <i class="ri-notification-3-line text-xl"></i>
                                 @if (auth()->user()->unreadNotifications->count() > 0)
                                     <span
@@ -227,7 +229,8 @@
                         {{-- Guest Desktop --}}
                         <div class="flex items-center gap-4">
                             <a href="{{ route('login') }}"
-                                class="text-sm font-semibold text-gray-600 hover:text-blue-600 transition">Masuk</a>
+                                class="text-sm font-semibold hover:text-blue-600 transition"
+                                :class="(atTop && isDarkTheme) ? 'text-gray-200' : 'text-gray-600'">Masuk</a>
                             <a href="{{ route('register') }}"
                                 class="px-5 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition shadow-md shadow-blue-200">Daftar</a>
                         </div>
@@ -401,7 +404,8 @@
 
                     {{-- Hamburger Menu --}}
                     <button @click="mobileMenuOpen = !mobileMenuOpen"
-                        class="p-2 text-gray-600 hover:text-blue-600 focus:outline-none ml-1">
+                        class="p-2 hover:text-blue-600 focus:outline-none ml-1"
+                        :class="(atTop && isDarkTheme && !mobileMenuOpen) ? 'text-gray-200' : 'text-gray-600'">
                         <i class="text-2xl" :class="mobileMenuOpen ? 'ri-close-line' : 'ri-menu-4-line'"></i>
                     </button>
                 </div>
