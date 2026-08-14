@@ -135,4 +135,32 @@ class HeroController extends Controller
 
         return back()->with('success', 'Urutan slider diperbarui.');
     }
+
+    public function updatePromo(Request $request)
+    {
+        $request->validate([
+            'promo_url' => 'nullable|string|max:255',
+            'promo_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+        ]);
+
+        $hero = HeroSetting::firstOrCreate([]);
+        
+        $hero->is_promo_active = $request->has('is_promo_active');
+        $hero->promo_url = $request->promo_url;
+
+        if ($request->hasFile('promo_image')) {
+            // Hapus gambar lama jika ada
+            if ($hero->promo_image && Storage::disk('public')->exists($hero->promo_image)) {
+                Storage::disk('public')->delete($hero->promo_image);
+            }
+            
+            // Upload gambar baru
+            $path = $request->file('promo_image')->store('promo', 'public');
+            $hero->promo_image = $path;
+        }
+
+        $hero->save();
+
+        return back()->with('success', 'Pengaturan Promo Banner berhasil diperbarui!');
+    }
 }

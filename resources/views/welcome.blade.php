@@ -845,6 +845,57 @@
         </div>
     </section>
 
+    {{-- PROMO BANNER POPUP --}}
+    @if(isset($hero) && $hero->is_promo_active && !empty($hero->promo_image))
+    <div x-data="{ 
+            showPromo: false,
+            init() {
+                if(!sessionStorage.getItem('promo_closed')) {
+                    setTimeout(() => { this.showPromo = true; }, 800);
+                }
+            },
+            closePromo() {
+                this.showPromo = false;
+                sessionStorage.setItem('promo_closed', 'true');
+            }
+         }"
+         x-show="showPromo" 
+         x-cloak
+         x-transition.opacity.duration.500ms
+         class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm"
+         style="display: none;">
+         
+         {{-- Backdrop --}}
+         <div class="absolute inset-0 cursor-pointer" @click="closePromo()"></div>
+
+         {{-- Modal --}}
+         <div class="relative z-10 w-full max-w-md bg-transparent rounded-2xl shadow-2xl transform transition-all"
+              x-show="showPromo"
+              x-transition:enter="transition ease-out duration-500 delay-100"
+              x-transition:enter-start="opacity-0 translate-y-8 scale-95"
+              x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+              x-transition:leave="transition ease-in duration-300"
+              x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+              x-transition:leave-end="opacity-0 translate-y-8 scale-95">
+             
+             <button @click="closePromo()" class="absolute -top-4 -right-4 w-9 h-9 flex items-center justify-center bg-white text-gray-900 rounded-full hover:bg-gray-100 hover:text-red-500 shadow-lg transition z-20">
+                 <i class="ri-close-line text-xl font-bold"></i>
+             </button>
+
+             @if($hero->promo_url)
+                 <a href="{{ $hero->promo_url }}" class="block w-full h-full relative group overflow-hidden rounded-2xl">
+                     <img src="{{ asset('storage/' . $hero->promo_image) }}" alt="Promo Spesial" class="w-full h-auto object-cover rounded-2xl group-hover:scale-[1.02] transition duration-500">
+                     <div class="absolute inset-0 bg-white/0 group-hover:bg-white/10 transition duration-300"></div>
+                 </a>
+             @else
+                 <div class="block w-full h-full relative rounded-2xl overflow-hidden">
+                     <img src="{{ asset('storage/' . $hero->promo_image) }}" alt="Promo Spesial" class="w-full h-auto object-cover rounded-2xl">
+                 </div>
+             @endif
+         </div>
+    </div>
+    @endif
+
     <script>
         class HomeController {
             constructor() {

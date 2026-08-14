@@ -342,6 +342,7 @@ Route::prefix('admin')->middleware('auth:admin')->name('admin.')->group(function
         Route::post('/add-image', 'addImage')->name('add_image');
         Route::delete('/delete-image', 'destroyImage')->name('delete_image');
         Route::patch('/reorder-image', 'reorderImage')->name('reorder_image');
+        Route::post('/update-promo', 'updatePromo')->name('update_promo');
     });
 });
 

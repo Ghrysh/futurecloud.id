@@ -178,6 +178,56 @@
             </div>
         </div>
     </div>
+
+    {{-- 3. PROMO BANNER POPUP --}}
+    <div class="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-gray-100 mt-6 sm:mt-8">
+        <div class="flex items-center gap-2 mb-4 border-b pb-2">
+            <div class="w-8 h-8 bg-pink-100 rounded-lg flex items-center justify-center text-pink-600">
+                <i class="ri-advertisement-line text-lg"></i>
+            </div>
+            <h3 class="font-bold text-gray-800 text-sm sm:text-base">3. Banner Promo Popup</h3>
+        </div>
+
+        <form action="{{ route('admin.hero.update_promo') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+            @csrf
+            
+            <div class="flex items-center gap-3">
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" name="is_promo_active" class="sr-only peer" {{ ($hero->is_promo_active ?? false) ? 'checked' : '' }}>
+                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                </label>
+                <span class="text-sm font-bold text-gray-700">Aktifkan Promo Popup</span>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">URL Redirect (Opsional)</label>
+                <input type="text" name="promo_url" value="{{ old('promo_url', $hero->promo_url ?? '') }}" placeholder="https://..."
+                       class="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-gray-700">
+                <p class="text-xs text-gray-500 mt-1">Ke mana pengunjung akan diarahkan saat gambar di-klik?</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Upload Gambar Banner</label>
+                    <input type="file" name="promo_image" accept="image/*" class="w-full px-3 py-2 text-sm rounded-lg border border-gray-300 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-gray-700">
+                    <p class="text-xs text-gray-500 mt-2">Maksimal 5MB. Saran: Gambar Portrait/Square (Misal 800x800 atau 600x800).</p>
+                </div>
+                
+                @if(!empty($hero->promo_image))
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Banner Saat Ini</label>
+                    <div class="border rounded-lg p-2 bg-gray-50 flex justify-center">
+                        <img src="{{ asset('storage/' . $hero->promo_image) }}" alt="Promo Banner" class="max-h-48 rounded object-contain shadow-sm">
+                    </div>
+                </div>
+                @endif
+            </div>
+
+            <button type="submit" class="bg-pink-600 text-white px-6 py-2.5 rounded-lg font-bold hover:bg-pink-700 transition text-sm sm:text-base">
+                Simpan Pengaturan Promo
+            </button>
+        </form>
+    </div>
 </div>
 
 <script>
