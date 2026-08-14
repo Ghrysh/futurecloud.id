@@ -27,7 +27,7 @@
         'EU' => 'Europe (Netherlands)',
         default => 'Global'
     };
-    $flagUrl = "https://flagcdn.com/w20/" . strtolower($dcCode == 'UK' ? 'gb' : $dcCode) . ".png";
+    $flagUrl = "https://flagcdn.com/w20/" . strtolower($dcCode == 'UK' ? 'gb' : $dcCode) . ".webp";
 @endphp
 
 <div class="space-y-6">

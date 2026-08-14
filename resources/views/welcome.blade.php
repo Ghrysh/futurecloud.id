@@ -48,7 +48,7 @@
 
     {{-- HERO SLIDER LOGIC --}}
     @php
-        $bgImages = $hero && $hero->background_images ? $hero->background_images : ['assets/bg.jpg'];
+        $bgImages = $hero && $hero->background_images ? $hero->background_images : ['assets/bg.webp'];
         $slides = array_map(function ($path) {
             return str_starts_with($path, 'assets/') ? asset($path) : asset('storage/' . $path);
         }, $bgImages);

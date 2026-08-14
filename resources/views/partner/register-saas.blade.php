@@ -313,7 +313,7 @@
                 // Konversi ke Blob dan Ganti File Input
                 canvas.toBlob(function (blob) {
                     // Buat File object baru dari Blob
-                    const file = new File([blob], "cropped_thumbnail.jpg", { type: "image/jpeg" });
+                    const file = new File([blob], "cropped_thumbnail.webp", { type: "image/jpeg" });
                     
                     // Gunakan DataTransfer untuk memanipulasi input file
                     const dataTransfer = new DataTransfer();

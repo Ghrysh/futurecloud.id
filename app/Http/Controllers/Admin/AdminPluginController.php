@@ -46,7 +46,7 @@ class AdminPluginController extends Controller
             $path = $request->file('thumbnail')->store('plugins', 'public');
             $data['thumbnail'] = 'storage/' . $path;
         } else {
-            $data['thumbnail'] = 'assets/img/placeholder.jpg'; // Default dulu
+            $data['thumbnail'] = 'assets/img/placeholder.webp'; // Default dulu
         }
 
         // Simpan cycle di array plans

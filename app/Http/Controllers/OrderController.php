@@ -94,26 +94,6 @@ public function store(Request $request)
         }
     }
 
-    public function ipaymuCallback(Request $request)
-    {
-        $status = $request->status;
-        $trx_id = $request->trx_id;
-        $invoice = $request->reference_id;
-
-        Log::info("iPaymu Webhook received for {$invoice} with status: {$status}");
-
-        if ($status == 'berhasil' || $status == 'sukses') {
-            $order = Order::with('items', 'user')->where('invoice_number', $invoice)->first();
-
-            if ($order && $order->status !== 'paid') {
-                $order->update(['status' => 'paid']);
-                $order->user->notify(new PaymentApprovedNotification($order));
-                $this->provisionOrder($order);
-            }
-        }
-
-        return response()->json(['status' => 'ok']);
-    }
 
     public static function provisionOrder($order)
     {

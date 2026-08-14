@@ -32,7 +32,7 @@
     <section class="w-full pt-32 pb-24 px-4 text-center bg-[#0a192f] text-white relative overflow-hidden">
         {{-- Background Image with mask --}}
         <div class="absolute inset-0 z-0">
-            <img src="{{ asset('img/portfolio-hero.jpg') }}" alt="Portfolio Background" class="w-full h-full object-cover opacity-[0.15] mix-blend-screen">
+            <img src="{{ asset('img/portfolio-hero.webp') }}" alt="Portfolio Background" class="w-full h-full object-cover opacity-[0.15] mix-blend-screen">
             <div class="absolute inset-0 bg-gradient-to-b from-transparent to-[#0a192f]/95"></div>
         </div>
 
@@ -57,7 +57,7 @@
     </section>
 
     {{-- PORTFOLIO SECTION --}}
-    <section class="w-full py-24 bg-slate-50 min-h-screen relative font-['Inter']">
+    <section class="w-full py-24 bg-slate-50 min-h-screen relative overflow-hidden font-['Inter']">
         <div class="absolute inset-0 z-0 opacity-40 pointer-events-none">
             <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-blue-100 rounded-full blur-[120px]"></div>
         </div>
@@ -77,43 +77,43 @@
             </div>
 
             {{-- Grid Gallery --}}
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="portfolio-grid">
+            <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8" id="portfolio-grid">
                 @foreach($portfolios as $index => $item)
-                <div class="portfolio-item scroll-reveal relative h-[450px] w-full rounded-3xl overflow-hidden shadow-lg shadow-blue-900/5 hover:shadow-2xl hover:shadow-blue-900/10 transition-all duration-500 bg-white border border-slate-100 flex flex-col group hover:-translate-y-2" data-category="{{ Str::slug($item->category) }}" style="transition-delay: {{ $index * 100 }}ms;">
+                <div class="portfolio-item scroll-reveal relative h-auto md:h-[450px] w-full rounded-2xl md:rounded-3xl overflow-hidden shadow-lg shadow-blue-900/5 hover:shadow-2xl hover:shadow-blue-900/10 transition-all duration-500 bg-white border border-slate-100 flex flex-col group hover:-translate-y-2" data-category="{{ Str::slug($item->category) }}" style="transition-delay: {{ $index * 100 }}ms;">
                     
                     {{-- Image Container (Atas) --}}
-                    <div class="portfolio-card h-56 w-full relative overflow-hidden shrink-0">
+                    <div class="portfolio-card h-32 md:h-56 w-full relative overflow-hidden shrink-0">
                         <img src="{{ Storage::url($item->image) }}" alt="{{ $item->title }}" class="w-full h-full object-cover transition-transform duration-700 ease-out">
                         
                         {{-- Overlay on Image --}}
-                        <div class="overlay absolute inset-0 bg-blue-900/70 backdrop-blur-sm flex items-center justify-center">
-                            <a href="{{ $item->url ?? '#' }}" target="_blank" class="px-6 py-3 bg-white text-blue-600 font-bold rounded-full transform translate-y-8 group-hover:translate-y-0 transition-all duration-500 ease-out shadow-lg hover:bg-blue-600 hover:text-white flex items-center gap-2">
-                                <i class="ri-external-link-line"></i> Kunjungi Project
+                        <div class="overlay absolute inset-0 bg-blue-900/70 backdrop-blur-sm flex items-center justify-center p-2">
+                            <a href="{{ $item->url ?? '#' }}" target="_blank" class="px-3 py-2 md:px-6 md:py-3 bg-white text-blue-600 font-bold rounded-full transform translate-y-8 group-hover:translate-y-0 transition-all duration-500 ease-out shadow-lg hover:bg-blue-600 hover:text-white flex items-center gap-1 md:gap-2 text-[10px] md:text-base text-center">
+                                <i class="ri-external-link-line"></i> <span class="hidden md:inline">Kunjungi Project</span><span class="md:hidden">Kunjungi</span>
                             </a>
                         </div>
                         
                         {{-- Category Badge --}}
-                        <div class="absolute top-4 left-4">
-                            <span class="bg-white/90 backdrop-blur-md text-blue-700 text-xs font-black px-3 py-1.5 rounded-lg shadow-sm border border-white/20 uppercase tracking-wide">
+                        <div class="absolute top-2 left-2 md:top-4 md:left-4">
+                            <span class="bg-white/90 backdrop-blur-md text-blue-700 text-[9px] md:text-xs font-black px-2 py-1 md:px-3 md:py-1.5 rounded-md md:rounded-lg shadow-sm border border-white/20 uppercase tracking-wide">
                                 {{ $item->category }}
                             </span>
                         </div>
                     </div>
 
                     {{-- Content Container (Bawah) --}}
-                    <div class="p-8 flex-1 flex flex-col relative z-10 bg-white">
-                        <h3 class="text-xl md:text-2xl font-bold text-slate-900 mb-4 group-hover:text-blue-600 transition-colors leading-tight">{{ $item->title }}</h3>
-                        <p class="text-slate-500 text-sm leading-relaxed line-clamp-3">
+                    <div class="p-4 md:p-8 flex-1 flex flex-col relative z-10 bg-white">
+                        <h3 class="text-sm md:text-2xl font-bold text-slate-900 mb-2 md:mb-4 group-hover:text-blue-600 transition-colors leading-tight">{{ $item->title }}</h3>
+                        <p class="text-slate-500 text-xs md:text-sm leading-relaxed line-clamp-2 md:line-clamp-3">
                             {{ $item->description }}
                         </p>
                         
                         {{-- Bottom Meta --}}
-                        <div class="mt-auto pt-6 flex items-center justify-between border-t border-slate-100">
-                            <span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Completed Project</span>
-                            <div class="flex gap-1.5">
-                                <span class="w-2.5 h-2.5 rounded-full bg-red-400 shadow-sm shadow-red-400/50"></span>
-                                <span class="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-sm shadow-amber-400/50"></span>
-                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400/50"></span>
+                        <div class="mt-auto pt-3 md:pt-6 flex items-center justify-between border-t border-slate-100">
+                            <span class="text-[9px] md:text-xs text-slate-400 font-bold uppercase tracking-wider">Completed</span>
+                            <div class="flex gap-1 md:gap-1.5">
+                                <span class="w-1.5 h-1.5 md:w-2.5 md:h-2.5 rounded-full bg-red-400 shadow-sm shadow-red-400/50"></span>
+                                <span class="w-1.5 h-1.5 md:w-2.5 md:h-2.5 rounded-full bg-amber-400 shadow-sm shadow-amber-400/50"></span>
+                                <span class="w-1.5 h-1.5 md:w-2.5 md:h-2.5 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400/50"></span>
                             </div>
                         </div>
                     </div>

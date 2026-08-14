@@ -8,312 +8,372 @@
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* Utility untuk JS Filter */
         .hidden-card { display: none !important; }
         
-        /* Smooth transition for filter buttons */
-        .category-btn { transition: all 0.3s ease; }
+        /* Glassmorphism */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
         
-        /* Hover effect for cards */
-        .saas-card:hover .card-img { transform: scale(1.05); }
+        /* App Card Hover */
+        .app-card {
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .app-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -8px rgba(37, 99, 235, 0.15);
+            border-color: #BFDBFE;
+        }
+        .app-card:hover .app-img {
+            transform: scale(1.05);
+        }
+        
+        /* Category Item Hover */
+        .cat-item.active {
+            background-color: #EFF6FF;
+            color: #2563EB;
+            font-weight: 700;
+            border-right: 3px solid #2563EB;
+        }
+        
+        /* Horizontal Scroll for Mobile Categories */
+        .mobile-cat-scroll {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+        .mobile-cat-scroll::-webkit-scrollbar { display: none; }
+        .mobile-cat-btn.active {
+            background-color: #2563EB;
+            color: white;
+            border-color: #2563EB;
+        }
     </style>
 @endsection
 
 @section('content')
 
-    {{-- 1. HERO SECTION (Updated Style) --}}
-    <section class="w-full pt-32 pb-24 px-4 text-center bg-[#0a192f] text-white relative overflow-hidden">
-        {{-- Background Decoration --}}
-        <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-            <div class="absolute top-10 left-10 w-32 h-32 bg-blue-500 rounded-full blur-3xl"></div>
-            <div class="absolute bottom-10 right-10 w-64 h-64 bg-cyan-500 rounded-full blur-3xl"></div>
+    {{-- HERO SECTION (Marketplace Style) --}}
+    <section class="w-full pt-32 pb-16 px-4 bg-gradient-to-b from-[#0f172a] to-[#1e293b] text-white relative overflow-hidden">
+        {{-- Background Elements --}}
+        <div class="absolute inset-0 z-0">
+            <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600/20 rounded-full blur-[100px] pointer-events-none"></div>
+            <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-cyan-500/20 rounded-full blur-[100px] pointer-events-none"></div>
+            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.webp')] opacity-10 mix-blend-overlay"></div>
         </div>
 
-        <div class="max-w-5xl mx-auto relative z-10">
-            <span class="inline-block py-1 px-3 rounded-full bg-blue-900/50 border border-blue-500/30 text-blue-300 text-xs font-semibold tracking-wider mb-4 uppercase">FutureCloud Marketplace</span>
+        <div class="max-w-7xl mx-auto relative z-10 flex flex-col items-center text-center">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-900/50 border border-blue-500/30 text-blue-300 text-xs font-bold uppercase tracking-wider mb-6">
+                <i class="ri-store-2-fill"></i> FutureCloud Marketplace
+            </div>
             
-            <h1 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
-                Aplikasi SaaS Terbaik<br>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Untuk Bisnis Anda</span>
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight max-w-4xl">
+                Temukan Solusi Digital <br class="hidden md:block">
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Untuk Memajukan Bisnis Anda</span>
             </h1>
 
-            <p class="text-blue-100 text-lg md:text-xl mb-10 font-light max-w-2xl mx-auto leading-relaxed px-4">
-                Jelajahi ribuan aplikasi berkualitas, baca review jujur, dan berlangganan dengan mudah dalam satu platform.
+            <p class="text-slate-300 text-lg md:text-xl mb-10 max-w-2xl font-light">
+                Jelajahi ratusan aplikasi SaaS dan Plugin berkualitas yang siap diintegrasikan untuk meningkatkan produktivitas perusahaan Anda.
             </p>
 
-            {{-- Search Bar (Modern Glass Style) --}}
-            <div class="mt-8 w-full px-0 md:px-4 relative z-10">
-                <div class="flex flex-col sm:flex-row items-center gap-2 p-2 rounded-2xl shadow-2xl w-full max-w-2xl mx-auto bg-white/10 backdrop-blur-md border border-white/20 focus-within:ring-4 focus-within:ring-blue-500/50 transition-all">
-                    <div class="flex items-center w-full sm:flex-1 p-3 bg-white rounded-xl">
-                        <i class="ri-search-2-line text-xl md:text-2xl text-blue-600 mr-3"></i>
-                        <input type="text" id="saas-search-input" placeholder="Cari aplikasi (contoh: accounting, crm)..." 
-                            class="flex-1 outline-none py-1 text-sm md:text-lg w-full placeholder:text-gray-400 text-gray-800 font-semibold bg-transparent" 
-                            autocomplete="off">
-                    </div>
-                    {{-- Desktop Button --}}
-                    <button class="hidden md:flex w-auto px-8 py-4 bg-blue-600 text-white rounded-xl font-bold text-sm hover:bg-blue-700 transition items-center justify-center gap-2 shadow-lg">
-                        <span>Cari</span>
-                    </button>
-                    {{-- Mobile Button (Icon Only) --}}
-                    <button class="md:hidden w-full py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition flex items-center justify-center shadow-lg">
-                        <i class="ri-search-line mr-1"></i> Cari
-                    </button>
+            {{-- Main Search Bar --}}
+            <div class="w-full max-w-3xl bg-white/10 backdrop-blur-md p-2 rounded-2xl border border-white/10 shadow-2xl flex flex-col sm:flex-row gap-2">
+                <div class="flex-1 flex items-center bg-white rounded-xl px-4 py-3">
+                    <i class="ri-search-2-line text-blue-600 text-xl mr-3"></i>
+                    <input type="text" id="saas-search-input" placeholder="Cari aplikasi, plugin, atau kategori..." class="w-full bg-transparent border-none outline-none text-slate-800 placeholder:text-slate-400 font-medium text-base">
                 </div>
+                <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-lg flex items-center justify-center gap-2">
+                    Cari <i class="ri-arrow-right-line hidden sm:inline-block"></i>
+                </button>
             </div>
-
-            {{-- Filter Kategori --}}
-            <div class="mt-10 flex flex-wrap justify-center gap-3 px-2" id="category-filter-container">
-                @php $categories = ['All', 'Security', 'Productivity', 'Marketing', 'Sales', 'HR', 'Finance', 'Plugin']; @endphp
-                @foreach ($categories as $index => $cat)
-                    <button class="category-btn px-5 py-2 rounded-full text-sm font-medium border border-blue-500/30 hover:bg-blue-600 hover:text-white hover:border-transparent transition backdrop-blur-sm cursor-pointer
-                        {{ $index === 0 ? 'bg-blue-600 text-white shadow-md border-transparent' : 'text-blue-200 bg-blue-900/30' }}"
-                        data-category="{{ $cat }}">
-                        {{ $cat }}
-                    </button>
-                @endforeach
+            
+            <div class="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm text-slate-300">
+                <span>Populer:</span>
+                <span class="px-3 py-1 bg-white/5 border border-white/10 rounded-full cursor-pointer hover:bg-white/10 transition">CRM</span>
+                <span class="px-3 py-1 bg-white/5 border border-white/10 rounded-full cursor-pointer hover:bg-white/10 transition">Akuntansi</span>
+                <span class="px-3 py-1 bg-white/5 border border-white/10 rounded-full cursor-pointer hover:bg-white/10 transition">HRIS</span>
             </div>
         </div>
     </section>
 
-    {{-- 2. GRID APLIKASI --}}
-    <section class="w-full py-16 md:py-24 px-4 bg-gray-50 min-h-screen border-t border-gray-200 rounded-t-[3rem] -mt-10 relative z-20">
-        <div class="max-w-7xl mx-auto">
+    {{-- MARKETPLACE MAIN LAYOUT --}}
+    <section class="w-full py-12 px-4 bg-slate-50 min-h-screen">
+        <div class="max-w-7xl mx-auto flex flex-col lg:flex-row gap-8">
+            
+            {{-- SIDEBAR FILTERS (DESKTOP) --}}
+            <aside class="hidden lg:block w-64 shrink-0">
+                <div class="sticky top-28 bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
+                    <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4 border-b border-slate-100 pb-2">Kategori</h3>
+                    
+                    <ul class="space-y-1" id="desktop-category-list">
+                        @php $categories = ['All', 'Security', 'Productivity', 'Marketing', 'Sales', 'HR', 'Finance', 'Plugin']; @endphp
+                        @foreach ($categories as $index => $cat)
+                            <li>
+                                <button class="cat-item w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors {{ $index === 0 ? 'active' : '' }}" data-category="{{ $cat }}">
+                                    <div class="flex items-center justify-between">
+                                        <span>{{ $cat === 'All' ? 'Semua Kategori' : $cat }}</span>
+                                        @if($index === 0)
+                                            <i class="ri-arrow-right-s-line text-blue-600"></i>
+                                        @endif
+                                    </div>
+                                </button>
+                            </li>
+                        @endforeach
+                    </ul>
 
-            <div class="flex flex-col sm:flex-row justify-between items-end mb-10 gap-4 px-2">
-                <div>
-                    <h2 class="text-3xl font-bold text-gray-900">Aplikasi Populer</h2>
-                    <p class="text-gray-500 mt-2">Solusi terpercaya pilihan ribuan pengguna FutureCloud.</p>
-                </div>
-                {{-- Optional: View All Link --}}
-            </div>
-
-            {{-- Pesan Tidak Ada Hasil --}}
-            <div id="no-results-message" class="hidden text-center py-24 bg-white rounded-2xl border border-gray-200">
-                <div class="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="ri-search-eye-line text-4xl text-blue-400"></i>
-                </div>
-                <h3 class="text-xl font-bold text-gray-800">Tidak ditemukan</h3>
-                <p class="text-gray-500 mt-2">Coba kata kunci lain atau ubah filter kategori.</p>
-                <button id="reset-filter-btn" class="mt-6 px-6 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 font-semibold hover:bg-gray-50 transition">
-                    Reset Pencarian
-                </button>
-            </div>
-
-            {{-- GRID APLIKASI --}}
-            <div id="saas-grid" class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
-                
-                @foreach ($apps as $app)
-                    <div onclick="window.location='{{ route('saas.show', $app->slug) }}'"
-                        class="saas-card bg-white rounded-2xl border border-gray-200 overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 group flex flex-col hover:-translate-y-1 h-full"
-                        data-name="{{ strtolower($app->name) }}" 
-                        data-category="{{ $app->category }}">
-
-                        {{-- Image Thumbnail --}}
-                        <div class="h-36 md:h-52 w-full bg-gray-100 relative overflow-hidden">
-                            <img src="{{ $app->thumbnail_url }}" alt="{{ $app->name }}" class="card-img w-full h-full object-cover transition-transform duration-500 ease-out">
-                            
-                            {{-- Badge Category --}}
-                            <span class="absolute top-3 right-3 bg-white/95 backdrop-blur text-gray-800 text-[10px] md:text-xs font-bold px-3 py-1 rounded-full shadow-sm border border-gray-100">
-                                {{ $app->category }}
-                            </span>
+                    <div class="mt-8 pt-6 border-t border-slate-100">
+                        <div class="bg-blue-50 rounded-xl p-4 border border-blue-100 text-center">
+                            <i class="ri-store-2-line text-3xl text-blue-600 mb-2"></i>
+                            <h4 class="font-bold text-blue-900 text-sm mb-1">Punya Aplikasi?</h4>
+                            <p class="text-xs text-blue-700 mb-3">Jangkau ribuan klien kami dengan menjadi partner.</p>
+                            <a href="{{ route('partner.register') }}" class="block w-full py-2 bg-blue-600 text-white text-xs font-bold rounded-lg hover:bg-blue-700 transition">Daftar Partner</a>
                         </div>
+                    </div>
+                </div>
+            </aside>
 
-                        {{-- Card Body --}}
-                        <div class="p-5 flex flex-col flex-1">
-                            {{-- Header --}}
-                            <div class="mb-3">
-                                <div class="flex justify-between items-center mb-2">
-                                    <div class="flex items-center gap-1.5 text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded-md border border-gray-100">
-                                        <i class="ri-store-2-line text-blue-500"></i>
-                                        <span class="truncate max-w-[80px] md:max-w-[120px]" title="{{ $app->partner_name }}">
-                                            {{ $app->partner_name }}
-                                        </span>
+            {{-- MOBILE FILTERS (HORIZONTAL SCROLL) --}}
+            <div class="lg:hidden w-full mb-6">
+                <div class="mobile-cat-scroll gap-2 pb-2">
+                    @foreach ($categories as $index => $cat)
+                        <button class="mobile-cat-btn shrink-0 px-4 py-2 rounded-full border border-slate-200 bg-white text-slate-600 text-sm font-medium shadow-sm {{ $index === 0 ? 'active' : '' }}" data-category="{{ $cat }}">
+                            {{ $cat === 'All' ? 'Semua' : $cat }}
+                        </button>
+                    @endforeach
+                </div>
+            </div>
+
+            {{-- MAIN CONTENT GRID --}}
+            <main class="flex-1">
+                
+                {{-- Header Section Title --}}
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-slate-900" id="section-title">Semua Aplikasi</h2>
+                    
+                    <div class="flex items-center gap-2 text-sm text-slate-500 bg-white px-3 py-1.5 rounded-lg border border-slate-200">
+                        <i class="ri-sort-desc"></i>
+                        <select class="bg-transparent border-none outline-none font-medium text-slate-700 focus:ring-0 cursor-pointer">
+                            <option>Terpopuler</option>
+                            <option>Terbaru</option>
+                            <option>Rating Tertinggi</option>
+                            <option>Harga Termurah</option>
+                        </select>
+                    </div>
+                </div>
+
+                {{-- Pesan Tidak Ada Hasil --}}
+                <div id="no-results-message" class="hidden text-center py-20 bg-white rounded-2xl border border-dashed border-slate-300">
+                    <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="ri-search-eye-line text-3xl text-slate-400"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800">Tidak ada aplikasi yang cocok</h3>
+                    <p class="text-slate-500 mt-1 text-sm">Coba sesuaikan filter atau gunakan kata kunci lain.</p>
+                </div>
+
+                {{-- SAAS GRID --}}
+                <div id="saas-grid" class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+                    @foreach ($apps as $app)
+                        <div onclick="window.location='{{ route('saas.show', $app->slug) }}'"
+                            class="app-card bg-white rounded-2xl border border-slate-200 overflow-hidden cursor-pointer flex flex-col h-full relative"
+                            data-name="{{ strtolower($app->name) }}" 
+                            data-category="{{ $app->category }}">
+                            
+                            {{-- Top Cover Image (Marketplace Style) --}}
+                            <div class="h-24 md:h-32 w-full bg-slate-100 relative overflow-hidden border-b border-slate-100">
+                                <img src="{{ $app->thumbnail_url }}" alt="{{ $app->name }}" class="app-img w-full h-full object-cover transition-transform duration-500">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                                
+                                {{-- Category Badge --}}
+                                <div class="absolute top-2 right-2 md:top-3 md:right-3">
+                                    <span class="bg-white/90 backdrop-blur text-slate-700 text-[8px] md:text-[10px] font-bold px-1.5 py-0.5 md:px-2.5 md:py-1 rounded-md shadow-sm border border-white/20 uppercase tracking-wide">
+                                        {{ $app->category }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            {{-- App Info Body --}}
+                            <div class="p-3 md:p-5 flex flex-col flex-1 relative">
+                                
+                                {{-- App Icon / Logo Placeholder --}}
+                                <div class="absolute -top-6 left-3 md:-top-10 md:left-5 w-12 h-12 md:w-16 md:h-16 bg-white rounded-lg md:rounded-xl shadow-md border border-slate-100 p-1 flex items-center justify-center overflow-hidden z-10">
+                                    <div class="w-full h-full bg-blue-50 rounded-md md:rounded-lg flex items-center justify-center text-blue-600 font-black text-lg md:text-xl">
+                                        {{ substr($app->name, 0, 1) }}
+                                    </div>
+                                </div>
+
+                                {{-- Partner Name & Rating --}}
+                                <div class="mt-6 md:mt-8 flex justify-between items-center mb-1.5 md:mb-2">
+                                    <div class="flex items-center gap-1 text-[10px] md:text-xs font-medium text-slate-500">
+                                        <i class="ri-store-2-line text-slate-400"></i>
+                                        <span class="truncate max-w-[80px] md:max-w-[120px]">{{ $app->partner_name }}</span>
                                         @if($app->partner_verified ?? false)
                                             <i class="ri-verified-badge-fill text-blue-500" title="Verified Partner"></i>
                                         @endif
                                     </div>
-                                    
-                                    {{-- Rating Small --}}
-                                    <div class="flex items-center gap-1 text-xs font-semibold text-gray-700">
+                                    <div class="flex items-center gap-0.5 md:gap-1 text-[10px] md:text-xs font-bold text-slate-700">
                                         <i class="ri-star-fill text-yellow-400"></i>
-                                        <span>{{ $app->rating }}</span>
+                                        {{ $app->rating }}
                                     </div>
                                 </div>
 
-                                <h3 class="font-bold text-base md:text-xl text-gray-900 group-hover:text-blue-600 transition leading-snug mb-2 line-clamp-1">
+                                {{-- Title & Desc --}}
+                                <h3 class="font-bold text-sm md:text-lg text-slate-900 leading-tight mb-1 md:mb-2 line-clamp-1 group-hover:text-blue-600 transition-colors">
                                     {{ $app->name }}
                                 </h3>
-
-                                <p class="text-gray-500 text-xs md:text-sm leading-relaxed line-clamp-2 h-10">
+                                <p class="text-slate-500 text-[10px] md:text-sm line-clamp-2 mb-3 md:mb-4 h-8 md:h-10">
                                     {{ $app->description }}
                                 </p>
-                            </div>
 
-                            {{-- Footer --}}
-                            <div class="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between">
-                                <div>
-                                    <p class="text-[10px] text-gray-400 font-medium uppercase tracking-wide">Mulai dari</p>
-                                    <p class="text-blue-600 font-bold text-sm md:text-lg">
-                                        Rp {{ number_format($app->price, 0, ',', '.') }}<span class="text-xs font-normal text-gray-400">{{ in_array($app->cycle, ['monthly', 'monthly_yearly']) ? '/bln' : ($app->cycle == 'annually' ? '/thn' : '') }}</span>
-                                    </p>
-                                </div>
-                                <span class="bg-gray-50 hover:bg-blue-600 hover:text-white text-blue-600 border border-blue-100 text-xs md:text-sm font-bold px-4 py-2 rounded-lg transition-colors duration-300">
-                                    Detail
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-
-            <div class="mt-12 text-center md:hidden">
-                <button class="w-full py-3.5 border border-gray-300 bg-white text-gray-700 rounded-xl text-sm font-bold hover:bg-gray-50 transition shadow-sm">
-                    Lihat Semua Aplikasi
-                </button>
-            </div>
-
-            {{-- PLUGIN SECTION --}}
-            @if(isset($plugins) && $plugins->count() > 0)
-            <div class="mt-20">
-                <div class="flex flex-col sm:flex-row justify-between items-end mb-10 gap-4 px-2">
-                    <div>
-                        <h2 class="text-3xl font-bold text-gray-900">Plugin</h2>
-                        <p class="text-gray-500 mt-2">Tingkatkan performa bisnis Anda dengan plugin unggulan kami.</p>
-                    </div>
-                </div>
-
-                <div id="plugin-grid" class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
-                    @foreach ($plugins as $plugin)
-                        <div onclick="window.location='{{ route('saas.show', $plugin->slug) }}'"
-                            class="saas-card bg-white rounded-2xl border border-gray-200 overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 group flex flex-col hover:-translate-y-1 h-full"
-                            data-name="{{ strtolower($plugin->name) }}" 
-                            data-category="{{ $plugin->category }}">
-
-                            {{-- Image Thumbnail --}}
-                            <div class="h-36 md:h-52 w-full bg-gray-100 relative overflow-hidden">
-                                <img src="{{ $plugin->thumbnail_url }}" alt="{{ $plugin->name }}" class="card-img w-full h-full object-cover transition-transform duration-500 ease-out">
-                                
-                                {{-- Badge Category --}}
-                                <span class="absolute top-3 right-3 bg-white/95 backdrop-blur text-gray-800 text-[10px] md:text-xs font-bold px-3 py-1 rounded-full shadow-sm border border-gray-100">
-                                    {{ $plugin->category }}
-                                </span>
-                            </div>
-
-                            {{-- Card Body --}}
-                            <div class="p-5 flex flex-col flex-1">
-                                {{-- Header --}}
-                                <div class="mb-3">
-                                    <div class="flex justify-between items-center mb-2">
-                                        <div class="flex items-center gap-1.5 text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded-md border border-gray-100">
-                                            <i class="ri-store-2-line text-blue-500"></i>
-                                            <span class="truncate max-w-[80px] md:max-w-[120px]" title="{{ $plugin->partner_name }}">
-                                                {{ $plugin->partner_name }}
-                                            </span>
-                                            @if($plugin->partner_verified ?? false)
-                                                <i class="ri-verified-badge-fill text-blue-500" title="Verified Partner"></i>
-                                            @endif
-                                        </div>
-                                        
-                                        {{-- Rating Small --}}
-                                        <div class="flex items-center gap-1 text-xs font-semibold text-gray-700">
-                                            <i class="ri-star-fill text-yellow-400"></i>
-                                            <span>{{ $plugin->rating }}</span>
-                                        </div>
-                                    </div>
-
-                                    <h3 class="font-bold text-base md:text-xl text-gray-900 group-hover:text-blue-600 transition leading-snug mb-2 line-clamp-1">
-                                        {{ $plugin->name }}
-                                    </h3>
-
-                                    <p class="text-gray-500 text-xs md:text-sm leading-relaxed line-clamp-2 h-10">
-                                        {{ $plugin->description }}
-                                    </p>
-                                </div>
-
-                                {{-- Footer --}}
-                                <div class="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between">
+                                {{-- Footer / Pricing --}}
+                                <div class="mt-auto pt-3 md:pt-4 border-t border-slate-100 flex items-end justify-between">
                                     <div>
-                                        <p class="text-[10px] text-gray-400 font-medium uppercase tracking-wide">Mulai dari</p>
-                                        <p class="text-blue-600 font-bold text-sm md:text-lg">
-                                            Rp {{ number_format($plugin->price, 0, ',', '.') }}<span class="text-xs font-normal text-gray-400">{{ in_array($plugin->cycle, ['monthly', 'monthly_yearly']) ? '/bln' : ($plugin->cycle == 'annually' ? '/thn' : '') }}</span>
-                                        </p>
+                                        <span class="block text-[8px] md:text-[10px] text-slate-400 font-semibold uppercase tracking-wider mb-0.5">Harga</span>
+                                        <div class="flex items-baseline gap-0.5 md:gap-1">
+                                            <span class="text-blue-700 font-extrabold text-sm md:text-lg">Rp{{ number_format($app->price / 1000, 0, ',', '.') }}k</span>
+                                            <span class="text-[10px] md:text-xs text-slate-400">{{ in_array($app->cycle, ['monthly', 'monthly_yearly']) ? '/bln' : ($app->cycle == 'annually' ? '/thn' : '') }}</span>
+                                        </div>
                                     </div>
-                                    <span class="bg-gray-50 hover:bg-blue-600 hover:text-white text-blue-600 border border-blue-100 text-xs md:text-sm font-bold px-4 py-2 rounded-lg transition-colors duration-300">
-                                        Detail
-                                    </span>
+                                    <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 transition-all shadow-sm">
+                                        <i class="ri-arrow-right-up-line text-sm md:text-base"></i>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     @endforeach
-                </div>
-            </div>
-            @endif
-
-        </div>
-    </section>
-
-    {{-- 3. BOTTOM CTA (Consistent Blue Box) --}}
-    <section class="w-full py-20 px-4 text-center">
-        <div class="max-w-4xl mx-auto bg-blue-600 rounded-3xl p-10 md:p-16 text-white shadow-2xl relative overflow-hidden">
-            {{-- Decoration --}}
-            <div class="absolute -bottom-10 -right-10 w-64 h-64 bg-cyan-500 rounded-full opacity-30 blur-3xl pointer-events-none"></div>
-            <div class="absolute -top-10 -left-10 w-64 h-64 bg-purple-500 rounded-full opacity-30 blur-3xl pointer-events-none"></div>
-
-            <div class="relative z-10">
-                <h2 class="text-3xl md:text-4xl font-extrabold mb-4">Tidak menemukan aplikasi yang dicari?</h2>
-                <p class="text-blue-100 mb-8 text-lg max-w-2xl mx-auto">
-                    Request aplikasi SaaS yang Anda butuhkan atau daftarkan produk Anda sendiri ke marketplace kami.
-                </p>
-                <div class="flex flex-col md:flex-row justify-center gap-4">
-                    <a href="https://wa.me/6281289537549?text=Halo%20Tim%20FutureCloud%2C%20saya%20ingin%20Request%20Aplikasi%20Saas%20untuk%20FutureCloud%20Terima%20kasih."
-                        target="_blank"
-                        class="px-8 py-3 bg-white text-blue-700 rounded-lg font-bold hover:bg-gray-100 transition shadow-lg">
-                        <i class="ri-whatsapp-line text-lg"></i> Request Aplikasi
-                    </a>
                     
-                    @auth
-                        @if(Auth::user()->role === 'partner')
-                            <a href="{{ route('partner.saas.create') }}" class="px-8 py-3 bg-blue-700/50 border-2 border-blue-400 text-white rounded-lg font-bold hover:bg-blue-700 transition">
-                                Upload Produk
-                            </a>
-                        @else
-                            <button onclick="document.getElementById('partnerModal').classList.remove('hidden')" class="px-8 py-3 bg-blue-700/50 border-2 border-blue-400 text-white rounded-lg font-bold hover:bg-blue-700 transition">
-                                Jadi Partner
-                            </button>
-                        @endif
-                    @else
-                        <a href="{{ route('login') }}" class="px-8 py-3 bg-blue-700/50 border-2 border-blue-400 text-white rounded-lg font-bold hover:bg-blue-700 transition">
-                            Jadi Partner
-                        </a>
-                    @endauth
+                    {{-- PLUGINS in same grid if we want to combine them, or keep separate --}}
+                    @if(isset($plugins) && $plugins->count() > 0)
+                        @foreach ($plugins as $plugin)
+                            <div onclick="window.location='{{ route('saas.show', $plugin->slug) }}'"
+                                class="app-card bg-white rounded-2xl border border-slate-200 overflow-hidden cursor-pointer flex flex-col h-full relative"
+                                data-name="{{ strtolower($plugin->name) }}" 
+                                data-category="{{ $plugin->category }}">
+                                
+                                <div class="h-24 md:h-32 w-full bg-slate-100 relative overflow-hidden border-b border-slate-100">
+                                    <img src="{{ $plugin->thumbnail_url }}" alt="{{ $plugin->name }}" class="app-img w-full h-full object-cover transition-transform duration-500">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                                    
+                                    <div class="absolute top-2 right-2 md:top-3 md:right-3">
+                                        <span class="bg-blue-600/90 backdrop-blur text-white text-[8px] md:text-[10px] font-bold px-1.5 py-0.5 md:px-2.5 md:py-1 rounded-md shadow-sm border border-blue-500/20 uppercase tracking-wide">
+                                            PLUGIN
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="p-3 md:p-5 flex flex-col flex-1 relative">
+                                    
+                                    <div class="absolute -top-6 left-3 md:-top-10 md:left-5 w-12 h-12 md:w-16 md:h-16 bg-white rounded-lg md:rounded-xl shadow-md border border-slate-100 p-1 flex items-center justify-center overflow-hidden z-10">
+                                        <div class="w-full h-full bg-purple-50 rounded-md md:rounded-lg flex items-center justify-center text-purple-600 font-black text-lg md:text-xl">
+                                            <i class="ri-plug-line"></i>
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-6 md:mt-8 flex justify-between items-center mb-1.5 md:mb-2">
+                                        <div class="flex items-center gap-1 text-[10px] md:text-xs font-medium text-slate-500">
+                                            <i class="ri-store-2-line text-slate-400"></i>
+                                            <span class="truncate max-w-[80px] md:max-w-[120px]">{{ $plugin->partner_name }}</span>
+                                            @if($plugin->partner_verified ?? false)
+                                                <i class="ri-verified-badge-fill text-blue-500"></i>
+                                            @endif
+                                        </div>
+                                        <div class="flex items-center gap-0.5 md:gap-1 text-[10px] md:text-xs font-bold text-slate-700">
+                                            <i class="ri-star-fill text-yellow-400"></i>
+                                            {{ $plugin->rating }}
+                                        </div>
+                                    </div>
+
+                                    <h3 class="font-bold text-sm md:text-lg text-slate-900 leading-tight mb-1 md:mb-2 line-clamp-1 group-hover:text-blue-600 transition-colors">
+                                        {{ $plugin->name }}
+                                    </h3>
+                                    <p class="text-slate-500 text-[10px] md:text-sm line-clamp-2 mb-3 md:mb-4 h-8 md:h-10">
+                                        {{ $plugin->description }}
+                                    </p>
+
+                                    <div class="mt-auto pt-3 md:pt-4 border-t border-slate-100 flex items-end justify-between">
+                                        <div>
+                                            <span class="block text-[8px] md:text-[10px] text-slate-400 font-semibold uppercase tracking-wider mb-0.5">Harga</span>
+                                            <div class="flex items-baseline gap-0.5 md:gap-1">
+                                                <span class="text-blue-700 font-extrabold text-sm md:text-lg">Rp{{ number_format($plugin->price / 1000, 0, ',', '.') }}k</span>
+                                                <span class="text-[10px] md:text-xs text-slate-400">{{ in_array($plugin->cycle, ['monthly', 'monthly_yearly']) ? '/bln' : ($plugin->cycle == 'annually' ? '/thn' : '') }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 transition-all shadow-sm">
+                                            <i class="ri-arrow-right-up-line text-sm md:text-base"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    @endif
                 </div>
+
+            </main>
+        </div>
+    </section>
+
+    {{-- BOTTOM CTA (Modern Banner) --}}
+    <section class="w-full py-16 px-4 bg-white border-t border-slate-100">
+        <div class="max-w-5xl mx-auto bg-gradient-to-r from-blue-600 to-indigo-700 rounded-[2rem] p-8 md:p-12 text-white shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
+            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.webp')] opacity-10 mix-blend-overlay pointer-events-none"></div>
+            
+            <div class="relative z-10 flex-1 text-center md:text-left">
+                <h2 class="text-2xl md:text-3xl font-extrabold mb-3">Ingin Menjadi Kreator?</h2>
+                <p class="text-blue-100 text-sm md:text-base max-w-lg">
+                    Daftarkan produk SaaS atau Plugin karya Anda dan raih keuntungan dengan menjualnya di FutureCloud Marketplace.
+                </p>
+            </div>
+            
+            <div class="relative z-10 shrink-0">
+                @auth
+                    @if(Auth::user()->role === 'partner')
+                        <a href="{{ route('partner.saas.create') }}" class="px-8 py-4 bg-white text-blue-700 rounded-xl font-bold hover:bg-slate-50 hover:shadow-lg transition flex items-center gap-2">
+                            <i class="ri-upload-cloud-2-line"></i> Upload Produk
+                        </a>
+                    @else
+                        <button onclick="document.getElementById('partnerModal').classList.remove('hidden')" class="px-8 py-4 bg-white text-blue-700 rounded-xl font-bold hover:bg-slate-50 hover:shadow-lg transition flex items-center gap-2">
+                            Mulai Berjualan
+                        </button>
+                    @endif
+                @else
+                    <a href="{{ route('login') }}" class="px-8 py-4 bg-white text-blue-700 rounded-xl font-bold hover:bg-slate-50 hover:shadow-lg transition flex items-center gap-2">
+                        Daftar Sebagai Partner
+                    </a>
+                @endauth
             </div>
         </div>
     </section>
 
-    {{-- MODAL AJAKAN JADI PARTNER (Updated Design) --}}
+    {{-- MODAL AJAKAN JADI PARTNER --}}
     <div id="partnerModal" class="fixed inset-0 z-[60] hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <div class="fixed inset-0 bg-gray-900/80 backdrop-blur-sm transition-opacity" onclick="document.getElementById('partnerModal').classList.add('hidden')"></div>
+        <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onclick="document.getElementById('partnerModal').classList.add('hidden')"></div>
 
         <div class="flex min-h-full items-center justify-center p-4 text-center">
-            <div class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:w-full sm:max-w-md p-8 border border-gray-100">
+            <div class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:w-full sm:max-w-md p-8">
                 
+                <div class="absolute top-4 right-4 cursor-pointer text-slate-400 hover:text-slate-600" onclick="document.getElementById('partnerModal').classList.add('hidden')">
+                    <i class="ri-close-line text-2xl"></i>
+                </div>
+
                 <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-50 mb-6">
-                    <i class="ri-shake-hands-line text-3xl text-blue-600"></i>
+                    <i class="ri-store-2-fill text-3xl text-blue-600"></i>
                 </div>
                 
                 <div class="text-center">
-                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Gabung Partner Program</h3>
-                    <p class="text-gray-500 text-sm leading-relaxed mb-8">
-                        Untuk mendaftarkan aplikasi SaaS, Anda harus bergabung menjadi <strong>Partner Resmi</strong> FutureCloud terlebih dahulu. Verifikasi bisnis Anda dan mulai hasilkan pendapatan.
+                    <h3 class="text-2xl font-bold text-slate-900 mb-2">Buka Toko Anda</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed mb-8">
+                        Untuk menjual aplikasi SaaS atau Plugin, Anda perlu mendaftar sebagai <strong>Partner Resmi</strong>. Prosesnya cepat dan mudah!
                     </p>
 
                     <div class="space-y-3">
-                        <a href="{{ route('partner.register') }}" class="block w-full py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition shadow-lg hover:shadow-blue-200">
-                            Daftar Jadi Partner Sekarang
+                        <a href="{{ route('partner.register') }}" class="block w-full py-3.5 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition shadow-lg shadow-blue-600/30">
+                            Daftar Jadi Partner
                         </a>
-                        <button onclick="document.getElementById('partnerModal').classList.add('hidden')" class="block w-full py-3 bg-white border border-gray-200 text-gray-600 font-semibold rounded-xl hover:bg-gray-50 transition">
-                            Nanti Saja
+                        <button onclick="document.getElementById('partnerModal').classList.add('hidden')" class="block w-full py-3.5 bg-slate-50 text-slate-600 font-semibold rounded-xl hover:bg-slate-100 transition">
+                            Tutup
                         </button>
                     </div>
                 </div>
@@ -328,10 +388,11 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const searchInput = document.getElementById('saas-search-input');
-        const filterButtons = document.querySelectorAll('.category-btn');
-        const cards = document.querySelectorAll('.saas-card');
+        const desktopCatBtns = document.querySelectorAll('.cat-item');
+        const mobileCatBtns = document.querySelectorAll('.mobile-cat-btn');
+        const cards = document.querySelectorAll('.app-card');
         const noResultsMsg = document.getElementById('no-results-message');
-        const resetBtn = document.getElementById('reset-filter-btn');
+        const sectionTitle = document.getElementById('section-title');
 
         let currentCategory = 'All';
         let currentSearch = '';
@@ -359,6 +420,13 @@
             } else {
                 noResultsMsg.classList.add('hidden');
             }
+            
+            // Update Title
+            if(currentSearch !== '') {
+                sectionTitle.textContent = `Hasil Pencarian: "${currentSearch}"`;
+            } else {
+                sectionTitle.textContent = currentCategory === 'All' ? 'Semua Aplikasi' : `Kategori: ${currentCategory}`;
+            }
         }
 
         searchInput.addEventListener('input', (e) => {
@@ -366,28 +434,77 @@
             filterApps();
         });
 
-        filterButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                // Reset active styles
-                filterButtons.forEach(b => {
-                    b.classList.remove('bg-blue-600', 'text-white', 'shadow-md', 'border-transparent');
-                    b.classList.add('text-blue-200', 'bg-blue-900/30');
-                });
-                
-                // Set active style
-                btn.classList.remove('text-blue-200', 'bg-blue-900/30');
-                btn.classList.add('bg-blue-600', 'text-white', 'shadow-md', 'border-transparent');
-
-                currentCategory = btn.getAttribute('data-category');
-                filterApps();
+        function handleCategorySelect(btn, group, otherGroup) {
+            // Update Active State for current group
+            group.forEach(b => {
+                b.classList.remove('active');
+                // For desktop specific styles
+                if(b.classList.contains('cat-item')) {
+                    b.classList.remove('bg-EFF6FF', 'text-blue-600', 'font-bold', 'border-blue-600');
+                    b.classList.add('text-slate-600');
+                    const icon = b.querySelector('.ri-arrow-right-s-line');
+                    if(icon) icon.remove();
+                }
+                // For mobile specific styles
+                if(b.classList.contains('mobile-cat-btn')) {
+                    b.classList.remove('bg-blue-600', 'text-white', 'border-blue-600');
+                    b.classList.add('bg-white', 'text-slate-600', 'border-slate-200');
+                }
             });
+
+            // Set active styles
+            btn.classList.add('active');
+            
+            if(btn.classList.contains('cat-item')) {
+                btn.classList.add('text-blue-600', 'font-bold');
+                btn.classList.remove('text-slate-600');
+                if(!btn.querySelector('.ri-arrow-right-s-line')) {
+                    btn.querySelector('div').insertAdjacentHTML('beforeend', '<i class="ri-arrow-right-s-line text-blue-600"></i>');
+                }
+            } else if (btn.classList.contains('mobile-cat-btn')) {
+                btn.classList.add('bg-blue-600', 'text-white', 'border-blue-600');
+                btn.classList.remove('bg-white', 'text-slate-600', 'border-slate-200');
+            }
+
+            currentCategory = btn.getAttribute('data-category');
+            
+            // Sync with other group silently
+            otherGroup.forEach(b => {
+                if(b.getAttribute('data-category') === currentCategory) {
+                    b.classList.add('active');
+                    if(b.classList.contains('cat-item')) {
+                        b.classList.add('text-blue-600', 'font-bold');
+                        b.classList.remove('text-slate-600');
+                        if(!b.querySelector('.ri-arrow-right-s-line')) {
+                            b.querySelector('div').insertAdjacentHTML('beforeend', '<i class="ri-arrow-right-s-line text-blue-600"></i>');
+                        }
+                    } else if (b.classList.contains('mobile-cat-btn')) {
+                        b.classList.add('bg-blue-600', 'text-white', 'border-blue-600');
+                        b.classList.remove('bg-white', 'text-slate-600', 'border-slate-200');
+                    }
+                } else {
+                    b.classList.remove('active');
+                    if(b.classList.contains('cat-item')) {
+                        b.classList.remove('text-blue-600', 'font-bold');
+                        b.classList.add('text-slate-600');
+                        const icon = b.querySelector('.ri-arrow-right-s-line');
+                        if(icon) icon.remove();
+                    } else if (b.classList.contains('mobile-cat-btn')) {
+                        b.classList.remove('bg-blue-600', 'text-white', 'border-blue-600');
+                        b.classList.add('bg-white', 'text-slate-600', 'border-slate-200');
+                    }
+                }
+            });
+
+            filterApps();
+        }
+
+        desktopCatBtns.forEach(btn => {
+            btn.addEventListener('click', () => handleCategorySelect(btn, desktopCatBtns, mobileCatBtns));
         });
 
-        resetBtn.addEventListener('click', () => {
-            searchInput.value = '';
-            currentSearch = '';
-            // Trigger click on 'All' button programmatically
-            document.querySelector('.category-btn[data-category="All"]').click();
+        mobileCatBtns.forEach(btn => {
+            btn.addEventListener('click', () => handleCategorySelect(btn, mobileCatBtns, desktopCatBtns));
         });
     });
 </script>

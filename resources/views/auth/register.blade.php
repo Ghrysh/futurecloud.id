@@ -1,4 +1,4 @@
-<x-split-auth-layout image="assets/login.png">
+<x-split-auth-layout image="assets/login.webp">
     {{-- Load Remix Icon --}}
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 
@@ -275,11 +275,8 @@
                     <label for="terms_agreed" class="inline-flex items-start gap-3 cursor-pointer group">
                         <input id="terms_agreed" type="checkbox" name="terms_agreed" required class="mt-1">
                         <span class="terms-label text-gray-600 group-hover:text-gray-800 transition">
-                            Saya setuju dengan <a href="#"
-                                class="text-blue-600 hover:text-blue-700 font-semibold hover:underline">Syarat
-                                Layanan</a> dan <a href="#"
-                                class="text-blue-600 hover:text-blue-700 font-semibold hover:underline">Kebijakan
-                                Privasi</a>
+                            Saya setuju dengan <a href="{{ url('/terms') }}" target="_blank"
+                                class="text-blue-600 hover:text-blue-700 font-semibold hover:underline">Syarat dan Ketentuan</a>
                         </span>
                     </label>
                 </div>

@@ -22,12 +22,14 @@ use App\Http\Controllers\Auth\SocialAuthController;
 
 // Client Area
 use App\Http\Controllers\ClientAreaController;
+use App\Http\Controllers\ClientArea\TicketController as ClientTicketController;
 
 // Partner & Admin Controllers
 use App\Http\Controllers\PartnerSaasController;
 use App\Http\Controllers\Partner\PartnerDashboardController;
 use App\Http\Controllers\Admin\AdminSaasController;
 use App\Http\Controllers\Admin\AdminPluginController;
+use App\Http\Controllers\Admin\TicketController as AdminTicketController;
 use App\Http\Controllers\Admin\Auth\AdminLoginController;
 use App\Http\Controllers\Admin\ChatbotAdminController;
 use App\Http\Controllers\Admin\AdminDashboardController;
@@ -211,6 +213,13 @@ Route::middleware('auth')->prefix('client-area')->name('client.')->group(functio
 
     Route::get('/invoices/{id}/download', [ClientAreaController::class, 'downloadInvoice'])->name('invoices.download');
 
+    // Support Tickets (Client)
+    Route::get('/tickets', [ClientTicketController::class, 'index'])->name('tickets.index');
+    Route::get('/tickets/create', [ClientTicketController::class, 'create'])->name('tickets.create');
+    Route::post('/tickets', [ClientTicketController::class, 'store'])->name('tickets.store');
+    Route::get('/tickets/{id}', [ClientTicketController::class, 'show'])->name('tickets.show');
+    Route::post('/tickets/{id}/reply', [ClientTicketController::class, 'reply'])->name('tickets.reply');
+
     // Helpdesk User Management (from Client Area)
     Route::get('/helpdesk-users', [App\Http\Controllers\HelpdeskManageController::class, 'index'])->name('helpdesk.users');
     Route::post('/helpdesk-users', [App\Http\Controllers\HelpdeskManageController::class, 'store'])->name('helpdesk.users.store');
@@ -260,6 +269,12 @@ Route::prefix('admin')->middleware('auth:admin')->name('admin.')->group(function
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/monitoring', [AdminDashboardController::class, 'monitoring'])->name('monitoring');
+
+    // SUPPORT TICKETS (ADMIN)
+    Route::get('/tickets', [AdminTicketController::class, 'index'])->name('tickets.index');
+    Route::get('/tickets/{id}', [AdminTicketController::class, 'show'])->name('tickets.show');
+    Route::post('/tickets/{id}/reply', [AdminTicketController::class, 'reply'])->name('tickets.reply');
+    Route::post('/tickets/{id}/status', [AdminTicketController::class, 'status'])->name('tickets.status');
 
     // SAAS MANAGEMENT
     Route::get('/saas-management', [AdminSaasController::class, 'saasIndex'])->name('saas.index');
@@ -386,7 +401,6 @@ Route::get('/sys-ping/v1', function (\Illuminate\Http\Request $request) {
     return response()->json(['success' => true]);
 });
 
-Route::post('/ipaymu/callback', [App\Http\Controllers\OrderController::class, 'ipaymuCallback'])->name('ipaymu.callback');
 
 require __DIR__ . '/auth.php';
 Route::post('/webhook/plugin/installed', [App\Http\Controllers\OrderController::class, 'pluginInstalledWebhook'])->name('webhook.plugin.installed');

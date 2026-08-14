@@ -1,4 +1,4 @@
-<x-split-auth-layout image="assets/login.png">
+<x-split-auth-layout image="assets/login.webp">
     {{-- Load Remix Icon --}}
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
 

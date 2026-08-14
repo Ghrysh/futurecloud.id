@@ -2,358 +2,179 @@
 
 @section('title', 'Keranjang Belanja')
 
-@section('styles')
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
-    <style>
-        .custom-checkbox {
-            accent-color: #2563eb;
-            width: 1.25rem;
-            height: 1.25rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .custom-checkbox:hover {
-            transform: scale(1.1);
-        }
-        @media (min-width: 1024px) {
-            .sticky-summary {
-                position: sticky;
-                top: 6rem;
-            }
-        }
-        .mobile-footer-shadow {
-            box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.05), 0 -2px 4px -1px rgba(0, 0, 0, 0.03);
-        }
-        .cart-item {
-            transition: all 0.3s ease;
-        }
-        .cart-item:hover {
-            transform: translateY(-2px);
-        }
-        .pulse-animation {
-            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-        .icon-bounce {
-            animation: bounce 1s ease-in-out infinite;
-        }
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-    </style>
-@endsection
-
 @section('content')
-<div class="pt-20 sm:pt-24 lg:pt-28 pb-32 lg:pb-24 bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50 min-h-screen">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="bg-slate-50 min-h-screen pt-28 pb-24 relative overflow-hidden font-['Inter']">
+    {{-- Latar Dekoratif --}}
+    <div class="absolute inset-0 z-0 opacity-40 pointer-events-none">
+        <div class="absolute top-0 right-1/4 w-[500px] h-[500px] bg-blue-100 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-0 left-1/4 w-[600px] h-[600px] bg-slate-200 rounded-full blur-[120px]"></div>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-4 relative z-10">
         
-        <!-- Header Section -->
-        <div class="mb-6 sm:mb-8 lg:mb-10">
-            <nav class="flex items-center gap-2 text-sm text-gray-500 mb-3 sm:mb-4">
-                <a href="{{ url('/') }}" class="hover:text-blue-600 transition">
-                    <i class="ri-home-4-line"></i>
-                </a>
-                <i class="ri-arrow-right-s-line text-gray-400"></i>
-                <span class="text-gray-900 font-medium">Keranjang Belanja</span>
-            </nav>
-            
-            <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 sm:gap-4">
-                <div>
-                    <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
-                        Keranjang Belanja
-                        @if(!$items->isEmpty())
-                        <span class="inline-flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 bg-blue-600 text-white rounded-full text-sm sm:text-base font-bold ml-2 sm:ml-3">
-                            {{ $items->count() }}
-                        </span>
-                        @endif
-                    </h1>
-                    <p class="text-gray-500 text-sm sm:text-base">
-                        <i class="ri-information-line"></i>
-                        Periksa kembali pesanan Anda sebelum melanjutkan pembayaran
-                    </p>
-                </div>
-                
-                @if(!$items->isEmpty())
-                <a href="{{ url('/catalog') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 hover:border-gray-400 transition shadow-sm text-sm sm:text-base">
-                    <i class="ri-add-line"></i>
-                    <span class="hidden sm:inline">Tambah Layanan</span>
-                    <span class="sm:hidden">Tambah</span>
-                </a>
-                @endif
-            </div>
+        <div class="text-center mb-10 scroll-reveal">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">Keranjang Anda</h1>
+            <p class="text-slate-500 mt-3 font-medium">Tinjau kembali pesanan Anda sebelum melanjutkan ke pembayaran.</p>
         </div>
 
+        @if(session('success'))
+            <div class="mb-6 p-4 bg-emerald-50 text-emerald-700 rounded-2xl border border-emerald-200 shadow-sm flex items-center gap-3 font-medium">
+                <i class="ri-checkbox-circle-fill text-xl"></i>
+                {{ session('success') }}
+            </div>
+        @endif
+        
+        @if(session('error'))
+            <div class="mb-6 p-4 bg-red-50 text-red-700 rounded-2xl border border-red-200 shadow-sm flex items-center gap-3 font-medium">
+                <i class="ri-error-warning-fill text-xl"></i>
+                {{ session('error') }}
+            </div>
+        @endif
+
         @if($items->isEmpty())
-            <!-- EMPTY STATE -->
-            <div class="flex flex-col items-center justify-center py-16 sm:py-20 lg:py-24 bg-white rounded-2xl sm:rounded-3xl border-2 border-dashed border-gray-200 shadow-sm text-center">
-                <div class="relative mb-6">
-                    <div class="w-24 h-24 sm:w-28 sm:h-28 bg-gradient-to-br from-blue-100 to-blue-50 rounded-full flex items-center justify-center">
-                        <i class="ri-shopping-cart-line text-5xl sm:text-6xl text-blue-400"></i>
-                    </div>
-                    <div class="absolute -top-2 -right-2 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center animate-pulse">
-                        <span class="text-white text-xs font-bold">0</span>
-                    </div>
+            <div class="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-200 p-12 text-center max-w-2xl mx-auto scroll-reveal">
+                <div class="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="ri-shopping-cart-2-line text-4xl text-slate-400"></i>
                 </div>
-                
-                <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Keranjang Masih Kosong</h3>
-                <p class="text-gray-500 text-sm sm:text-base mt-2 mb-8 max-w-md px-4">
-                    Yuk mulai belanja! Pilih layanan terbaik untuk kebutuhan bisnis digital Anda.
-                </p>
-                
-                <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                    <a href="{{ url('/catalog') }}" class="px-6 sm:px-8 py-3 sm:py-3.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-bold hover:from-blue-700 hover:to-blue-800 transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
-                        <i class="ri-shopping-bag-line text-lg"></i>
-                        Lihat Katalog
-                    </a>
-                </div>
+                <h2 class="text-2xl font-bold text-slate-900 mb-2">Keranjang Kosong</h2>
+                <p class="text-slate-500 mb-8 font-medium">Anda belum menambahkan layanan apa pun ke dalam keranjang.</p>
+                <a href="{{ route('landing') }}" class="inline-flex px-8 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-600/30 transition-all hover:-translate-y-0.5">
+                    Mulai Belanja <i class="ri-arrow-right-line ml-2"></i>
+                </a>
             </div>
         @else
-            <!-- CART FORM UTAMA -->
             <form action="{{ route('cart.checkout') }}" method="POST" id="checkoutForm">
                 @csrf
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     
-                    <!-- KOLOM KIRI: LIST ITEM -->
-                    <div class="lg:col-span-2 space-y-4 sm:space-y-5">
+                    {{-- KOLOM KIRI: DAFTAR ITEM --}}
+                    <div class="lg:col-span-2 space-y-4 scroll-reveal">
                         
-                        <!-- Select All Header -->
-                        <div class="bg-white px-4 sm:px-5 py-3.5 sm:py-4 rounded-xl sm:rounded-2xl border-2 border-gray-200 shadow-sm hover:shadow-md transition">
-                            <div class="flex items-center justify-between">
-                                <label class="flex items-center gap-3 cursor-pointer select-none group">
-                                    <input type="checkbox" id="selectAll" class="custom-checkbox" checked onclick="toggleAll(this)">
-                                    <div class="flex items-center gap-2">
-                                        <span class="text-sm sm:text-base font-bold text-gray-700 group-hover:text-blue-600 transition">
-                                            Pilih Semua
-                                        </span>
-                                        <span class="hidden sm:inline text-xs text-gray-400">
-                                            ({{ $items->count() }} item)
-                                        </span>
-                                    </div>
-                                </label>
-                                <div class="flex items-center gap-2 sm:gap-3">
-                                    <span class="text-xs sm:text-sm font-medium text-gray-500">
-                                        {{ $items->count() }} Item Total
-                                    </span>
-                                </div>
-                            </div>
+                        {{-- Select All Header --}}
+                        <div class="bg-white/80 backdrop-blur-xl px-6 py-4 rounded-2xl border border-slate-200 shadow-sm">
+                            <label class="flex items-center gap-3 cursor-pointer group w-max">
+                                <input type="checkbox" id="selectAll" class="w-5 h-5 text-blue-600 border-slate-300 rounded focus:ring-blue-500" checked onclick="toggleAll(this)">
+                                <span class="font-bold text-slate-700 group-hover:text-blue-600 transition select-none">
+                                    Pilih Semua ({{ $items->count() }} item)
+                                </span>
+                            </label>
                         </div>
 
-                        <!-- Cart Items Loop -->
-                        @foreach($items as $index => $item)
-                            
-                            {{-- FIX PENTING: Pastikan config jadi array, apapun format di DB --}}
-                            @php
-                                $config = $item->configuration;
-                                if (is_string($config)) {
-                                    $config = json_decode($config, true);
-                                }
-                                if (!is_array($config)) {
-                                    $config = [];
-                                }
-                            @endphp
-
-                            <div class="cart-item bg-white p-4 sm:p-5 lg:p-6 rounded-2xl border-2 border-gray-200 shadow-sm hover:shadow-lg hover:border-blue-300 transition-all">
-                                <div class="flex gap-3 sm:gap-4 items-start">
+                        {{-- Loop Items --}}
+                        <div class="space-y-4">
+                            @foreach($items as $item)
+                                @php
+                                    $config = json_decode($item->configuration, true) ?? [];
                                     
-                                    <!-- Checkbox -->
-                                    <div class="pt-1 sm:pt-1.5">
-                                        <input type="checkbox" 
-                                               name="selected_items[]" 
-                                               value="{{ $item->id }}" 
-                                               class="item-checkbox custom-checkbox" 
-                                               data-price="{{ $item->price }}" 
-                                               checked 
-                                               onchange="calculateTotal()">
+                                    // Tentukan Icon & Warna berdasarkan tipe
+                                    $icon = 'ri-box-3-line';
+                                    $color = 'text-slate-500';
+                                    $bg = 'bg-slate-100';
+                                    
+                                    if($item->type == 'domain') { $icon = 'ri-global-line'; $color = 'text-blue-600'; $bg = 'bg-blue-50 border-blue-100'; }
+                                    elseif($item->type == 'vps') { $icon = 'ri-server-line'; $color = 'text-indigo-600'; $bg = 'bg-indigo-50 border-indigo-100'; }
+                                    elseif($item->type == 'hosting') { $icon = 'ri-cloud-line'; $color = 'text-orange-600'; $bg = 'bg-orange-50 border-orange-100'; }
+                                    elseif($item->type == 'saas') { $icon = 'ri-rocket-line'; $color = 'text-emerald-600'; $bg = 'bg-emerald-50 border-emerald-100'; }
+                                @endphp
+
+                                <div class="bg-white/90 backdrop-blur-xl p-6 rounded-3xl border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center gap-5 hover:border-blue-300 transition-colors">
+                                    
+                                    <div class="flex items-center gap-4">
+                                        <input type="checkbox" name="selected_items[]" value="{{ $item->id }}" 
+                                            class="item-checkbox w-5 h-5 text-blue-600 border-slate-300 rounded focus:ring-blue-500 shrink-0" 
+                                            data-price="{{ $item->price }}" checked>
+                                        
+                                        <div class="w-14 h-14 rounded-2xl flex items-center justify-center border {{ $bg }} {{ $color }} shrink-0">
+                                            <i class="{{ $icon }} text-2xl"></i>
+                                        </div>
                                     </div>
 
-                                    <!-- Content -->
                                     <div class="flex-1 min-w-0">
-                                        <!-- Header dengan Icon & Price -->
-                                        <div class="flex justify-between items-start mb-3 sm:mb-4 gap-3">
-                                            <div class="flex items-start gap-3 flex-1 min-w-0">
-                                                <!-- Icon Badge -->
-                                                <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl flex-shrink-0 flex items-center justify-center text-xl sm:text-2xl shadow-md transform hover:scale-110 transition
-                                                    @if($item->type == 'domain') bg-gradient-to-br from-green-400 to-green-600 text-white
-                                                    @elseif($item->type == 'vps') bg-gradient-to-br from-blue-400 to-blue-600 text-white
-                                                    @elseif($item->type == 'hosting') bg-gradient-to-br from-orange-400 to-orange-600 text-white
-                                                    @elseif($item->type == 'saas') bg-gradient-to-br from-purple-400 to-purple-600 text-white
-                                                    @else bg-gradient-to-br from-gray-400 to-gray-600 text-white @endif">
-                                                    
-                                                    @if($item->type == 'domain') <i class="ri-global-line"></i>
-                                                    @elseif($item->type == 'vps') <i class="ri-server-line"></i>
-                                                    @elseif($item->type == 'hosting') <i class="ri-hard-drive-2-line"></i>
-                                                    @elseif($item->type == 'saas') <i class="ri-apps-line"></i>
-                                                    @else <i class="ri-price-tag-3-line"></i> @endif
+                                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
+                                            <div>
+                                                <h3 class="font-bold text-slate-900 text-lg truncate">{{ $item->product_name }}</h3>
+                                                <div class="flex flex-wrap items-center gap-2 mt-1">
+                                                    <span class="px-2 py-0.5 bg-slate-100 text-slate-600 text-xs font-bold rounded uppercase tracking-wider">{{ $item->type }}</span>
+                                                    <span class="text-xs text-slate-500 font-medium">&bull; {{ str_replace(' Year(s)', ' Tahun', $item->billing_cycle) }}</span>
                                                 </div>
-
-                                                <!-- Product Info -->
-                                                <div class="min-w-0 flex-1">
-                                                    <h3 class="font-bold text-gray-900 text-base sm:text-lg leading-tight mb-1">
-                                                        {{ $item->product_name }}
-                                                    </h3>
-                                                    <div class="flex flex-wrap items-center gap-2 text-xs sm:text-sm">
-                                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-gray-100 text-gray-700 rounded-lg font-medium capitalize">
-                                                            <i class="ri-price-tag-3-line"></i>
-                                                            {{ $item->type }}
-                                                        </span>
-                                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-blue-50 text-blue-700 rounded-lg font-medium capitalize">
-                                                            <i class="ri-calendar-line"></i>
-                                                            {{ $item->billing_cycle }}
-                                                        </span>
-                                                    </div>
+                                                
+                                                {{-- Extra Config Info --}}
+                                                <div class="mt-2 flex flex-wrap gap-2">
+                                                    @if(isset($config['os']))
+                                                        <span class="text-xs bg-slate-50 border border-slate-100 px-2 py-1 rounded text-slate-500 font-medium">OS: <span class="uppercase">{{ $config['os'] }}</span></span>
+                                                    @endif
+                                                    @if(isset($config['datacenter']))
+                                                        <span class="text-xs bg-slate-50 border border-slate-100 px-2 py-1 rounded text-slate-500 font-medium">DC: <span class="uppercase">{{ $config['datacenter'] }}</span></span>
+                                                    @endif
+                                                    @if(isset($config['domain_connection']))
+                                                        <span class="text-xs bg-slate-50 border border-slate-100 px-2 py-1 rounded text-slate-500 font-medium">Domain: {{ $config['domain_connection'] }}</span>
+                                                    @endif
+                                                    @if(isset($config['notes']))
+                                                        <span class="text-xs bg-slate-50 border border-slate-100 px-2 py-1 rounded text-slate-500 font-medium">{{ $config['notes'] }}</span>
+                                                    @endif
                                                 </div>
                                             </div>
-                                            
-                                            <!-- Price Desktop -->
-                                            <div class="hidden sm:flex flex-col items-end">
-                                                <div class="text-xs text-gray-400 mb-1">Harga</div>
-                                                <p class="font-extrabold text-blue-600 text-lg lg:text-xl">
-                                                    Rp {{ number_format($item->price, 0, ',', '.') }}
-                                                </p>
+
+                                            <div class="flex items-center sm:flex-col sm:items-end justify-between mt-4 sm:mt-0">
+                                                <span class="font-black text-slate-900 text-xl">Rp {{ number_format($item->price, 0, ',', '.') }}</span>
+                                                <button type="button" onclick="triggerDelete('{{ route('cart.delete', $item->id) }}')" 
+                                                    class="text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-lg transition-colors text-sm font-bold flex items-center gap-1 mt-1">
+                                                    <i class="ri-delete-bin-line"></i> <span class="sm:hidden">Hapus</span>
+                                                </button>
                                             </div>
                                         </div>
-
-                                        <!-- Price Mobile -->
-                                        <div class="sm:hidden mb-3 pb-3 border-b border-gray-100">
-                                            <div class="flex items-center justify-between">
-                                                <span class="text-xs text-gray-500">Harga:</span>
-                                                <div class="text-right">
-                                                    <p class="font-extrabold text-blue-600 text-base">
-                                                        Rp {{ number_format($item->price, 0, ',', '.') }}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Configuration Details (FIXED LOGIC) -->
-                                        @if(count($config) > 0)
-                                            <div class="mt-4 bg-gradient-to-br from-gray-50 to-gray-100/50 rounded-xl p-3 sm:p-4 border border-gray-200">
-                                                <div class="flex items-center gap-2 mb-3 pb-2 border-b border-gray-200">
-                                                    <i class="ri-settings-3-line text-gray-600"></i>
-                                                    <span class="text-xs sm:text-sm font-bold text-gray-700">Konfigurasi</span>
-                                                </div>
-                                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 text-xs sm:text-sm">
-                                                    @foreach($config as $key => $val)
-                                                        @if(!empty($val))
-                                                        <div class="flex items-start gap-2">
-                                                            <i class="ri-checkbox-circle-fill text-blue-500 text-xs mt-0.5 flex-shrink-0"></i>
-                                                            <div class="flex-1 min-w-0">
-                                                                <span class="text-gray-500 capitalize block">{{ str_replace('_', ' ', $key) }}</span>
-                                                                <span class="font-semibold text-gray-800 block truncate">{{ $val }}</span>
-                                                            </div>
-                                                        </div>
-                                                        @endif
-                                                    @endforeach
-                                                </div>
-                                            </div>
-                                        @endif
-
-                                        <!-- Action Buttons -->
-                                        <div class="mt-4 sm:mt-5 flex items-center justify-between sm:justify-end gap-2 sm:gap-3 pt-4 border-t-2 border-gray-100">
-                                            <button type="button" 
-                                                    onclick="triggerDelete('{{ route('cart.delete', $item->id) }}')" 
-                                                    class="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-gradient-to-r from-red-50 to-red-100 text-red-700 rounded-xl text-xs sm:text-sm font-bold hover:from-red-100 hover:to-red-200 transition shadow-sm hover:shadow-md transform hover:-translate-y-0.5">
-                                                <i class="ri-delete-bin-line text-sm sm:text-base"></i> 
-                                                <span>Hapus</span>
-                                            </button>
-                                        </div>
-
                                     </div>
                                 </div>
-                            </div>
-                        @endforeach
-
+                            @endforeach
+                        </div>
                     </div>
 
-                    <!-- KOLOM KANAN: RINGKASAN -->
-                    <div class="lg:col-span-1">
-                        <!-- Desktop Summary -->
-                        <div class="hidden lg:block sticky-summary">
-                            <div class="bg-white rounded-2xl shadow-xl border-2 border-gray-200 overflow-hidden">
-                                <!-- Header dengan Gradient -->
-                                <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-5">
-                                    <h3 class="font-bold text-white text-lg flex items-center gap-2">
-                                        <i class="ri-file-list-3-line"></i>
-                                        Ringkasan Pesanan
-                                    </h3>
+                    {{-- KOLOM KANAN: SUMMARY --}}
+                    <div class="lg:col-span-1 scroll-reveal" style="transition-delay: 100ms;">
+                        <div class="bg-slate-900 p-8 rounded-3xl shadow-xl sticky top-32 text-white relative overflow-hidden">
+                            <div class="absolute top-0 right-0 w-32 h-32 bg-blue-600 rounded-full blur-3xl -mr-16 -mt-16 opacity-50"></div>
+                            
+                            <h3 class="font-bold text-xl mb-6 flex items-center gap-2 relative z-10">
+                                <i class="ri-bill-line"></i> Ringkasan Pesanan
+                            </h3>
+
+                            <div class="space-y-4 mb-8 relative z-10">
+                                <div class="flex justify-between items-center text-sm text-slate-300">
+                                    <span>Subtotal (<span id="summaryCount">{{ $items->count() }}</span> item)</span>
+                                    <span class="font-bold text-white" id="summarySubtotal">Rp 0</span>
                                 </div>
-
-                                <div class="p-6">
-                                    <!-- Breakdown -->
-                                    <div class="space-y-4 mb-6">
-                                        <div class="flex justify-between items-center text-sm">
-                                            <span class="text-gray-600 flex items-center gap-2">Subtotal</span>
-                                            <span class="font-bold text-gray-900" id="subtotalLabelDesktop">Rp 0</span>
-                                        </div>
-                                        <div class="flex justify-between items-center text-sm">
-                                            <span class="text-gray-600 flex items-center gap-2">PPN (11%)</span>
-                                            <span class="font-bold text-gray-900" id="taxLabelDesktop">Rp 0</span>
-                                        </div>
-                                    </div>
-
-                                    <!-- Divider -->
-                                    <div class="border-t-2 border-dashed border-gray-200 my-6"></div>
-
-                                    <!-- Total -->
-                                    <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 mb-6">
-                                        <div class="flex justify-between items-center">
-                                            <span class="font-bold text-gray-700">Total Tagihan</span>
-                                            <div class="text-right">
-                                                <div class="font-extrabold text-2xl text-blue-600" id="totalLabel">Rp 0</div>
-                                                <div class="text-xs text-gray-500 mt-0.5">Sudah termasuk pajak</div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Checkout Button -->
-                                    <button type="button" 
-                                            onclick="submitCheckout()" 
-                                            id="btnCheckout" 
-                                            class="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-bold shadow-lg hover:from-blue-700 hover:to-blue-800 transition transform hover:-translate-y-1 hover:shadow-xl flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
-                                        <span class="text-base">Lanjutkan Pembayaran</span>
-                                        <i class="ri-arrow-right-line text-lg"></i>
-                                    </button>
+                                <div class="flex justify-between items-center text-sm text-slate-300">
+                                    <span>PPN (11%)</span>
+                                    <span class="font-bold text-white" id="summaryTax">Rp 0</span>
+                                </div>
+                                
+                                <div class="border-t border-slate-700 border-dashed my-4"></div>
+                                
+                                <div class="flex justify-between items-end">
+                                    <span class="font-bold">Total</span>
+                                    <span class="text-3xl font-black text-blue-400" id="summaryTotal">Rp 0</span>
                                 </div>
                             </div>
-                        </div>
-
-                        <!-- Mobile Summary (Fixed Bottom) -->
-                        <div class="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t-2 border-gray-200 mobile-footer-shadow">
-                            <div class="px-4 py-4">
-                                <div class="flex items-center justify-between gap-4">
-                                    <div class="flex flex-col">
-                                        <span class="text-xs text-gray-500 mb-1">Total Tagihan</span>
-                                        <div class="flex items-baseline gap-2">
-                                            <span class="font-extrabold text-xl sm:text-2xl text-blue-600 leading-none" id="totalLabel">Rp 0</span>
-                                        </div>
-                                    </div>
-                                    <button type="button" onclick="submitCheckout()" id="btnCheckout" class="px-6 sm:px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-bold shadow-lg flex items-center gap-2 disabled:opacity-50">
-                                        <span>Checkout</span>
-                                        <i class="ri-arrow-right-line"></i>
-                                    </button>
-                                </div>
-                            </div>
+                            
+                            <button type="submit" id="checkoutBtn" class="w-full py-4 bg-blue-600 text-white rounded-xl font-bold shadow-lg shadow-blue-900/50 hover:bg-blue-500 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 relative z-10">
+                                Lanjut Pembayaran <i class="ri-secure-payment-line"></i>
+                            </button>
                         </div>
                     </div>
 
                 </div>
             </form>
 
-            {{-- FORM DELETE HIDDEN --}}
             <form id="deleteForm" method="POST" style="display: none;">
                 @csrf
                 @method('DELETE')
             </form>
         @endif
+
     </div>
 </div>
-@endsection
 
-@section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     const formatRupiah = (number) => {
         return new Intl.NumberFormat('id-ID', {
@@ -365,11 +186,21 @@
     }
 
     function triggerDelete(url) {
-        Swal.fire({title: 'Konfirmasi', text: 'Apakah Anda yakin ingin menghapus item ini dari keranjang?', icon: 'warning', showCancelButton: true, confirmButtonText: 'Ya', cancelButtonText: 'Batal'}).then((result) => { if (result.isConfirmed) { 
-            const form = document.getElementById('deleteForm');
-            form.action = url;
-            form.submit();
-         } })
+        Swal.fire({
+            title: 'Hapus Item?', 
+            text: 'Apakah Anda yakin ingin menghapus layanan ini dari keranjang?', 
+            icon: 'warning', 
+            showCancelButton: true, 
+            confirmButtonText: 'Ya, Hapus', 
+            confirmButtonColor: '#ef4444',
+            cancelButtonText: 'Batal'
+        }).then((result) => { 
+            if (result.isConfirmed) { 
+                const form = document.getElementById('deleteForm');
+                form.action = url;
+                form.submit();
+            } 
+        })
     }
 
     function toggleAll(source) {
@@ -387,45 +218,39 @@
         
         allCheckboxes.forEach(box => {
             if(box.checked) {
-                subtotal += parseFloat(box.getAttribute('data-price'));
+                subtotal += parseInt(box.dataset.price);
                 checkedCount++;
             }
         });
 
-        const selectAll = document.getElementById('selectAll');
-        if(selectAll) selectAll.checked = (checkedCount === allCheckboxes.length && allCheckboxes.length > 0);
+        const tax = subtotal * 0.11;
+        const total = subtotal + tax;
 
-        let tax = subtotal * 0.11;
-        let total = subtotal + tax;
+        // Update UI
+        document.getElementById('summaryCount').innerText = checkedCount;
+        document.getElementById('summarySubtotal').innerText = formatRupiah(subtotal);
+        document.getElementById('summaryTax').innerText = formatRupiah(tax);
+        document.getElementById('summaryTotal').innerText = formatRupiah(total);
 
-        const subDesktop = document.getElementById('subtotalLabelDesktop');
-        const taxDesktop = document.getElementById('taxLabelDesktop');
-        
-        if(subDesktop) subDesktop.innerText = formatRupiah(subtotal);
-        if(taxDesktop) taxDesktop.innerText = formatRupiah(tax);
-
-        const totalLabels = document.querySelectorAll('#totalLabel');
-        totalLabels.forEach(el => el.innerText = formatRupiah(total));
-
-        const btns = document.querySelectorAll('#btnCheckout');
-        btns.forEach(btn => {
-            if(checkedCount === 0) {
-                btn.disabled = true;
-                btn.classList.add('opacity-50', 'cursor-not-allowed');
-            } else {
-                btn.disabled = false;
-                btn.classList.remove('opacity-50', 'cursor-not-allowed');
-            }
-        });
-    }
-
-    function submitCheckout() {
-        const checkedBoxes = document.querySelectorAll('.item-checkbox:checked');
-        if(checkedBoxes.length === 0) {
-            customAlert('Harap pilih minimal satu item untuk melanjutkan.')
-            return;
+        // Handle Checkbox "Pilih Semua"
+        const selectAllCb = document.getElementById('selectAll');
+        if (selectAllCb) {
+            selectAllCb.checked = (checkedCount === allCheckboxes.length && allCheckboxes.length > 0);
         }
-        document.getElementById('checkoutForm').submit();
+
+        // Disable button jika tidak ada yg dipilih
+        const checkoutBtn = document.getElementById('checkoutBtn');
+        if (checkoutBtn) {
+            if (checkedCount === 0) {
+                checkoutBtn.disabled = true;
+                checkoutBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                checkoutBtn.classList.remove('hover:bg-blue-500', 'hover:-translate-y-0.5');
+            } else {
+                checkoutBtn.disabled = false;
+                checkoutBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                checkoutBtn.classList.add('hover:bg-blue-500', 'hover:-translate-y-0.5');
+            }
+        }
     }
 
     document.addEventListener('DOMContentLoaded', calculateTotal);

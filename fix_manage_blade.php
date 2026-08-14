@@ -13,7 +13,7 @@ $search1 = <<<'EOT'
         'EU' => 'Europe (Netherlands)',
         default => 'Global'
     };
-    $flagUrl = "https://flagcdn.com/w20/" . strtolower($dcCode == 'UK' ? 'gb' : $dcCode) . ".png";
+    $flagUrl = "https://flagcdn.com/w20/" . strtolower($dcCode == 'UK' ? 'gb' : $dcCode) . ".webp";
 @endphp
 EOT;
 
@@ -27,7 +27,7 @@ $replace1 = <<<'EOT'
         'EU' => 'Europe (Netherlands)',
         default => 'Global'
     };
-    $flagUrl = "https://flagcdn.com/w20/" . strtolower($dcCode == 'UK' ? 'gb' : $dcCode) . ".png";
+    $flagUrl = "https://flagcdn.com/w20/" . strtolower($dcCode == 'UK' ? 'gb' : $dcCode) . ".webp";
 
     $isPlugin = $service->type == 'saas' && str_contains(strtolower($service->product_name), 'plugin');
     $licenseKey = $config['license_key'] ?? 'FC-LIC-' . str_pad($service->id, 4, '0', STR_PAD_LEFT) . '-' . strtoupper(\Illuminate\Support\Str::random(6));

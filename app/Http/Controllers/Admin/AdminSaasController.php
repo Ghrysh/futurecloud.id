@@ -46,7 +46,7 @@ class AdminSaasController extends Controller
             $path = $request->file('thumbnail')->store('saas', 'public');
             $data['thumbnail'] = 'storage/' . $path;
         } else {
-            $data['thumbnail'] = 'assets/img/placeholder.jpg'; // Default dulu
+            $data['thumbnail'] = 'assets/img/placeholder.webp'; // Default dulu
         }
         
         $data['features'] = $data['features'] ?? []; // Fix SQL error

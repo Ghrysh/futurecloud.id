@@ -1,4 +1,4 @@
-<x-split-auth-layout image="assets/reset_password.jpg">
+<x-split-auth-layout image="assets/reset_password.webp">
     <div class="mb-8">
         <h1 class="text-2xl font-bold text-gray-900 mb-2">Lupa Kata Sandi?</h1>
         <p class="text-sm text-gray-600">

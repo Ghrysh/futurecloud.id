@@ -39,7 +39,7 @@ class SaasProductSeeder extends Seeder
                 'tagline' => 'Email profesional aman, bebas iklan dengan domain Anda sendiri.',
                 'description' => "Tingkatkan kredibilitas bisnis Anda dengan email domain sendiri. Pilih paket tahunan untuk hemat atau coba gratis selama 2 bulan.\n\nFitur Utama:\n- POP3/IMAP/Webmail Access\n- Anti-Spam Protection\n- 2FA Security\n- Full Mobile Sync",
                 'price' => 18000, 
-                'thumbnail' => 'assets/Saas/email.jpg',
+                'thumbnail' => 'assets/Saas/email.webp',
                 'plans' => [
                     'ultimate' => [
                         'name' => 'Ultimate', 'tag' => 'Best Value',
@@ -70,7 +70,7 @@ class SaasProductSeeder extends Seeder
                 'tagline' => 'Aman, Cepat, dan Anonim. Buka blokir konten di mana saja.',
                 'description' => "Lindungi privasi online Anda dengan FastVPN. Enkripsi tingkat militer menyembunyikan IP Anda dari peretas dan pelacak.\n\nFitur Utama:\n- 1000+ Server di 50+ Negara\n- No-Logs Policy\n- Unlimited Devices\n- Unblock Netflix/Streaming",
                 'price' => 18000, 
-                'thumbnail' => 'assets/Saas/vpn.jpg',
+                'thumbnail' => 'assets/Saas/vpn.webp',
                 'plans' => [
                     'monthly' => [
                         'name' => 'Monthly Plan', 'price_display' => 18000, 'price_crossed' => 145000, 'discount_tag' => '87% off', 'renew_text' => 'Renews at Rp 145.000/mo', 'btn_text' => 'Get 1-month plan', 'cycle' => 'monthly', 'real_price' => 18000
@@ -92,7 +92,7 @@ class SaasProductSeeder extends Seeder
                 'tagline' => 'Amankan website Anda dengan enkripsi standar industri.',
                 'description' => "Pilih dari berbagai jenis sertifikat SSL untuk kebutuhan personal, bisnis, hingga e-commerce.\n\nFitur Umum:\n- Enkripsi 256-bit\n- Tanda Gembok HTTPS\n- Meningkatkan SEO\n- Garansi Uang Kembali",
                 'price' => 109000, 
-                'thumbnail' => 'assets/Saas/ssl.jpg',
+                'thumbnail' => 'assets/Saas/ssl.webp',
                 'plans' => [
                     'positive_ssl' => ['name' => 'PositiveSSL', 'price_display' => 109000, 'real_price' => 109000, 'renew_text' => 'Renews at Rp 127.000/yr', 'discount_tag' => '14% off', 'features' => ['Domain (DV)', 'Single Domain'], 'cycle' => 'annually'],
                     'essential_ssl' => ['name' => 'EssentialSSL', 'price_display' => 253000, 'real_price' => 253000, 'renew_text' => 'Renews at Rp 303.000/yr', 'discount_tag' => '17% off', 'features' => ['Domain (DV)', 'Single Domain'], 'cycle' => 'annually'],

@@ -15,7 +15,7 @@ class HeroController extends Controller
         
         // Setup default jika kosong
         if (empty($hero->background_images)) {
-            $hero->background_images = ['assets/bg.jpg'];
+            $hero->background_images = ['assets/bg.webp'];
             $hero->save();
         }
 
@@ -51,7 +51,7 @@ class HeroController extends Controller
         $currentImages = $hero->background_images ?? [];
 
         if (empty($currentImages)) {
-            $currentImages = ['assets/bg.jpg'];
+            $currentImages = ['assets/bg.webp'];
         }
 
         if ($request->hasFile('image')) {
@@ -74,7 +74,7 @@ class HeroController extends Controller
     {
         $imagePath = $request->image_path;
         
-        if ($imagePath === 'assets/bg.jpg') {
+        if ($imagePath === 'assets/bg.webp') {
             return back()->with('error', 'Gambar Default System tidak boleh dihapus.');
         }
 

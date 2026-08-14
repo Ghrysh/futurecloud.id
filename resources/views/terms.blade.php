@@ -8,7 +8,7 @@
     <section class="w-full pt-32 pb-24 px-4 text-center bg-[#0a192f] text-white relative overflow-hidden">
         {{-- Background Image with mask --}}
         <div class="absolute inset-0 z-0">
-            <img src="{{ asset('img/terms-hero.jpg') }}" alt="Terms Background" class="w-full h-full object-cover opacity-[0.15] mix-blend-screen">
+            <img src="{{ asset('img/terms-hero.webp') }}" alt="Terms Background" class="w-full h-full object-cover opacity-[0.15] mix-blend-screen">
             <div class="absolute inset-0 bg-gradient-to-b from-transparent to-[#0a192f]/95"></div>
         </div>
 

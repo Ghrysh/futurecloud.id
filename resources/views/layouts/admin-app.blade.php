@@ -173,6 +173,15 @@
                     <span class="font-medium text-sm">Hero Section</span>
                 </a>
 
+                <p class="px-3 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 mt-6">Dukungan Pelanggan</p>
+
+                <a href="{{ route('admin.tickets.index') }}"
+                    class="flex items-center px-3 py-2.5 rounded-lg transition group {{ request()->routeIs('admin.tickets.*') ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                    <i
+                        class="ri-customer-service-2-line text-xl mr-3 {{ request()->routeIs('admin.tickets.*') ? 'text-white' : 'text-slate-400 group-hover:text-white' }}"></i>
+                    <span class="font-medium text-sm">Support Tickets</span>
+                </a>
+
                 <p class="px-3 text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 mt-6">Chatbot & Live Chat</p>
 
                 <a href="{{ route('admin.chatbot.index') }}"

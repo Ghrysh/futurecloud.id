@@ -29,7 +29,7 @@ class PluginSeeder extends Seeder
                 'tagline' => 'Plugin Chatbot pintar untuk integrasi instan',
                 'description' => $chatbotDesc,
                 'price' => 0,
-                'thumbnail' => 'assets/img/placeholder.jpg',
+                'thumbnail' => 'assets/img/placeholder.webp',
                 'status' => 'approved',
                 'features' => [
                     'Kecerdasan Buatan (AI): Chatbot tidak kaku, memahami konteks percakapan secara natural dan interaktif',
@@ -50,7 +50,7 @@ class PluginSeeder extends Seeder
                 'tagline' => 'Plugin Monitoring Visitor secara real-time',
                 'description' => $monitoringDesc,
                 'price' => 0,
-                'thumbnail' => 'assets/img/placeholder.jpg',
+                'thumbnail' => 'assets/img/placeholder.webp',
                 'status' => 'approved',
                 'features' => [
                     'Real-Time Analytics: Pantau jumlah pengunjung yang sedang aktif di situs Anda secara langsung',

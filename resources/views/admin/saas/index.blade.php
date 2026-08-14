@@ -37,7 +37,7 @@
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-4">
                                     @php
-                                        $imgSrc = asset($app->thumbnail ?? 'assets/img/placeholder.jpg');
+                                        $imgSrc = asset($app->thumbnail ?? 'assets/img/placeholder.webp');
                                     @endphp
                                     <img src="{{ $imgSrc }}"
                                         class="w-10 h-10 rounded-lg object-cover border border-gray-200 shadow-sm">

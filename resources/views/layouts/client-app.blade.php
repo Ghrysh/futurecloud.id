@@ -169,8 +169,8 @@
                     <span class="font-medium text-sm">Invoices</span>
                 </a>
 
-                <a href="#" class="flex items-center px-3 py-2.5 rounded-lg group text-gray-600 hover:bg-gray-50 hover:text-gray-900">
-                    <i class="ri-customer-service-2-line text-lg mr-3 text-gray-400 group-hover:text-gray-600"></i>
+                <a href="{{ route('client.tickets.index') }}" class="flex items-center px-3 py-2.5 rounded-lg group transition-colors {{ request()->routeIs('client.tickets.*') ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                    <i class="ri-customer-service-2-line text-lg mr-3 {{ request()->routeIs('client.tickets.*') ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-600' }}"></i>
                     <span class="font-medium text-sm">Support Ticket</span>
                 </a>
             </nav>
@@ -215,10 +215,10 @@
                 <div class="flex items-center gap-2 sm:gap-4">
                     
                     {{-- Promo Button --}}
-                    <button class="flex items-center justify-center w-9 h-9 sm:w-auto sm:h-auto sm:px-4 sm:py-2 border border-blue-200 text-blue-600 rounded-lg text-sm font-semibold hover:bg-blue-50 transition" title="Promo">
+                    <!-- <button class="flex items-center justify-center w-9 h-9 sm:w-auto sm:h-auto sm:px-4 sm:py-2 border border-blue-200 text-blue-600 rounded-lg text-sm font-semibold hover:bg-blue-50 transition" title="Promo">
                         <i class="ri-coupon-3-line sm:mr-2 text-lg sm:text-base"></i>
                         <span class="hidden sm:inline">Promo</span>
-                    </button>
+                    </button> -->
 
                     {{-- Order Button --}}
                     <button class="flex items-center justify-center w-9 h-9 sm:w-auto sm:h-auto sm:px-4 sm:py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 shadow-sm shadow-blue-200 transition" title="Pesan Layanan" onclick="window.location='{{ route('catalog') }}'">

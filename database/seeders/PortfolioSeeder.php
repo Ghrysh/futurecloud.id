@@ -17,7 +17,7 @@ class PortfolioSeeder extends Seeder
                 'category' => 'Web Development',
                 'url' => 'https://tokocontoh.id',
                 'description' => 'Platform toko online berkinerja tinggi dengan integrasi payment gateway midtrans dan sistem manajemen stok real-time.',
-                'image' => 'portfolios/sample-1.jpg', // Pastikan nanti ada gambar dummy di storage
+                'image' => 'portfolios/sample-1.webp', // Pastikan nanti ada gambar dummy di storage
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -27,7 +27,7 @@ class PortfolioSeeder extends Seeder
                 'category' => 'SaaS Application',
                 'url' => 'https://rs-smart.id',
                 'description' => 'Aplikasi manajemen pasien dan rekam medis elektronik berbasis cloud yang aman dan compliant dengan regulasi kesehatan.',
-                'image' => 'portfolios/sample-2.jpg',
+                'image' => 'portfolios/sample-2.webp',
                 'created_at' => now(),
                 'updated_at' => now(),
             ]

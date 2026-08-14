@@ -122,7 +122,7 @@
                 </div>
 
                 <div class="space-y-3">
-                    @php $images = $hero->background_images ?? ['assets/bg.jpg']; @endphp
+                    @php $images = $hero->background_images ?? ['assets/bg.webp']; @endphp
 
                     @foreach($images as $index => $img)
                     <div class="flex items-center gap-3 sm:gap-4 p-2 sm:p-3 border border-gray-200 rounded-lg bg-white group hover:border-blue-300 transition">
@@ -142,7 +142,7 @@
 
                         <div class="flex-1 min-w-0">
                             <p class="text-[10px] sm:text-xs text-gray-500 truncate font-mono">{{ basename($img) }}</p>
-                            @if($img === 'assets/bg.jpg')
+                            @if($img === 'assets/bg.webp')
                                 <span class="text-[9px] sm:text-[10px] bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full font-bold inline-block mt-1">Default</span>
                             @else
                                 <span class="text-[9px] sm:text-[10px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-bold inline-block mt-1">Uploaded</span>
@@ -164,7 +164,7 @@
                                 <button type="submit" class="p-1.5 sm:p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded"><i class="ri-arrow-down-line text-sm sm:text-base"></i></button>
                             </form>
                             @endif
-                            @if($img !== 'assets/bg.jpg')
+                            @if($img !== 'assets/bg.webp')
                                 <form action="{{ route('admin.hero.delete_image') }}" method="POST" onsubmit="confirmSubmit(event, 'Hapus slide ini?')">
                                     @csrf @method('DELETE')
                                     <input type="hidden" name="image_path" value="{{ $img }}">

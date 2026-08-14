@@ -12,7 +12,7 @@
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f0f2f5; margin: 0; padding: 0; height: 100vh; overflow: hidden; }
         .bg-wa-header { background-color: #f0f2f5; }
-        .bg-wa-body { background-color: #efeae2; background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); background-size: 412px; }
+        .bg-wa-body { background-color: #efeae2; background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.webp'); background-size: 412px; }
         .bg-wa-chat-in { background-color: #ffffff; }
         .bg-wa-chat-out { background-color: #d9fdd3; }
         .bg-wa-chat-system { background-color: #fef3c7; }
@@ -185,7 +185,7 @@
         </div>
 
         {{-- ===================== AREA CHAT KANAN ===================== --}}
-        <div class="flex-1 flex flex-col relative hidden md:flex" style="background-color: #efeae2; background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); background-size: 412px;">
+        <div class="flex-1 flex flex-col relative hidden md:flex" style="background-color: #efeae2; background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.webp'); background-size: 412px;">
             
             {{-- Welcome Screen --}}
             <div x-show="!currentChat" class="absolute inset-0 z-20 bg-[#f0f2f5] flex flex-col items-center justify-center border-l border-gray-200">

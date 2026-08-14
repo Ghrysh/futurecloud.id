@@ -29,7 +29,7 @@ class SaasController extends Controller
                 'rating' => 5.0, 
                 'reviews_count' => SaasReview::where('saas_slug', $app->slug)->count(),
                 'subscribers' => 'New',
-                'thumbnail_url' => asset($app->thumbnail ?? 'assets/img/placeholder.jpg'),
+                'thumbnail_url' => asset($app->thumbnail ?? 'assets/img/placeholder.webp'),
                 'partner_name' => 'FutureCloud Official',
                 'partner_verified' => true,
                 'cycle' => is_array($app->plans) && isset($app->plans['cycle']) ? $app->plans['cycle'] : 'monthly',
@@ -99,7 +99,7 @@ class SaasController extends Controller
             'rating' => 5.0, 
             'reviews_count' => SaasReview::where('saas_slug', $slug)->count(),
             'subscribers' => '100+',
-            'img_hero' => $dbApp->thumbnail ?? 'assets/img/placeholder.jpg',
+            'img_hero' => $dbApp->thumbnail ?? 'assets/img/placeholder.webp',
             'price' => $dbApp->price,
             
             // GUNAKAN ARRAY FITUR
