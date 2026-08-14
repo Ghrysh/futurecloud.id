@@ -1,223 +1,224 @@
 @extends('layouts.landing')
 
-@section('title', 'Tentang Kami - Membangun Masa Depan Teknologi Cloud')
-
-@section('styles')
-<style>
-    /* Utility Scrollbar Hide */
-    .scrollbar-hide::-webkit-scrollbar {
-        display: none;
-    }
-    .scrollbar-hide {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-    }
-</style>
-@endsection
+@section('title', 'Tentang Kami')
 
 @section('content')
 
-    {{-- 1. Hero Section --}}
-    <section class="w-full pt-32 pb-20 mb-10 md:pt-36 md:pb-32 md:mb-28 px-4 bg-gray-50 text-center">
-        <div class="max-w-4xl mx-auto">
+    {{-- 1. HERO SECTION --}}
+    <section class="w-full pt-32 pb-24 px-4 text-center bg-[#0a192f] text-white relative overflow-hidden">
+        {{-- Background Image with mask --}}
+        <div class="absolute inset-0 z-0">
+            <img src="{{ asset('img/about-us-hero.jpg') }}" alt="FutureCloud Background" class="w-full h-full object-cover opacity-20 mix-blend-screen">
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-[#0a192f]/95"></div>
+        </div>
+
+        {{-- Glow effects --}}
+        <div class="absolute top-0 left-0 w-full h-full opacity-30 pointer-events-none z-0">
+            <div class="absolute top-1/4 left-10 w-48 h-48 bg-blue-500 rounded-full blur-[100px]"></div>
+            <div class="absolute bottom-10 right-1/4 w-64 h-64 bg-cyan-500 rounded-full blur-[120px]"></div>
+        </div>
+
+        <div class="max-w-4xl mx-auto relative z-10 scroll-reveal">
+            <span class="inline-block py-1 px-4 rounded-full bg-blue-900/40 border border-blue-500/30 text-blue-300 text-xs font-bold tracking-wider mb-6 uppercase backdrop-blur-sm">Kenali Kami Lebih Dekat</span>
             
-            <span class="inline-flex items-center gap-2 text-[10px] md:text-[13px] font-semibold text-blue-600 bg-blue-100 px-3 py-1.5 rounded-full mb-6 shadow-sm">
-                Tentang Kami
-            </span>
-            
-            <h1 class="text-3xl md:text-5xl lg:text-[54px] font-extrabold mt-2 text-gray-900 leading-[1.15] tracking-tight">
-                Membangun Masa Depan <br><span class="text-blue-600">Teknologi Cloud</span>
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6">
+                Mempercepat <br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Masa Depan Digital</span> Indonesia
             </h1>
-            <p class="mt-6 text-sm md:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed px-2">
-                PT Berkah Teknologi Terdepan (FutureCloud.id) adalah penyedia terkemuka di Indonesia untuk infrastruktur cloud generasi mendatang, pengembangan kustom, dan layanan konsultasi TI strategis.
+
+            <p class="text-blue-100 text-lg md:text-xl font-light max-w-2xl mx-auto leading-relaxed px-4">
+                Kami adalah mitra teknologi terpercaya yang berdedikasi untuk memberikan solusi infrastruktur cloud dan pengembangan perangkat lunak terbaik untuk kesuksesan bisnis Anda.
             </p>
         </div>
     </section>
 
-    {{-- 2. Mission & Vision (Horizontal Scroll Mobile) --}}
-    <section class="w-full pb-16 px-0 md:px-4 -mt-16 md:-mt-24 relative z-10">
-        
-        <!-- 
-            CONTAINER: 
-            Mobile: Flex Horizontal Scroll (85% width per card)
-            Desktop: Grid 2 Columns 
-        -->
-        <div class="max-w-7xl mx-auto 
-                    flex flex-nowrap overflow-x-auto snap-x snap-mandatory gap-4 px-6 pb-8 scrollbar-hide
-                    md:grid md:grid-cols-2 md:gap-8 md:px-4 md:pb-0 md:overflow-visible">
-
-            {{-- Mission Card --}}
-            <div class="flex-shrink-0 w-[85%] md:w-auto snap-center
-                        bg-white p-6 md:p-8 rounded-2xl shadow-xl border border-gray-100 flex flex-col md:flex-row items-start gap-4 h-full">
-                <div class="w-12 h-12 md:w-16 md:h-16 shrink-0 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-xl md:text-2xl border-2 border-blue-200">
-                    <i class="ri-target-line"></i>
-                </div>
-                <div>
-                    <h2 class="font-bold text-lg md:text-2xl text-gray-900 mt-1">Misi Kami</h2>
-                    <p class="text-gray-600 text-sm md:text-base mt-2 leading-relaxed">
-                        Memberdayakan bisnis dengan teknologi cloud mutakhir dan solusi inovatif yang mendorong transformasi digital, meningkatkan efisiensi operasional, dan mempercepat pertumbuhan.
-                    </p>
+    {{-- 2. WHO WE ARE --}}
+    <section class="scroll-reveal w-full py-24 px-4 bg-white">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div class="relative">
+                <div class="absolute inset-0 bg-blue-100 rounded-[40px] blur-[60px] opacity-60"></div>
+                <div class="relative bg-gray-50 border border-gray-100 p-8 rounded-[32px] shadow-2xl">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-4">
+                            <div class="bg-blue-600 text-white p-6 rounded-2xl shadow-lg">
+                                <i class="ri-rocket-2-line text-4xl mb-4 block text-blue-200"></i>
+                                <h4 class="font-bold text-xl mb-1">Misi Kami</h4>
+                                <p class="text-sm text-blue-100">Memberdayakan bisnis melalui teknologi mutakhir.</p>
+                            </div>
+                            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                                <h3 class="text-3xl font-bold text-gray-900 mb-1">98%</h3>
+                                <p class="text-sm text-gray-500">Klien Bertahan</p>
+                            </div>
+                        </div>
+                        <div class="space-y-4 translate-y-8">
+                            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                                <h3 class="text-3xl font-bold text-gray-900 mb-1">24/7</h3>
+                                <p class="text-sm text-gray-500">Dukungan Penuh</p>
+                            </div>
+                            <div class="bg-gray-900 text-white p-6 rounded-2xl shadow-lg">
+                                <i class="ri-eye-line text-4xl mb-4 block text-gray-400"></i>
+                                <h4 class="font-bold text-xl mb-1">Visi Kami</h4>
+                                <p class="text-sm text-gray-400">Menjadi penyedia cloud No.1 di Asia Tenggara.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            {{-- Vision Card --}}
-            <div class="flex-shrink-0 w-[85%] md:w-auto snap-center
-                        bg-white p-6 md:p-8 rounded-2xl shadow-xl border border-gray-100 flex flex-col md:flex-row items-start gap-4 h-full">
-                <div class="w-12 h-12 md:w-16 md:h-16 shrink-0 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-xl md:text-2xl border-2 border-blue-200">
-                    <i class="ri-eye-line"></i>
-                </div>
-                <div>
-                    <h2 class="font-bold text-lg md:text-2xl text-gray-900 mt-1">Visi Kami</h2>
-                    <p class="text-gray-600 text-sm md:text-base mt-2 leading-relaxed">
-                        Menjadi mitra teknologi paling tepercaya di Asia Tenggara, dikenal karena memberikan solusi cloud yang luar biasa, mendorong inovasi, dan menciptakan nilai yang bertahan lama.
-                    </p>
+            <div>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-6 leading-tight">Siapa <span class="text-blue-600">FutureCloud?</span></h2>
+                <p class="text-gray-600 text-lg mb-6 leading-relaxed">
+                    Di bawah naungan <strong>PT Berkah Teknologi Terdepan</strong>, FutureCloud.id lahir dari keinginan untuk mendemokratisasi akses ke infrastruktur cloud berkualitas enterprise bagi perusahaan dari segala ukuran di Indonesia.
+                </p>
+                <p class="text-gray-600 text-lg mb-8 leading-relaxed">
+                    Tim kami terdiri dari insinyur bersertifikat, pengembang kreatif, dan ahli strategi bisnis yang bekerja sama untuk memecahkan masalah paling kompleks menggunakan teknologi terkini.
+                </p>
+                <div class="flex items-center gap-4">
+                    <img src="https://ui-avatars.com/api/?name=CEO&background=0D8ABC&color=fff" alt="CEO" class="w-12 h-12 rounded-full ring-2 ring-blue-100">
+                    <div>
+                        <h4 class="font-bold text-gray-900">Budi Santoso</h4>
+                        <p class="text-sm text-gray-500">CEO & Pendiri</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    {{-- 3. Stats Section --}}
-    <section class="w-full py-12 md:py-20 px-4">
-        <div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 text-center">
-            
-            <div class="border-r border-gray-200 md:border-none p-2">
-                <h3 class="text-3xl md:text-4xl font-extrabold text-blue-600">500+</h3>
-                <p class="text-gray-700 mt-1 text-xs md:text-base font-medium">Proyek Diselesaikan</p>
-            </div>
-            <div class="md:border-r md:border-gray-200 p-2"> {{-- Border logic adjusted --}}
-                <h3 class="text-3xl md:text-4xl font-extrabold text-blue-600">98%</h3>
-                <p class="text-gray-700 mt-1 text-xs md:text-base font-medium">Kepuasan Klien</p>
-            </div>
-            <div class="border-r border-gray-200 md:border-none p-2">
-                <h3 class="text-3xl md:text-4xl font-extrabold text-blue-600">50+</h3>
-                <p class="text-gray-700 mt-1 text-xs md:text-base font-medium">Tim Ahli</p>
-            </div>
-            <div class="p-2">
-                <h3 class="text-3xl md:text-4xl font-extrabold text-blue-600">24/7</h3>
-                <p class="text-gray-700 mt-1 text-xs md:text-base font-medium">Dukungan Tersedia</p>
-            </div>
+    {{-- 3. CORE VALUES --}}
+    <section class="scroll-reveal w-full py-24 px-4 bg-gray-50 border-y border-gray-100">
+        <div class="max-w-6xl mx-auto text-center mb-16">
+            <span class="inline-block py-1 px-3 rounded-full bg-blue-100 text-blue-700 text-xs font-bold tracking-wider mb-4 uppercase">Budaya Perusahaan</span>
+            <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900">Nilai Inti Kami</h2>
         </div>
-    </section>
 
-    {{-- 4. Core Values (Grid 2 Kolom Mobile) --}}
-    <section class="w-full py-16 md:py-20 px-4 bg-white border-t border-b border-gray-100">
-        <h2 class="text-center text-2xl md:text-3xl font-bold text-gray-900 mb-2">Nilai Inti Kami</h2>
-        <p class="text-center text-sm md:text-base text-gray-600 mb-10 md:mb-12">Prinsip-prinsip yang memandu segala yang kami lakukan</p>
-
-        <!-- Grid: 2 Kolom Mobile, 4 Kolom Desktop -->
-        <div class="max-w-7xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-8">
-            
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             @php
                 $values = [
-                    ['icon' => 'ri-compasses-line', 'title' => 'Inovasi', 'detail' => 'Melampaui batas untuk memberikan solusi mutakhir.'],
-                    ['icon' => 'ri-shield-line', 'title' => 'Keamanan', 'detail' => 'Perlindungan tingkat perusahaan adalah prioritas utama kami.'],
-                    ['icon' => 'ri-group-line', 'title' => 'Kesuksesan', 'detail' => 'Dukungan penuh dedikasi untuk memastikan tujuan bisnis Anda.'],
-                    ['icon' => 'ri-medal-line', 'title' => 'Keunggulan', 'detail' => 'Standar tertinggi dalam kualitas kode dan layanan.'],
+                    ['icon' => 'ri-compasses-line', 'title' => 'Inovasi Tanpa Henti', 'detail' => 'Kami tidak pernah berhenti bereksplorasi. Melampaui batas untuk memberikan solusi teknologi paling mutakhir.'],
+                    ['icon' => 'ri-shield-check-line', 'title' => 'Keamanan Ekstra', 'detail' => 'Data Anda adalah nyawa bisnis Anda. Perlindungan tingkat perusahaan adalah prioritas utama kami.'],
+                    ['icon' => 'ri-heart-pulse-line', 'title' => 'Fokus Klien', 'detail' => 'Dedikasi penuh pada kesuksesan Anda. Jika Anda bertumbuh, kami pun ikut bertumbuh.'],
+                    ['icon' => 'ri-medal-line', 'title' => 'Keunggulan Mutu', 'detail' => 'Kami mempertahankan standar tertinggi dalam kualitas layanan, kode, maupun infrastruktur perangkat keras.'],
                 ];
             @endphp
 
             @foreach ($values as $value)
-                <div class="bg-white p-4 md:p-6 rounded-xl shadow-sm border text-center transition-all duration-300 hover:shadow-lg hover:border-blue-500">
-                    <div class="w-10 h-10 md:w-12 md:h-12 mx-auto bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-lg md:text-xl mb-3 md:mb-4 border border-blue-200">
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-2 hover:border-blue-300 transition-all duration-300 group">
+                    <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-2xl mb-6 group-hover:bg-blue-600 group-hover:text-white transition-colors">
                         <i class="{{ $value['icon'] }}"></i>
                     </div>
-                    <h3 class="font-bold text-sm md:text-lg text-gray-900">{{ $value['title'] }}</h3>
-                    <p class="text-gray-600 text-[10px] md:text-sm mt-2 leading-snug">{{ $value['detail'] }}</p>
+                    <h3 class="font-bold text-xl text-gray-900 mb-3">{{ $value['title'] }}</h3>
+                    <p class="text-gray-600 leading-relaxed">{{ $value['detail'] }}</p>
                 </div>
             @endforeach
         </div>
     </section>
 
-    {{-- 5. Our Journey (Timeline Responsive) --}}
-    <section class="w-full py-16 md:py-20 px-4 bg-gray-50">
-        <h2 class="text-center text-2xl md:text-3xl font-bold text-gray-900 mb-2">Perjalanan Kami</h2>
-        <p class="text-center text-sm md:text-base text-gray-600 mb-10 md:mb-12">Pencapaian utama dalam evolusi berkelanjutan kami</p>
+    {{-- 4. TIMELINE --}}
+    <section class="scroll-reveal w-full py-24 px-4 bg-white">
+        <div class="max-w-4xl mx-auto text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900">Perjalanan Kami</h2>
+            <p class="text-gray-600 text-lg mt-4 max-w-2xl mx-auto">Dari mimpi kecil hingga menjadi pelopor penyedia infrastruktur terkemuka.</p>
+        </div>
 
         @php
             $milestones = [
-                ['year' => 2018, 'title' => 'Didirikan', 'detail' => 'Didirikan dengan visi untuk merevolusi cloud di Indonesia'],
-                ['year' => 2019, 'title' => 'Kemitraan', 'detail' => 'Mengamankan kemitraan dengan penyedia cloud global terkemuka'],
-                ['year' => 2021, 'title' => 'Sertifikasi ISO', 'detail' => 'Meraih ISO 27001 untuk manajemen keamanan informasi'],
-                ['year' => 2023, 'title' => 'Ekspansi', 'detail' => 'Memperluas operasi di seluruh Asia Tenggara (5 negara)'],
-                ['year' => 2024, 'title' => 'Lab AI', 'detail' => 'Meluncurkan divisi R&D khusus yang berfokus pada solusi AI'],
+                ['year' => 2018, 'title' => 'Langkah Pertama', 'detail' => 'Didirikan dengan visi untuk merevolusi ekosistem cloud lokal di Indonesia, bermula dari satu rak server.'],
+                ['year' => 2019, 'title' => 'Kemitraan Global', 'detail' => 'Mengamankan kemitraan strategis dengan penyedia hardware global terkemuka untuk infrastruktur.'],
+                ['year' => 2021, 'title' => 'Keamanan & Kepatuhan', 'detail' => 'Meraih sertifikasi standar internasional ISO 27001 untuk manajemen keamanan informasi.'],
+                ['year' => 2023, 'title' => 'Ekspansi Internasional', 'detail' => 'Memperluas operasi dan zona ketersediaan data center di seluruh Asia Tenggara.'],
+                ['year' => 2024, 'title' => 'Inovasi AI', 'detail' => 'Meluncurkan divisi R&D khusus yang berfokus pada solusi integrasi Kecerdasan Buatan (AI) di cloud.'],
             ];
         @endphp
 
-        <div class="max-w-4xl mx-auto relative px-0 md:px-4">
-            {{-- Timeline Line: Left di Mobile, Center di Desktop --}}
-            <div class="absolute left-6 md:left-1/2 md:-translate-x-1/2 top-0 h-full w-0.5 bg-gray-200"></div>
+        <div class="max-w-3xl mx-auto relative px-4">
+            {{-- Vertical Line --}}
+            <div class="absolute left-8 md:left-1/2 top-0 bottom-0 w-0.5 bg-blue-100 md:-translate-x-1/2"></div>
 
-            @foreach ($milestones as $index => $milestone)
-                @php
-                    $isLeft = $index % 2 == 0;
-                @endphp
-                {{-- 
-                    Container Milestone:
-                    Mobile: Selalu flex-row biasa (kiri ke kanan)
-                    Desktop: Alternating flex-row-reverse jika item kiri
-                --}}
-                <div class="flex flex-row md:{{ $isLeft ? 'flex-row' : 'flex-row-reverse' }} mb-8 md:mb-12 relative items-start md:items-center">
-                    
-                    {{-- Spacer untuk Desktop agar layout imbang --}}
-                    <div class="hidden md:block w-1/2"></div>
-
-                    {{-- Circle Point: Absolute left di Mobile, Relative Center di Desktop --}}
-                    <div class="absolute left-6 md:left-1/2 -translate-x-1/2 w-8 h-8 md:w-12 md:h-12 bg-blue-600 rounded-full flex items-center justify-center text-white text-[10px] md:text-sm font-bold shadow-lg z-10 border-4 border-gray-50">
-                        {{ $milestone['year'] }}
-                    </div>
-                    
-                    {{-- Card Content --}}
-                    {{-- Mobile: pl-12 (memberi ruang untuk garis di kiri). Desktop: menyesuaikan sisi --}}
-                    <div class="w-full md:w-1/2 pl-12 md:pl-0 {{ $isLeft ? 'md:pr-12 md:text-right' : 'md:pl-12 md:text-left' }}">
-                        <div class="bg-white p-4 md:p-5 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition-all">
-                            <h3 class="font-bold text-sm md:text-lg text-gray-900 mb-1">{{ $milestone['title'] }}</h3>
-                            <p class="text-gray-600 text-xs md:text-sm leading-snug">{{ $milestone['detail'] }}</p>
+            <div class="space-y-12">
+                @foreach ($milestones as $index => $milestone)
+                    @php $isLeft = $index % 2 == 0; @endphp
+                    <div class="relative flex flex-col md:flex-row items-start md:items-center justify-between group">
+                        
+                        {{-- Left Side (Desktop) / Hidden Mobile --}}
+                        <div class="hidden md:block w-[45%] text-right pr-8 {{ $isLeft ? 'opacity-100' : 'opacity-0' }}">
+                            <h3 class="font-bold text-xl text-gray-900">{{ $milestone['title'] }}</h3>
+                            <p class="text-gray-600 mt-2">{{ $milestone['detail'] }}</p>
                         </div>
+
+                        {{-- Node --}}
+                        <div class="absolute left-0 md:left-1/2 md:-translate-x-1/2 w-16 h-16 rounded-full bg-white border-4 border-blue-100 flex items-center justify-center shadow-lg group-hover:border-blue-500 group-hover:bg-blue-50 transition-colors z-10">
+                            <span class="font-bold text-blue-600">{{ $milestone['year'] }}</span>
+                        </div>
+
+                        {{-- Right Side (Desktop) / Main Mobile --}}
+                        <div class="w-full pl-24 md:pl-0 md:w-[45%] {{ $isLeft ? 'md:opacity-0 md:text-left' : 'md:pl-8 md:text-left opacity-100' }}">
+                            <div class="md:hidden">
+                                <h3 class="font-bold text-lg text-gray-900">{{ $milestone['title'] }}</h3>
+                                <p class="text-gray-600 text-sm mt-1">{{ $milestone['detail'] }}</p>
+                            </div>
+                            <div class="hidden md:block">
+                                <h3 class="font-bold text-xl text-gray-900">{{ $milestone['title'] }}</h3>
+                                <p class="text-gray-600 mt-2">{{ $milestone['detail'] }}</p>
+                            </div>
+                        </div>
+
                     </div>
-                </div>
-            @endforeach
+                @endforeach
+            </div>
         </div>
     </section>
 
-    {{-- 6. Visit Our Office --}}
-    <section class="w-full py-16 md:py-20 px-4 bg-white">
-        <div class="max-w-4xl mx-auto">
-            <div class="bg-white p-6 md:p-10 rounded-2xl shadow-xl border border-gray-100 text-center">
-
-                <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Kunjungi Kantor Kami</h2>
-                <p class="text-sm md:text-base text-gray-600 mb-8 md:mb-10">Kami akan sangat senang bertemu Anda secara langsung</p>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 text-left">
-                    
-                    {{-- Left --}}
-                    <div>
-                        <h3 class="font-bold text-base md:text-lg text-gray-900 mb-2">PT Berkah Teknologi Terdepan</h3>
-                        <address class="text-gray-600 text-xs md:text-sm not-italic leading-relaxed">
-                            Gedung Jaya Lomba 5 unit A.6<br>
-                            JL. M H Thamrin No.12<br>
-                            Jakarta Pusat 10340, Indonesia
-                        </address>
-                    </div>
-
-                    {{-- Right --}}
-                    <div class="space-y-4">
-                        <div class="flex items-center gap-3">
-                            <i class="ri-phone-line text-lg md:text-xl text-blue-600"></i>
+    {{-- 5. OFFICE & CONTACT --}}
+    <section class="scroll-reveal w-full py-24 px-4 bg-gray-50 border-t border-gray-100">
+        <div class="max-w-5xl mx-auto">
+            <div class="bg-white rounded-[32px] shadow-2xl border border-gray-100 overflow-hidden flex flex-col md:flex-row">
+                
+                {{-- Left: Info --}}
+                <div class="w-full md:w-1/2 p-10 md:p-14 bg-gray-900 text-white relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-blue-500/20 rounded-full blur-[80px]"></div>
+                    <div class="relative z-10">
+                        <h2 class="text-3xl font-bold mb-2">Kantor Pusat Kami</h2>
+                        <p class="text-gray-400 mb-10">Kunjungi kami untuk berdiskusi sambil menikmati secangkir kopi hangat.</p>
+                        
+                        <div class="space-y-6">
                             <div>
-                                <p class="font-bold text-sm md:text-base text-gray-900">Telepon</p>
-                                <p class="text-gray-600 text-xs md:text-sm">(+62) 815-2022-225</p>
+                                <h4 class="text-blue-400 font-semibold mb-1 uppercase text-sm tracking-wider">Perusahaan</h4>
+                                <p class="font-bold text-xl">PT Berkah Teknologi Terdepan</p>
                             </div>
-                        </div>
-
-                        <div class="flex items-center gap-3">
-                            <i class="ri-mail-line text-lg md:text-xl text-blue-600"></i>
                             <div>
-                                <p class="font-bold text-sm md:text-base text-gray-900">Email</p>
-                                <p class="text-gray-600 text-xs md:text-sm">info@futurecloud.id</p>
+                                <h4 class="text-blue-400 font-semibold mb-1 uppercase text-sm tracking-wider">Alamat</h4>
+                                <address class="text-gray-300 not-italic leading-relaxed">
+                                    Gedung Jaya Lomba 5 unit A.6<br>
+                                    JL. M H Thamrin No.12<br>
+                                    Jakarta Pusat 10340, Indonesia
+                                </address>
+                            </div>
+                            <div class="pt-6 border-t border-gray-800">
+                                <div class="flex items-center gap-4 mb-4">
+                                    <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-xl text-white"><i class="ri-phone-line"></i></div>
+                                    <p class="text-lg">(+62) 815-2022-225</p>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-xl text-white"><i class="ri-mail-line"></i></div>
+                                    <p class="text-lg">info@futurecloud.id</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                {{-- Right: Placeholder Maps / Decor --}}
+                <div class="w-full md:w-1/2 relative bg-blue-50 min-h-[300px] flex items-center justify-center">
+                    <div class="text-center p-8">
+                        <i class="ri-map-pin-2-fill text-6xl text-blue-300 mb-4 inline-block"></i>
+                        <h3 class="font-bold text-gray-900 text-xl mb-2">Pusat Bisnis Jakarta</h3>
+                        <p class="text-gray-500">Berlokasi strategis di jantung pusat bisnis Ibukota.</p>
+                        <a href="https://maps.google.com" target="_blank" class="mt-6 inline-block px-6 py-2.5 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition shadow-lg shadow-blue-600/30">
+                            Buka di Google Maps
+                        </a>
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>
