@@ -431,7 +431,7 @@
         </div>
     </nav>
 
-    <div class="pt-20">
+    <div class="{{ request()->is('/') ? '' : 'pt-20' }}">
         @yield('content')
     </div>
 
