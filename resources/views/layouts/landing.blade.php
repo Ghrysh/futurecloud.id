@@ -58,7 +58,7 @@
 <body class="antialiased bg-gray-50">
 
     <!-- Navbar -->
-    <nav x-data="{ mobileMenuOpen: false, atTop: true, isHome: {{ request()->is('/') || request()->is('catalog') || request()->is('services') || request()->is('about-us') || request()->is('contact') || request()->is('faq') || request()->is('terms') || request()->is('refund-policy') ? 'true' : 'false' }}, isDarkTheme: {{ request()->is('catalog') || request()->is('services') || request()->is('about-us') || request()->is('contact') || request()->is('faq') || request()->is('terms') || request()->is('refund-policy') ? 'true' : 'false' }} }" 
+    <nav x-data="{ mobileMenuOpen: false, atTop: true, isHome: {{ request()->is('/') || request()->is('catalog') || request()->is('services') || request()->is('about-us') || request()->is('contact') || request()->is('faq') || request()->is('terms') || request()->is('refund-policy') || request()->is('portfolio') ? 'true' : 'false' }}, isDarkTheme: {{ request()->is('catalog') || request()->is('services') || request()->is('about-us') || request()->is('contact') || request()->is('faq') || request()->is('terms') || request()->is('refund-policy') || request()->is('portfolio') ? 'true' : 'false' }} }" 
          @scroll.window="atTop = (window.pageYOffset < 20)"
          :class="{ 
              'bg-transparent border-transparent': atTop && isHome, 
@@ -446,7 +446,7 @@
         </div>
     </nav>
 
-    <div class="{{ request()->is('/') || request()->is('catalog') || request()->is('services') || request()->is('about-us') || request()->is('contact') || request()->is('faq') || request()->is('terms') || request()->is('refund-policy') ? '' : 'pt-20' }}">
+    <div class="{{ request()->is('/') || request()->is('catalog') || request()->is('services') || request()->is('about-us') || request()->is('contact') || request()->is('faq') || request()->is('terms') || request()->is('refund-policy') || request()->is('portfolio') ? '' : 'pt-20' }}">
         @yield('content')
     </div>
 

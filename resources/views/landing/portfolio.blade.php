@@ -1,21 +1,18 @@
 @extends('layouts.landing')
 
-@section('title', 'Portfolio & Case Studies - FutureCloud.id')
+@section('title', 'Portfolio')
 
 @section('styles')
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <style>
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
-        
         /* Portfolio Card Hover Effect */
         .portfolio-card .overlay {
             opacity: 0;
             transition: all 0.4s ease;
         }
-        .portfolio-card:hover .overlay {
+        .portfolio-item:hover .portfolio-card .overlay {
             opacity: 1;
         }
-        .portfolio-card:hover img {
+        .portfolio-item:hover .portfolio-card img {
             transform: scale(1.1);
         }
         
@@ -24,6 +21,7 @@
             background-color: #2563EB;
             color: white;
             border-color: #2563EB;
+            box-shadow: 0 4px 14px 0 rgba(37, 99, 235, 0.39);
         }
     </style>
 @endsection
@@ -32,32 +30,47 @@
 
     {{-- HERO SECTION --}}
     <section class="w-full pt-32 pb-24 px-4 text-center bg-[#0a192f] text-white relative overflow-hidden">
-        {{-- Abstract Shapes --}}
-        <div class="absolute top-20 left-0 w-72 h-72 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob"></div>
-        <div class="absolute bottom-20 right-0 w-72 h-72 bg-cyan-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-2000"></div>
+        {{-- Background Image with mask --}}
+        <div class="absolute inset-0 z-0">
+            <img src="{{ asset('img/portfolio-hero.jpg') }}" alt="Portfolio Background" class="w-full h-full object-cover opacity-[0.15] mix-blend-screen">
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-[#0a192f]/95"></div>
+        </div>
 
-        <div class="max-w-6xl mx-auto relative z-10">
-            <span class="text-cyan-400 font-bold tracking-widest uppercase text-sm mb-4 block">Our Masterpiece</span>
-            <h1 class="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-6">
-                Karya & Hasil <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Nyata</span>
+        {{-- Glow effects --}}
+        <div class="absolute top-0 left-0 w-full h-full opacity-30 pointer-events-none z-0">
+            <div class="absolute top-10 right-1/4 w-48 h-48 bg-blue-500 rounded-full blur-[100px]"></div>
+            <div class="absolute bottom-10 left-1/4 w-64 h-64 bg-cyan-400 rounded-full blur-[120px]"></div>
+        </div>
+
+        <div class="max-w-4xl mx-auto relative z-10 scroll-reveal">
+            <span class="inline-block py-1 px-4 rounded-full bg-blue-900/40 border border-blue-500/30 text-blue-300 text-xs font-bold tracking-wider mb-6 uppercase backdrop-blur-sm">Our Masterpiece</span>
+            
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6">
+                Karya & Hasil <br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Nyata</span>
             </h1>
-            <p class="mt-4 text-lg text-blue-100 max-w-2xl mx-auto leading-relaxed px-2 font-light">
+
+            <p class="text-blue-100 text-lg md:text-xl font-light max-w-2xl mx-auto leading-relaxed px-4">
                 Lihat bagaimana FutureCloud membantu bisnis bertransformasi digital melalui infrastruktur handal dan solusi perangkat lunak canggih.
             </p>
         </div>
     </section>
 
     {{-- PORTFOLIO SECTION --}}
-    <section class="w-full py-16 px-4 bg-gray-50 min-h-screen">
-        <div class="max-w-7xl mx-auto">
+    <section class="w-full py-24 bg-slate-50 min-h-screen relative font-['Inter']">
+        <div class="absolute inset-0 z-0 opacity-40 pointer-events-none">
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-blue-100 rounded-full blur-[120px]"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
             
             {{-- Filter Categories --}}
-            <div class="flex flex-wrap justify-center gap-3 mb-12">
-                <button class="filter-btn active px-6 py-2 rounded-full border border-gray-300 text-gray-600 font-medium text-sm hover:bg-gray-100 transition duration-300" onclick="filterPortfolio('all', this)">
+            <div class="flex flex-wrap justify-center gap-3 mb-16 scroll-reveal">
+                <button class="filter-btn active px-6 py-2.5 rounded-full border border-slate-200 bg-white text-slate-600 font-bold text-sm transition-all duration-300 hover:border-blue-300 hover:text-blue-600 shadow-sm" onclick="filterPortfolio('all', this)">
                     Semua
                 </button>
                 @foreach($categories as $cat)
-                <button class="filter-btn px-6 py-2 rounded-full border border-gray-300 text-gray-600 font-medium text-sm hover:bg-gray-100 transition duration-300" onclick="filterPortfolio('{{ Str::slug($cat) }}', this)">
+                <button class="filter-btn px-6 py-2.5 rounded-full border border-slate-200 bg-white text-slate-600 font-bold text-sm transition-all duration-300 hover:border-blue-300 hover:text-blue-600 shadow-sm" onclick="filterPortfolio('{{ Str::slug($cat) }}', this)">
                     {{ $cat }}
                 </button>
                 @endforeach
@@ -65,40 +78,42 @@
 
             {{-- Grid Gallery --}}
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="portfolio-grid">
-                @foreach($portfolios as $item)
-                <div class="portfolio-item group relative h-[450px] w-full rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 bg-white flex flex-col" data-category="{{ Str::slug($item->category) }}">
+                @foreach($portfolios as $index => $item)
+                <div class="portfolio-item scroll-reveal relative h-[450px] w-full rounded-3xl overflow-hidden shadow-lg shadow-blue-900/5 hover:shadow-2xl hover:shadow-blue-900/10 transition-all duration-500 bg-white border border-slate-100 flex flex-col group hover:-translate-y-2" data-category="{{ Str::slug($item->category) }}" style="transition-delay: {{ $index * 100 }}ms;">
                     
                     {{-- Image Container (Atas) --}}
-                    <div class="portfolio-card h-64 w-full relative overflow-hidden">
-                        <img src="{{ Storage::url($item->image) }}" alt="{{ $item->title }}" class="w-full h-full object-cover transition-transform duration-700">
+                    <div class="portfolio-card h-56 w-full relative overflow-hidden shrink-0">
+                        <img src="{{ Storage::url($item->image) }}" alt="{{ $item->title }}" class="w-full h-full object-cover transition-transform duration-700 ease-out">
                         
                         {{-- Overlay on Image --}}
-                        <div class="overlay absolute inset-0 bg-blue-900/80 flex items-center justify-center backdrop-blur-sm">
-                            <a href="{{ $item->url ?? '#' }}" target="_blank" class="px-6 py-3 bg-white text-blue-900 font-bold rounded-full transform translate-y-4 group-hover:translate-y-0 transition duration-300 hover:bg-cyan-400 hover:text-white">
-                                <i class="ri-external-link-line mr-2"></i> Kunjungi Project
+                        <div class="overlay absolute inset-0 bg-blue-900/70 backdrop-blur-sm flex items-center justify-center">
+                            <a href="{{ $item->url ?? '#' }}" target="_blank" class="px-6 py-3 bg-white text-blue-600 font-bold rounded-full transform translate-y-8 group-hover:translate-y-0 transition-all duration-500 ease-out shadow-lg hover:bg-blue-600 hover:text-white flex items-center gap-2">
+                                <i class="ri-external-link-line"></i> Kunjungi Project
                             </a>
                         </div>
                         
                         {{-- Category Badge --}}
-                        <span class="absolute top-4 left-4 bg-white/90 backdrop-blur text-blue-800 text-xs font-bold px-3 py-1 rounded-md shadow-sm">
-                            {{ $item->category }}
-                        </span>
+                        <div class="absolute top-4 left-4">
+                            <span class="bg-white/90 backdrop-blur-md text-blue-700 text-xs font-black px-3 py-1.5 rounded-lg shadow-sm border border-white/20 uppercase tracking-wide">
+                                {{ $item->category }}
+                            </span>
+                        </div>
                     </div>
 
                     {{-- Content Container (Bawah) --}}
-                    <div class="p-6 flex-1 flex flex-col">
-                        <h3 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition">{{ $item->title }}</h3>
-                        <p class="text-gray-500 text-sm leading-relaxed line-clamp-3">
+                    <div class="p-8 flex-1 flex flex-col relative z-10 bg-white">
+                        <h3 class="text-xl md:text-2xl font-bold text-slate-900 mb-4 group-hover:text-blue-600 transition-colors leading-tight">{{ $item->title }}</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed line-clamp-3">
                             {{ $item->description }}
                         </p>
                         
                         {{-- Bottom Meta --}}
-                        <div class="mt-auto pt-4 flex items-center justify-between border-t border-gray-100">
-                            <span class="text-xs text-gray-400 font-medium">Completed Project</span>
-                            <div class="flex gap-2">
-                                <span class="w-2 h-2 rounded-full bg-red-500"></span>
-                                <span class="w-2 h-2 rounded-full bg-yellow-500"></span>
-                                <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                        <div class="mt-auto pt-6 flex items-center justify-between border-t border-slate-100">
+                            <span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Completed Project</span>
+                            <div class="flex gap-1.5">
+                                <span class="w-2.5 h-2.5 rounded-full bg-red-400 shadow-sm shadow-red-400/50"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-sm shadow-amber-400/50"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400/50"></span>
                             </div>
                         </div>
                     </div>
@@ -108,25 +123,35 @@
             </div>
 
             {{-- Empty State (Hidden by default) --}}
-            <div id="empty-state" class="hidden text-center py-20">
-                <div class="inline-block p-4 rounded-full bg-gray-100 mb-4">
-                    <i class="ri-folder-open-line text-4xl text-gray-400"></i>
+            <div id="empty-state" class="hidden text-center py-24 scroll-reveal">
+                <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-blue-50 text-blue-300 mb-6 border-8 border-white shadow-lg">
+                    <i class="ri-folder-open-line text-4xl"></i>
                 </div>
-                <h3 class="text-lg font-bold text-gray-700">Belum ada project di kategori ini.</h3>
+                <h3 class="text-xl md:text-2xl font-bold text-slate-700 mb-2">Belum ada project</h3>
+                <p class="text-slate-500">Kami belum menambahkan portofolio di kategori ini.</p>
             </div>
 
         </div>
     </section>
 
     {{-- CTA FOOTER --}}
-    <section class="w-full py-20 px-4 text-center bg-white">
-        <div class="max-w-4xl mx-auto border border-gray-100 bg-gradient-to-b from-white to-blue-50 rounded-3xl p-10 md:p-16 shadow-xl">
-            <h2 class="text-3xl md:text-4xl font-extrabold mb-4 text-gray-900">Ingin Project Anda Selanjutnya Ada Disini?</h2>
-            <p class="text-gray-600 mb-8 text-lg">Percayakan infrastruktur dan pengembangan digital Anda kepada FutureCloud.</p>
-            <a href="{{ url('/contact') }}"
-                class="inline-block px-8 py-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition shadow-lg hover:shadow-blue-200">
-                Mulai Konsultasi Gratis
-            </a>
+    <section class="w-full py-24 px-4 text-center bg-white relative overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[300px] bg-gradient-to-r from-blue-50 via-cyan-50 to-blue-50 opacity-50 blur-3xl"></div>
+        </div>
+
+        <div class="max-w-4xl mx-auto relative z-10 scroll-reveal">
+            <div class="bg-white border border-blue-100 rounded-[2.5rem] p-10 md:p-16 shadow-2xl shadow-blue-900/5 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-blue-600/5 rounded-bl-full pointer-events-none"></div>
+                <div class="absolute bottom-0 left-0 w-48 h-48 bg-cyan-400/5 rounded-tr-full pointer-events-none"></div>
+                
+                <h2 class="text-3xl md:text-4xl font-extrabold mb-6 text-slate-900 tracking-tight">Ingin Project Anda Selanjutnya Ada Disini?</h2>
+                <p class="text-slate-500 mb-10 text-lg font-medium max-w-xl mx-auto">Percayakan infrastruktur dan pengembangan digital Anda kepada tim ahli di FutureCloud.</p>
+                <a href="{{ url('/contact') }}"
+                    class="inline-flex items-center gap-2 px-8 py-4 bg-blue-600 text-white rounded-full font-bold hover:bg-blue-700 transition-all hover:-translate-y-1 shadow-lg shadow-blue-600/30">
+                    Mulai Konsultasi Gratis <i class="ri-arrow-right-line"></i>
+                </a>
+            </div>
         </div>
     </section>
 
@@ -137,12 +162,12 @@
     function filterPortfolio(category, btn) {
         // Update Button Styles
         document.querySelectorAll('.filter-btn').forEach(b => {
-            b.classList.remove('active', 'bg-blue-600', 'text-white', 'border-blue-600');
-            b.classList.add('border-gray-300', 'text-gray-600');
+            b.classList.remove('active', 'bg-blue-600', 'text-white', 'border-blue-600', 'shadow-blue-600/30');
+            b.classList.add('bg-white', 'text-slate-600', 'border-slate-200');
         });
         
-        btn.classList.remove('border-gray-300', 'text-gray-600');
-        btn.classList.add('active', 'bg-blue-600', 'text-white', 'border-blue-600');
+        btn.classList.remove('bg-white', 'text-slate-600', 'border-slate-200');
+        btn.classList.add('active', 'bg-blue-600', 'text-white', 'border-blue-600', 'shadow-blue-600/30');
 
         // Filter Items
         const items = document.querySelectorAll('.portfolio-item');
@@ -153,10 +178,17 @@
                 item.style.display = 'flex'; // Kembalikan ke flex karena layout card menggunakan flex-col
                 // Tambahkan sedikit animasi fade in
                 item.style.opacity = '0';
-                setTimeout(() => item.style.opacity = '1', 50);
+                item.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    item.style.transition = 'all 0.5s ease-out';
+                    item.style.opacity = '1';
+                    item.style.transform = 'scale(1)';
+                }, 50);
                 visibleCount++;
             } else {
                 item.style.display = 'none';
+                item.style.opacity = '0';
+                item.style.transform = 'scale(0.95)';
             }
         });
 
@@ -164,8 +196,14 @@
         const emptyState = document.getElementById('empty-state');
         if (visibleCount === 0) {
             emptyState.classList.remove('hidden');
+            setTimeout(() => {
+                emptyState.style.opacity = '1';
+                emptyState.style.transform = 'translateY(0)';
+            }, 50);
         } else {
             emptyState.classList.add('hidden');
+            emptyState.style.opacity = '0';
+            emptyState.style.transform = 'translateY(20px)';
         }
     }
 </script>
