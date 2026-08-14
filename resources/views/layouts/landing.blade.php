@@ -415,7 +415,7 @@
 
         {{-- DRAWER MENU MOBILE --}}
         <div x-show="mobileMenuOpen" x-cloak x-transition
-            class="lg:hidden bg-white border-t border-gray-100 w-full absolute top-20 left-0 shadow-lg h-[calc(100vh-80px)] overflow-y-auto z-40">
+            class="lg:hidden bg-white/70 backdrop-blur-xl backdrop-saturate-150 border-t border-gray-200/50 w-full absolute top-20 left-0 shadow-lg h-[calc(100vh-80px)] overflow-y-auto z-40">
             <div class="px-4 pt-4 pb-6 space-y-1">
                 <a href="{{ url('/') }}"
                     class="block px-3 py-3 rounded-md text-base font-medium {{ request()->is('/') ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50' }}">Beranda</a>
@@ -480,9 +480,9 @@
                 <div class="md:col-span-1">
                     <h4 class="font-bold text-white mb-4">Layanan</h4>
                     <ul class="space-y-3 text-sm text-gray-400">
-                        <li><a href="{{ url('/service') }}" class="hover:text-blue-400 transition">Layanan Cloud</a></li>
-                        <li><a href="{{ url('/service') }}" class="hover:text-blue-400 transition">Pengembangan Kustom</a></li>
-                        <li><a href="{{ url('/service') }}" class="hover:text-blue-400 transition">Konsultasi TI</a></li>
+                        <li><a href="{{ url('/services') }}" class="hover:text-blue-400 transition">Layanan Cloud</a></li>
+                        <li><a href="{{ url('/services') }}" class="hover:text-blue-400 transition">Pengembangan Kustom</a></li>
+                        <li><a href="{{ url('/services') }}" class="hover:text-blue-400 transition">Konsultasi TI</a></li>
                     </ul>
                 </div>
                 <div class="md:col-span-1">
