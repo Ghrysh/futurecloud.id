@@ -60,10 +60,22 @@ class SyncDomainPricing extends Command
                 $finalPrice = ceil($priceWithMargin / 1000) * 1000;
 
                 $finalDiscountPrice = null;
+                $discountConfig = null;
+
                 if ($promoUsd) {
                     $promoIdr = $promoUsd * $exchangeRate;
                     $promoWithMargin = $promoIdr * 1.10; // +10%
                     $finalDiscountPrice = ceil($promoWithMargin / 1000) * 1000;
+                    
+                    $discountConfig = [
+                        'register' => [
+                            'type' => 'fixed',
+                            'value' => $finalDiscountPrice,
+                            'label' => 'Sale'
+                        ],
+                        'renew' => ['type' => 'none', 'value' => '0', 'label' => null],
+                        'transfer' => ['type' => 'none', 'value' => '0', 'label' => null]
+                    ];
                 }
 
                 // Update atau Create di DB
@@ -75,6 +87,7 @@ class SyncDomainPricing extends Command
                     [
                         'price' => $finalPrice,
                         'discount_price' => $finalDiscountPrice,
+                        'discount_config' => $discountConfig,
                         'slug' => 'tld-' . strtolower(str_replace('.', '', $tld)),
                         'is_active' => true,
                     ]
