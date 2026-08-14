@@ -47,7 +47,13 @@
 <body class="antialiased bg-gray-50">
 
     <!-- Navbar -->
-    <nav x-data="{ mobileMenuOpen: false }" class="w-full bg-white/80 backdrop-blur-md shadow-sm fixed top-0 left-0 z-50 border-b border-gray-100">
+    <nav x-data="{ mobileMenuOpen: false, atTop: true, isHome: {{ request()->is('/') ? 'true' : 'false' }} }" 
+         @scroll.window="atTop = (window.pageYOffset < 20)"
+         :class="{ 
+             'bg-transparent border-transparent': atTop && isHome, 
+             'bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-100': !atTop || !isHome 
+         }"
+         class="w-full fixed top-0 left-0 z-50 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
 
