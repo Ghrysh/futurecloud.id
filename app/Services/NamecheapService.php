@@ -150,4 +150,65 @@ class NamecheapService
             throw new Exception($e->getMessage());
         }
     }
+
+    /**
+     * Mendapatkan Daftar Harga Domain (TLD) dari Namecheap
+     */
+    public function getDomainPricing()
+    {
+        $params = [
+            'ApiUser'      => $this->apiUser,
+            'ApiKey'       => $this->apiKey,
+            'UserName'     => $this->apiUser,
+            'Command'      => 'namecheap.users.getPricing',
+            'ClientIp'     => $this->clientIp,
+            'ProductType'  => 'DOMAIN',
+            'ProductCategory' => 'REGISTER',
+        ];
+
+        try {
+            $response = Http::withoutVerifying()->get($this->baseUrl, $params);
+
+            if ($response->failed()) {
+                throw new Exception("HTTP Error saat getPricing.");
+            }
+
+            $body = $response->body();
+            $xml = simplexml_load_string($body);
+
+            if (isset($xml->Errors->Error)) {
+                throw new Exception("Namecheap API Error (getPricing): " . (string)$xml->Errors->Error);
+            }
+
+            $pricingList = [];
+
+            // XML Structure: UserGetPricingResult -> ProductType -> ProductCategory -> Product
+            $products = $xml->CommandResponse->UserGetPricingResult->ProductType->ProductCategory->Product;
+            
+            if ($products) {
+                foreach ($products as $product) {
+                    $tld = (string)$product['Name'];
+                    $priceElements = $product->Price;
+                    
+                    foreach ($priceElements as $priceData) {
+                        // Kita ambil harga untuk 1 Tahun (Duration="1")
+                        if ((string)$priceData['Duration'] === '1' && (string)$priceData['DurationType'] === 'YEAR') {
+                            $pricingList[] = [
+                                'tld' => '.' . strtolower($tld),
+                                'price_usd' => (float)$priceData['Price'],
+                                'currency' => (string)$priceData['Currency']
+                            ];
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return $pricingList;
+
+        } catch (Exception $e) {
+            Log::error("Namecheap GetPricing Error: " . $e->getMessage());
+            throw new Exception($e->getMessage());
+        }
+    }
 }
