@@ -158,6 +158,38 @@
         @endif
     </section>
 
+    <!-- TENTANG FUTURECLOUD -->
+    <section class="w-full py-16 md:py-24 bg-white px-4">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12">
+            <div class="w-full md:w-1/2">
+                <div class="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-sm font-bold mb-4">
+                    <i class="ri-rocket-line"></i> Mitra Transformasi Digital
+                </div>
+                <h2 class="text-3xl md:text-5xl font-bold text-gray-900 leading-tight">
+                    Solusi <span class="text-blue-600">Cloud Hosting & Infrastruktur</span> Terbaik untuk Bisnis Anda
+                </h2>
+                <p class="mt-6 text-lg text-gray-600 leading-relaxed">
+                    FutureCloud.id hadir sebagai penyedia layanan web hosting, VPS murah berkinerja tinggi, dan registrasi domain terpercaya di Indonesia. Kami berdedikasi untuk membantu UMKM, perusahaan skala menengah, hingga enterprise korporat dalam mengelola ekosistem IT yang aman, stabil, dan siap berskala besar.
+                </p>
+                <div class="mt-8 grid grid-cols-2 gap-6">
+                    <div class="flex flex-col">
+                        <span class="text-3xl font-extrabold text-gray-900">99.9%</span>
+                        <span class="text-sm text-gray-500 font-medium mt-1">Uptime SLA Garansi</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-3xl font-extrabold text-gray-900">500+</span>
+                        <span class="text-sm text-gray-500 font-medium mt-1">Klien Bisnis Aktif</span>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full md:w-1/2 relative">
+                <!-- Ilustrasi Dekoratif -->
+                <div class="absolute inset-0 bg-blue-100 rounded-3xl transform rotate-3 scale-105 z-0"></div>
+                <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=2070&auto=format&fit=crop" alt="Tim Support FutureCloud" class="relative z-10 w-full h-auto rounded-3xl shadow-xl object-cover">
+            </div>
+        </div>
+    </section>
+
     <section class="w-full py-12 md:py-20 bg-gray-50 px-0 md:px-4">
         <h2 class="text-center text-3xl md:text-4xl font-bold text-gray-900 px-4">Layanan <span
                 class="text-blue-600">Cloud</span></h2>
@@ -607,33 +639,204 @@
         </div>
     </section>
 
-    <section id="why-choose-us" class="w-full py-20 bg-white px-4">
-        <h2 class="text-center text-3xl md:text-4xl font-bold text-gray-900">Mengapa Memilih <span
-                class="text-blue-600">FutureCloud.id?</span></h2>
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 max-w-6xl mx-auto mt-12">
-            @php
-                $reasons = [
-                    [
-                        'icon' => 'ri-shield-check-line',
-                        'title' => 'Keamanan Perusahaan',
-                        'desc' => 'Protokol keamanan tingkat bank',
-                    ],
-                    ['icon' => 'ri-flashlight-line', 'title' => 'Sangat Cepat', 'desc' => 'Infrastruktur yang dioptimalkan'],
-                    ['icon' => 'ri-user-star-line', 'title' => 'Tim Ahli', 'desc' => 'Profesional bersertifikat'],
-                    ['icon' => 'ri-medal-line', 'title' => 'Rekam Jejak Terbukti', 'desc' => '500+ proyek sukses'],
-                ];
-            @endphp
-            @foreach ($reasons as $r)
-                <div
-                    class="bg-white p-4 md:p-6 rounded-2xl shadow border text-center transition-all duration-300 hover:shadow-xl hover:border-blue-500 w-full">
-                    <div
-                        class="w-10 h-10 md:w-12 md:h-12 mx-auto bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-lg md:text-xl">
-                        <i class="{{ $r['icon'] }}"></i>
+    <!-- MENGAPA MEMILIH KAMI (EXPANDED) -->
+    <section id="why-choose-us" class="w-full py-20 bg-gray-900 text-white px-4 relative overflow-hidden">
+        <!-- Dekorasi Background -->
+        <div class="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-blue-600 rounded-full blur-[100px] opacity-20"></div>
+        <div class="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-purple-600 rounded-full blur-[100px] opacity-20"></div>
+
+        <div class="max-w-6xl mx-auto relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold">Keunggulan <span class="text-blue-400">Teknologi FutureCloud</span></h2>
+                <p class="text-gray-400 mt-4 max-w-2xl mx-auto">Kami merancang arsitektur server dengan standar industri tertinggi untuk memastikan website dan aplikasi Anda selalu online dengan performa maksimal.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-gray-800/50 backdrop-blur border border-gray-700 p-8 rounded-2xl hover:border-blue-500 transition duration-300">
+                    <div class="w-14 h-14 bg-blue-500/20 text-blue-400 rounded-xl flex items-center justify-center text-2xl mb-6">
+                        <i class="ri-flashlight-fill"></i>
                     </div>
-                    <h3 class="font-semibold text-sm md:text-lg mt-3 md:mt-4">{{ $r['title'] }}</h3>
-                    <p class="text-gray-600 text-xs md:text-sm mt-2">{{ $r['desc'] }}</p>
+                    <h3 class="text-xl font-bold mb-3">Penyimpanan SSD NVMe Enterprise</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Kecepatan baca dan tulis data hingga 10x lebih cepat dibanding SSD konvensional, menjamin <em>loading time</em> website Anda secepat kilat untuk skor SEO yang lebih baik.</p>
                 </div>
-            @endforeach
+
+                <div class="bg-gray-800/50 backdrop-blur border border-gray-700 p-8 rounded-2xl hover:border-blue-500 transition duration-300">
+                    <div class="w-14 h-14 bg-blue-500/20 text-blue-400 rounded-xl flex items-center justify-center text-2xl mb-6">
+                        <i class="ri-shield-check-fill"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Keamanan Tingkat Tinggi (DDoS Protection)</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Infrastruktur kami dilengkapi dengan proteksi DDoS Anti-Malware otomatis untuk melindungi data dan reputasi bisnis Anda dari serangan siber yang merugikan.</p>
+                </div>
+
+                <div class="bg-gray-800/50 backdrop-blur border border-gray-700 p-8 rounded-2xl hover:border-blue-500 transition duration-300">
+                    <div class="w-14 h-14 bg-blue-500/20 text-blue-400 rounded-xl flex items-center justify-center text-2xl mb-6">
+                        <i class="ri-earth-fill"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Data Center Lokal & Global</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Pilih lokasi server terdekat dengan target audiens Anda. Kami menyediakan node server Tier-3 di Indonesia, Singapura, dan Amerika Serikat untuk latensi terendah.</p>
+                </div>
+                
+                <div class="bg-gray-800/50 backdrop-blur border border-gray-700 p-8 rounded-2xl hover:border-blue-500 transition duration-300">
+                    <div class="w-14 h-14 bg-blue-500/20 text-blue-400 rounded-xl flex items-center justify-center text-2xl mb-6">
+                        <i class="ri-customer-service-2-fill"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Dukungan Teknis 24/7/365</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Tim IT Support berpengalaman kami selalu siaga memantau server dan siap membantu Anda kapan pun Anda membutuhkannya, hari libur sekalipun.</p>
+                </div>
+
+                <div class="bg-gray-800/50 backdrop-blur border border-gray-700 p-8 rounded-2xl hover:border-blue-500 transition duration-300">
+                    <div class="w-14 h-14 bg-blue-500/20 text-blue-400 rounded-xl flex items-center justify-center text-2xl mb-6">
+                        <i class="ri-loop-right-fill"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Backup Harian Otomatis</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Kami sangat menghargai data Anda. Sistem otomatis kami melakukan <em>backup</em> rutinan setiap hari untuk mengantisipasi insiden kehilangan data tak terduga.</p>
+                </div>
+
+                <div class="bg-gray-800/50 backdrop-blur border border-gray-700 p-8 rounded-2xl hover:border-blue-500 transition duration-300">
+                    <div class="w-14 h-14 bg-blue-500/20 text-blue-400 rounded-xl flex items-center justify-center text-2xl mb-6">
+                        <i class="ri-dashboard-3-fill"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Kontrol Panel Intuitif</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Kelola semua layanan domain, hosting, dan VPS Anda dari satu dashboard modern yang sangat mudah dipahami, tanpa perlu keahlian <em>sysadmin</em> mendalam.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="w-full py-20 bg-gray-50 px-4">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Dipercaya oleh <span class="text-blue-600">Ribuan Pelanggan</span></h2>
+                <p class="text-gray-600 mt-4 max-w-2xl mx-auto">Apa kata mereka yang telah mengembangkan bisnisnya bersama infrastruktur andal dari FutureCloud.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Testi 1 -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 relative">
+                    <div class="text-blue-500 text-4xl absolute top-6 right-8 opacity-20"><i class="ri-double-quotes-r"></i></div>
+                    <div class="flex gap-1 text-yellow-400 text-sm mb-4">
+                        <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
+                    </div>
+                    <p class="text-gray-600 text-sm leading-relaxed italic mb-6">"Migrasi dari provider lama ke VPS FutureCloud sangat mulus dibantu oleh tim support. Traffic toko online saya naik 2x lipat tanpa ada isu server down lagi!"</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 font-bold">AB</div>
+                        <div>
+                            <h4 class="font-bold text-gray-900 text-sm">Ahmad B.</h4>
+                            <p class="text-xs text-gray-500">Founder E-Commerce Lokal</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Testi 2 -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 relative">
+                    <div class="text-blue-500 text-4xl absolute top-6 right-8 opacity-20"><i class="ri-double-quotes-r"></i></div>
+                    <div class="flex gap-1 text-yellow-400 text-sm mb-4">
+                        <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-half-fill"></i>
+                    </div>
+                    <p class="text-gray-600 text-sm leading-relaxed italic mb-6">"Harga domain dan hosting paling rasional untuk spesifikasi NVMe. Dashboardnya sangat rapi, proses pointing domain hanya makan waktu hitungan menit."</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 font-bold">SR</div>
+                        <div>
+                            <h4 class="font-bold text-gray-900 text-sm">Siti R.</h4>
+                            <p class="text-xs text-gray-500">Web Developer Freelance</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Testi 3 -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 relative">
+                    <div class="text-blue-500 text-4xl absolute top-6 right-8 opacity-20"><i class="ri-double-quotes-r"></i></div>
+                    <div class="flex gap-1 text-yellow-400 text-sm mb-4">
+                        <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
+                    </div>
+                    <p class="text-gray-600 text-sm leading-relaxed italic mb-6">"SaaS dari FutureCloud sangat membantu perusahaan kami mempercepat operasional HR. Dukungan 24/7 mereka bukan sekadar janji, benar-benar responsif di tengah malam!"</p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 font-bold">DR</div>
+                        <div>
+                            <h4 class="font-bold text-gray-900 text-sm">Dimas R.</h4>
+                            <p class="text-xs text-gray-500">IT Manager Corporate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ (Frequently Asked Questions) -->
+    <section class="w-full py-20 bg-white px-4">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Pertanyaan yang Sering <span class="text-blue-600">Diajukan (FAQ)</span></h2>
+                <p class="text-gray-600 mt-4">Temukan jawaban cepat untuk pertanyaan umum seputar layanan cloud hosting dan domain kami.</p>
+            </div>
+
+            <div class="space-y-4" x-data="{ active: null }">
+                <!-- FAQ 1 -->
+                <div class="border border-gray-200 rounded-xl overflow-hidden bg-white transition hover:border-blue-300">
+                    <button @click="active = active === 1 ? null : 1" class="w-full flex items-center justify-between p-5 text-left font-semibold text-gray-800 hover:text-blue-600 transition">
+                        <span>Apa perbedaan antara Shared Hosting dan VPS Hosting?</span>
+                        <i class="ri-arrow-down-s-line transition-transform duration-300 text-xl" :class="active === 1 ? 'rotate-180' : ''"></i>
+                    </button>
+                    <div x-show="active === 1" x-collapse x-cloak>
+                        <div class="p-5 pt-0 text-gray-600 text-sm leading-relaxed border-t border-gray-100">
+                            Shared Hosting cocok untuk pemula dan website skala kecil karena Anda berbagi sumber daya server dengan pengguna lain. Sedangkan VPS (Virtual Private Server) memberi Anda sumber daya yang terdedikasi (RAM & CPU pribadi) serta kontrol root penuh, ideal untuk website dengan trafik tinggi, aplikasi khusus, atau toko online menengah ke atas.
+                        </div>
+                    </div>
+                </div>
+                <!-- FAQ 2 -->
+                <div class="border border-gray-200 rounded-xl overflow-hidden bg-white transition hover:border-blue-300">
+                    <button @click="active = active === 2 ? null : 2" class="w-full flex items-center justify-between p-5 text-left font-semibold text-gray-800 hover:text-blue-600 transition">
+                        <span>Apakah FutureCloud melayani migrasi website (pindahan) secara gratis?</span>
+                        <i class="ri-arrow-down-s-line transition-transform duration-300 text-xl" :class="active === 2 ? 'rotate-180' : ''"></i>
+                    </button>
+                    <div x-show="active === 2" x-collapse x-cloak>
+                        <div class="p-5 pt-0 text-gray-600 text-sm leading-relaxed border-t border-gray-100">
+                            Ya, sama sekali gratis! Tim teknis kami akan membantu proses migrasi data dari provider hosting lama Anda (cPanel ke cPanel atau custom VPS) tanpa mengganggu operasional website (zero downtime). Cukup ajukan tiket bantuan setelah mendaftar.
+                        </div>
+                    </div>
+                </div>
+                <!-- FAQ 3 -->
+                <div class="border border-gray-200 rounded-xl overflow-hidden bg-white transition hover:border-blue-300">
+                    <button @click="active = active === 3 ? null : 3" class="w-full flex items-center justify-between p-5 text-left font-semibold text-gray-800 hover:text-blue-600 transition">
+                        <span>Bagaimana cara kerja registrasi domain murah di sini?</span>
+                        <i class="ri-arrow-down-s-line transition-transform duration-300 text-xl" :class="active === 3 ? 'rotate-180' : ''"></i>
+                    </button>
+                    <div x-show="active === 3" x-collapse x-cloak>
+                        <div class="p-5 pt-0 text-gray-600 text-sm leading-relaxed border-t border-gray-100">
+                            Anda cukup memasukkan nama domain incaran Anda pada kolom pencarian di halaman utama. Jika statusnya "Tersedia", Anda bisa langsung menambahkannya ke keranjang, melakukan pembayaran, dan domain akan aktif secara instan. Kami juga menyediakan fitur DNS Management dan proteksi privasi Whois secara gratis.
+                        </div>
+                    </div>
+                </div>
+                <!-- FAQ 4 -->
+                <div class="border border-gray-200 rounded-xl overflow-hidden bg-white transition hover:border-blue-300">
+                    <button @click="active = active === 4 ? null : 4" class="w-full flex items-center justify-between p-5 text-left font-semibold text-gray-800 hover:text-blue-600 transition">
+                        <span>Apa itu layanan SaaS Marketplace?</span>
+                        <i class="ri-arrow-down-s-line transition-transform duration-300 text-xl" :class="active === 4 ? 'rotate-180' : ''"></i>
+                    </button>
+                    <div x-show="active === 4" x-collapse x-cloak>
+                        <div class="p-5 pt-0 text-gray-600 text-sm leading-relaxed border-t border-gray-100">
+                            SaaS (Software as a Service) Marketplace kami menawarkan berbagai aplikasi siap pakai untuk menunjang operasional bisnis Anda (seperti aplikasi ERP, sistem Kasir/POS, atau HRIS) tanpa perlu memikirkan teknis instalasi dan konfigurasi server. Semua sudah terkelola dalam satu tempat.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRE-FOOTER SEO TEXT -->
+    <section class="w-full py-12 bg-gray-50 border-t border-gray-200 px-4">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-sm font-bold text-gray-800 uppercase tracking-widest mb-4">Layanan Cloud Hosting & VPS Terbaik Indonesia</h2>
+            <div class="text-xs text-gray-500 leading-relaxed space-y-3 text-justify">
+                <p>
+                    FutureCloud.id adalah penyedia layanan <strong>Web Hosting Indonesia</strong> dan <strong>Cloud VPS Murah</strong> yang berfokus pada kecepatan, keamanan, dan stabilitas server. Di era digital saat ini, memiliki fondasi IT yang kuat adalah keharusan. Baik Anda ingin membuat blog pribadi, portofolio profesional, toko online e-commerce, hingga aplikasi korporasi berskala enterprise, kami memiliki infrastruktur yang tepat untuk Anda.
+                </p>
+                <p>
+                    Kami menawarkan <strong>Registrasi Domain Murah</strong> dengan beragam ekstensi populer seperti .com, .id, .net, dan lainnya, dilengkapi proteksi privasi Whois secara cuma-cuma. Untuk kebutuhan komputasi yang lebih kompleks, layanan <strong>Virtual Private Server (VPS) NVMe</strong> kami menghadirkan performa I/O secepat kilat dengan akses root penuh, memberi Anda kebebasan kustomisasi arsitektur web server tanpa batas. Kami juga mendukung berbagai Control Panel populer seperti cPanel, CyberPanel, maupun instalasi OS kosongan (Linux/Windows) sesuai kebutuhan <em>developer</em>.
+                </p>
+                <p>
+                    Bergabunglah bersama ribuan pebisnis cerdas yang telah mempercayakan kehadiran digital mereka pada FutureCloud. Nikmati pengalaman <em>Zero Downtime</em>, fitur <em>Auto-Backup</em> harian yang menjamin integritas data, serta dukungan <em>Customer Service</em> berbahasa Indonesia yang responsif 24/7/365. Kembangkan bisnis Anda sekarang juga tanpa perlu khawatir akan batasan teknis infrastruktur web hosting Anda.
+                </p>
+            </div>
         </div>
     </section>
 
