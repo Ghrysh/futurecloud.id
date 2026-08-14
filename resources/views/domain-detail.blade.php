@@ -259,7 +259,6 @@
             const altWrapper = document.getElementById('alternatives-wrapper');
             const altContainer = document.getElementById('alternatives-list-container');
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            const configUrl = "{{ route('order.config.domain') }}";
 
             // 1. PRE-FILL dari URL
             const urlParams = new URLSearchParams(window.location.search);

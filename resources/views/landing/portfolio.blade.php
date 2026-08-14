@@ -83,7 +83,7 @@
                     
                     {{-- Image Container (Atas) --}}
                     <div class="portfolio-card h-32 md:h-56 w-full relative overflow-hidden shrink-0">
-                        @if($item->image)
+                        @if(!empty(trim($item->image)))
                             <img src="{{ Storage::url($item->image) }}" alt="{{ $item->title }}" class="w-full h-full object-cover transition-transform duration-700 ease-out">
                         @else
                             <div class="w-full h-full bg-slate-200 flex items-center justify-center">

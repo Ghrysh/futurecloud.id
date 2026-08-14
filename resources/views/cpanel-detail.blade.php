@@ -29,19 +29,25 @@
 @section('content')
 
     {{-- 1. HERO SECTION --}}
-    <section class="w-full pt-32 pb-20 px-4 text-center bg-[#0a192f] text-white relative overflow-hidden">
-        <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-            <div class="absolute top-10 left-10 w-32 h-32 bg-blue-500 rounded-full blur-3xl"></div>
-            <div class="absolute bottom-10 right-10 w-64 h-64 bg-purple-500 rounded-full blur-3xl"></div>
+    <section class="w-full pt-32 pb-24 px-4 text-center bg-[#0a192f] text-white relative overflow-hidden">
+        {{-- Animated Background Gradients --}}
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute -top-[20%] -left-[10%] w-[50%] h-[70%] bg-blue-600/20 rounded-full blur-[120px] animate-pulse"></div>
+            <div class="absolute top-[20%] -right-[10%] w-[40%] h-[60%] bg-purple-600/20 rounded-full blur-[100px] animate-pulse" style="animation-delay: 1s;"></div>
+            <div class="absolute -bottom-[20%] left-[20%] w-[60%] h-[50%] bg-cyan-600/20 rounded-full blur-[120px] animate-pulse" style="animation-delay: 2s;"></div>
         </div>
 
         <div class="max-w-6xl mx-auto relative z-10">
-            <span class="inline-block py-1 px-3 rounded-full bg-blue-900/50 border border-blue-500/30 text-blue-300 text-xs font-semibold tracking-wider mb-4 uppercase">FutureCloud Shared</span>
-            <h1 class="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-6">
-                Shared Hosting<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Cepat, Aman & Terjangkau</span>
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-900/40 border border-blue-500/30 text-blue-300 text-xs font-bold tracking-wider mb-8 uppercase backdrop-blur-md shadow-lg shadow-blue-900/20">
+                <i class="ri-rocket-2-line"></i> FutureCloud Shared Hosting
+            </div>
+            
+            <h1 class="text-5xl md:text-7xl font-extrabold text-white leading-[1.1] mb-6 tracking-tight">
+                Cepat, Aman & <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-200">Sangat Terjangkau.</span>
             </h1>
-            <p class="mt-4 text-lg text-blue-100 max-w-3xl mx-auto leading-relaxed px-2 font-light">
-                Solusi hosting terbaik untuk memulai website Anda dengan performa tinggi dan kemudahan pengelolaan cPanel.
+            
+            <p class="mt-6 text-lg md:text-xl text-blue-100/80 max-w-2xl mx-auto leading-relaxed px-4 font-light">
+                Solusi hosting terbaik untuk memulai website Anda dengan performa tinggi, keandalan server 99.9%, dan kemudahan cPanel.
             </p>
         </div>
     </section>
