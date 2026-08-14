@@ -69,7 +69,7 @@ class SyncDomainPricing extends Command
                     ],
                     [
                         'price' => $finalPrice,
-                        'slug' => strtolower(str_replace('.', '', $tld)) . '-domain',
+                        'slug' => 'tld-' . strtolower(str_replace('.', '', $tld)),
                         'is_active' => true,
                     ]
                 );
