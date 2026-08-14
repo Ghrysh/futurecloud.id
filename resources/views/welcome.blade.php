@@ -188,8 +188,8 @@
                         <span class="text-sm text-gray-500 font-medium mt-1">Uptime SLA Garansi</span>
                     </div>
                     <div class="flex flex-col">
-                        <span class="text-3xl font-extrabold text-gray-900">500+</span>
-                        <span class="text-sm text-gray-500 font-medium mt-1">Klien Bisnis Aktif</span>
+                        <span class="text-3xl font-extrabold text-gray-900">{{ number_format($clientCount) }}</span>
+                        <span class="text-sm text-gray-500 font-medium mt-1">Klien Terdaftar</span>
                     </div>
                 </div>
             </div>
@@ -715,62 +715,43 @@
     </section>
 
     <!-- TESTIMONIALS -->
+    @if(isset($testimonials) && $testimonials->count() > 0)
     <section class="scroll-reveal w-full py-20 bg-gray-50 px-4">
         <div class="max-w-6xl mx-auto">
             <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Dipercaya oleh <span class="text-blue-600">Ribuan Pelanggan</span></h2>
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Dipercaya oleh <span class="text-blue-600">Pelanggan Kami</span></h2>
                 <p class="text-gray-600 mt-4 max-w-2xl mx-auto">Apa kata mereka yang telah mengembangkan bisnisnya bersama infrastruktur andal dari FutureCloud.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Testi 1 -->
+                @foreach($testimonials as $testi)
                 <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 relative">
                     <div class="text-blue-500 text-4xl absolute top-6 right-8 opacity-20"><i class="ri-double-quotes-r"></i></div>
                     <div class="flex gap-1 text-yellow-400 text-sm mb-4">
-                        <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
+                        @for($i=1; $i<=5; $i++)
+                            @if($i <= $testi->rating)
+                                <i class="ri-star-fill"></i>
+                            @else
+                                <i class="ri-star-line"></i>
+                            @endif
+                        @endfor
                     </div>
-                    <p class="text-gray-600 text-sm leading-relaxed italic mb-6">"Migrasi dari provider lama ke VPS FutureCloud sangat mulus dibantu oleh tim support. Traffic toko online saya naik 2x lipat tanpa ada isu server down lagi!"</p>
+                    <p class="text-gray-600 text-sm leading-relaxed italic mb-6">"{{ $testi->comment }}"</p>
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 font-bold">AB</div>
+                        <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 font-bold">
+                            {{ strtoupper(substr($testi->user->name ?? 'User', 0, 2)) }}
+                        </div>
                         <div>
-                            <h4 class="font-bold text-gray-900 text-sm">Ahmad B.</h4>
-                            <p class="text-xs text-gray-500">Founder E-Commerce Lokal</p>
+                            <h4 class="font-bold text-gray-900 text-sm">{{ $testi->user->name ?? 'Pengguna Anonim' }}</h4>
+                            <p class="text-xs text-gray-500">Pelanggan Setia</p>
                         </div>
                     </div>
                 </div>
-                <!-- Testi 2 -->
-                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 relative">
-                    <div class="text-blue-500 text-4xl absolute top-6 right-8 opacity-20"><i class="ri-double-quotes-r"></i></div>
-                    <div class="flex gap-1 text-yellow-400 text-sm mb-4">
-                        <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-half-fill"></i>
-                    </div>
-                    <p class="text-gray-600 text-sm leading-relaxed italic mb-6">"Harga domain dan hosting paling rasional untuk spesifikasi NVMe. Dashboardnya sangat rapi, proses pointing domain hanya makan waktu hitungan menit."</p>
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 font-bold">SR</div>
-                        <div>
-                            <h4 class="font-bold text-gray-900 text-sm">Siti R.</h4>
-                            <p class="text-xs text-gray-500">Web Developer Freelance</p>
-                        </div>
-                    </div>
-                </div>
-                <!-- Testi 3 -->
-                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 relative">
-                    <div class="text-blue-500 text-4xl absolute top-6 right-8 opacity-20"><i class="ri-double-quotes-r"></i></div>
-                    <div class="flex gap-1 text-yellow-400 text-sm mb-4">
-                        <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
-                    </div>
-                    <p class="text-gray-600 text-sm leading-relaxed italic mb-6">"SaaS dari FutureCloud sangat membantu perusahaan kami mempercepat operasional HR. Dukungan 24/7 mereka bukan sekadar janji, benar-benar responsif di tengah malam!"</p>
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 font-bold">DR</div>
-                        <div>
-                            <h4 class="font-bold text-gray-900 text-sm">Dimas R.</h4>
-                            <p class="text-xs text-gray-500">IT Manager Corporate</p>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </section>
+    @endif
 
     <!-- FAQ (Frequently Asked Questions) -->
     <section class="scroll-reveal w-full py-20 bg-white px-4">
@@ -836,7 +817,7 @@
     <!-- PRE-FOOTER SEO TEXT -->
     <section class="scroll-reveal w-full py-12 bg-gray-50 border-t border-gray-200 px-4">
         <div class="max-w-6xl mx-auto">
-            <h2 class="text-sm font-bold text-gray-800 uppercase tracking-widest mb-4">Layanan Cloud Hosting & VPS Terbaik Indonesia</h2>
+            <h2 class="text-sm font-bold text-gray-800 uppercase tracking-widest mb-4">Layanan Cloud Hosting & VPS</h2>
             <div class="text-xs text-gray-500 leading-relaxed space-y-3 text-justify">
                 <p>
                     FutureCloud.id adalah penyedia layanan <strong>Web Hosting Indonesia</strong> dan <strong>Cloud VPS Murah</strong> yang berfokus pada kecepatan, keamanan, dan stabilitas server. Di era digital saat ini, memiliki fondasi IT yang kuat adalah keharusan. Baik Anda ingin membuat blog pribadi, portofolio profesional, toko online e-commerce, hingga aplikasi korporasi berskala enterprise, kami memiliki infrastruktur yang tepat untuk Anda.

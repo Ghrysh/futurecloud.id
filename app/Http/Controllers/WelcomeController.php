@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\HeroSetting;
 use App\Models\Product;
 use App\Models\SaasProduct;
+use App\Models\User;
+use App\Models\SaasReview;
 
 class WelcomeController extends Controller
 {
@@ -42,6 +44,12 @@ class WelcomeController extends Controller
                 return array_search($item->slug, ['business-email', 'ssl-certificates', 'fast-vpn']);
             });
 
-        return view('welcome', compact('hero', 'domains', 'hostings', 'vps', 'saas'));
+        // 5. Client Count (Dynamic)
+        $clientCount = User::count();
+
+        // 6. Testimonials (Dynamic from SaasReview, rating >= 4, limit 3)
+        $testimonials = SaasReview::with('user')->where('rating', '>=', 4)->inRandomOrder()->take(3)->get();
+
+        return view('welcome', compact('hero', 'domains', 'hostings', 'vps', 'saas', 'clientCount', 'testimonials'));
     }
 }
