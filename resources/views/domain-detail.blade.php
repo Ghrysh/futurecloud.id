@@ -334,9 +334,25 @@
                 let actionHtml = isAvailable ? 
                     `<div class="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto mt-4 sm:mt-0">
                         ${priceHtml}
-                        <a href="${configUrl}?product_name=${item.domain}&price=${item.price_final}&action=register" class="px-6 py-3 bg-blue-600 text-white rounded-lg text-sm font-bold hover:bg-blue-700 transition flex items-center gap-2">
-                            <i class="ri-shopping-cart-2-line"></i> Beli
-                        </a>
+                        <form method="POST" action="{{ route('cart.add') }}" class="flex items-center gap-2 m-0" onsubmit="this.price.value = ${item.price_final} * this.years.value;">
+                            <input type="hidden" name="_token" value="${csrfToken}">
+                            <input type="hidden" name="type" value="domain">
+                            <input type="hidden" name="product_name" value="${item.domain}">
+                            <input type="hidden" name="price" value="${item.price_final}">
+                            <input type="hidden" name="action" value="register">
+                            
+                            <select name="years" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 outline-none font-medium w-28">
+                                <option value="1">1 Tahun</option>
+                                <option value="2">2 Tahun</option>
+                                <option value="3">3 Tahun</option>
+                                <option value="5">5 Tahun</option>
+                                <option value="10">10 Tahun</option>
+                            </select>
+
+                            <button type="submit" class="px-6 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-bold hover:bg-blue-700 transition flex items-center gap-2 shadow-sm cursor-pointer border-none outline-none">
+                                <i class="ri-shopping-cart-2-line"></i> Beli
+                            </button>
+                        </form>
                     </div>` : 
                     `<div class="mt-2 sm:mt-0 flex flex-col sm:items-end">
                         <button class="px-4 py-2 bg-gray-100 text-gray-400 rounded-lg text-sm font-semibold cursor-not-allowed border border-gray-200" disabled>Tidak Tersedia</button>

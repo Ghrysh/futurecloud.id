@@ -13,14 +13,7 @@ class ShopController extends Controller
      */
     
     // Konfigurasi Domain
-    public function configDomain(Request $request)
-    {
-        $domainName = $request->query('product_name', 'example.com');
-        $price = $request->query('price', 150000);
-        $action = $request->query('action', 'register');
 
-        return view('shop.config-domain', compact('domainName', 'price', 'action'));
-    }
 
     // Konfigurasi VPS
     public function configVps(Request $request)

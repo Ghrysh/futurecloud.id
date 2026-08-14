@@ -136,7 +136,7 @@ Route::get('/saas/{slug}', [SaasController::class, 'show'])->name('saas.show');
 Route::post('/saas/{slug}/review', [SaasController::class, 'storeReview'])->name('saas.review.store')->middleware('auth');
 
 // --- KONFIGURASI ORDER ---
-Route::get('/order/domain', [ShopController::class, 'configDomain'])->name('order.config.domain');
+
 Route::get('/order/vps', [ShopController::class, 'configVps'])->name('order.config.vps');
 Route::get('/order/cpanel', [ShopController::class, 'configCpanel'])->name('order.config.cpanel');
 Route::get('/order/saas', [ShopController::class, 'configSaas'])->name('order.config.saas');

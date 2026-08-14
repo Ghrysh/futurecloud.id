@@ -83,7 +83,13 @@
                     
                     {{-- Image Container (Atas) --}}
                     <div class="portfolio-card h-32 md:h-56 w-full relative overflow-hidden shrink-0">
-                        <img src="{{ Storage::url($item->image) }}" alt="{{ $item->title }}" class="w-full h-full object-cover transition-transform duration-700 ease-out">
+                        @if($item->image)
+                            <img src="{{ Storage::url($item->image) }}" alt="{{ $item->title }}" class="w-full h-full object-cover transition-transform duration-700 ease-out">
+                        @else
+                            <div class="w-full h-full bg-slate-200 flex items-center justify-center">
+                                <i class="ri-image-line text-4xl text-slate-400"></i>
+                            </div>
+                        @endif
                         
                         {{-- Overlay on Image --}}
                         <div class="overlay absolute inset-0 bg-blue-900/70 backdrop-blur-sm flex items-center justify-center p-2">

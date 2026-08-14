@@ -326,6 +326,7 @@
 
             <!-- MAIN CONTENT AREA -->
             <main class="flex-1 overflow-x-hidden overflow-y-auto bg-[#F9FAFB] p-4 md:p-8 scroll-smooth relative z-0">
+                @yield('header')
                 @yield('content')
                 <div class="mt-10 border-t border-gray-200 pt-6 text-center text-xs text-gray-400">
                     &copy; {{ date('Y') }} FutureCloud.id. Client Area Panel v2.0

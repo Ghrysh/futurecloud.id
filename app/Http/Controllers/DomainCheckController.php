@@ -32,6 +32,10 @@ class DomainCheckController extends Controller
         $sld = $parts[0];
         $originalTld = '.' . ($parts[1] ?? 'com');
 
+        if (empty($sld)) {
+            return response()->json(['error' => true, 'message' => 'Silakan masukkan nama domain, tidak hanya ekstensinya.']);
+        }
+
         $popularTlds = ['.com', '.net', '.org', '.id', '.co.id'];
         $alternativeTlds = array_diff($popularTlds, [$originalTld]);
         $alternativeTlds = array_slice($alternativeTlds, 0, 4);
