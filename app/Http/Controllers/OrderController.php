@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use App\Services\NamecheapService;
+use App\Notifications\PaymentApprovedNotification;
 
 class OrderController extends Controller
 {
@@ -106,6 +107,7 @@ public function store(Request $request)
 
             if ($order && $order->status !== 'paid') {
                 $order->update(['status' => 'paid']);
+                $order->user->notify(new PaymentApprovedNotification($order));
                 $this->provisionOrder($order);
             }
         }

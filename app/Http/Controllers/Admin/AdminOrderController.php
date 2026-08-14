@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Services\NamecheapService; // Import Service Namecheap
+use App\Notifications\PaymentApprovedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -44,6 +45,7 @@ class AdminOrderController extends Controller
             // Panggil fungsi provisioning tersentralisasi
             try {
                 \App\Http\Controllers\OrderController::provisionOrder($order);
+                $order->user->notify(new PaymentApprovedNotification($order));
             } catch (\Exception $e) {
                 Log::error("Gagal melakukan provisioning pesanan {$order->id}: " . $e->getMessage());
                 session()->flash('error', "Status diubah ke Paid, tapi ada error saat provisioning (lihat log).");
