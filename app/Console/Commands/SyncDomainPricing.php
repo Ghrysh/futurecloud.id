@@ -52,14 +52,19 @@ class SyncDomainPricing extends Command
             foreach ($pricingList as $item) {
                 $tld = strtoupper($item['tld']); // e.g. .COM
                 $priceUsd = $item['price_usd'];
+                $promoUsd = $item['promo_usd'] ?? null;
 
                 // Konversi dan Markup
                 $priceIdr = $priceUsd * $exchangeRate;
                 $priceWithMargin = $priceIdr * 1.10; // +10%
-
-                // Pembulatan ke ribuan terdekat ke atas
-                // Contoh: 153.456 -> 154.000
                 $finalPrice = ceil($priceWithMargin / 1000) * 1000;
+
+                $finalDiscountPrice = null;
+                if ($promoUsd) {
+                    $promoIdr = $promoUsd * $exchangeRate;
+                    $promoWithMargin = $promoIdr * 1.10; // +10%
+                    $finalDiscountPrice = ceil($promoWithMargin / 1000) * 1000;
+                }
 
                 // Update atau Create di DB
                 Product::updateOrCreate(
@@ -69,6 +74,7 @@ class SyncDomainPricing extends Command
                     ],
                     [
                         'price' => $finalPrice,
+                        'discount_price' => $finalDiscountPrice,
                         'slug' => 'tld-' . strtolower(str_replace('.', '', $tld)),
                         'is_active' => true,
                     ]

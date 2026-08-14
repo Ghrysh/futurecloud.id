@@ -193,9 +193,13 @@ class NamecheapService
                     foreach ($priceElements as $priceData) {
                         // Kita ambil harga untuk 1 Tahun (Duration="1")
                         if ((string)$priceData['Duration'] === '1' && (string)$priceData['DurationType'] === 'YEAR') {
+                            $promoPrice = isset($priceData['PromotionPrice']) ? (float)$priceData['PromotionPrice'] : null;
+                            if ($promoPrice === 0.0) $promoPrice = null;
+
                             $pricingList[] = [
                                 'tld' => '.' . strtolower($tld),
                                 'price_usd' => (float)$priceData['Price'],
+                                'promo_usd' => $promoPrice,
                                 'currency' => (string)$priceData['Currency']
                             ];
                             break;
