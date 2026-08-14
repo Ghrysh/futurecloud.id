@@ -430,66 +430,66 @@
     </div>
 
     {{-- FOOTER (Tidak Diubah) --}}
-    <footer class="bg-white border-t">
+    <footer class="bg-gray-900 border-t border-gray-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <div class="grid grid-cols-2 md:grid-cols-5 gap-8">
                 <div class="col-span-2 md:col-span-2">
                     <div class="flex items-center space-x-2 mb-4">
                         <i class="ri-cloud-line text-xl text-blue-400"></i>
-                        <p class="text-xl font-bold text-gray-900">FutureCloud.id</p>
+                        <p class="text-xl font-bold text-white">FutureCloud.id</p>
                     </div>
-                    <p class="font-semibold text-sm text-gray-900 mt-2">PT Berkah Teknologi Terdepan</p>
-                    <address class="text-gray-600 text-sm not-italic mt-3 leading-relaxed">
+                    <p class="font-semibold text-sm text-white mt-2">PT Berkah Teknologi Terdepan</p>
+                    <address class="text-gray-400 text-sm not-italic mt-3 leading-relaxed">
                         Gedung Jaya Lomba 5 unit A.6<br>
                         JL. M H Thamrin No.12, RT.002/RW.001<br>
                         Kb. Sirih, Kec. Menteng<br>
                         Jakarta Pusat 10340
                     </address>
-                    <p class="flex items-center space-x-2 text-gray-900 text-sm mt-4">
+                    <p class="flex items-center space-x-2 text-white text-sm mt-4">
                         <span class="text-pink-500"><i class="ri-phone-fill"></i></span>
                         <span>Phone: (+62) 815-2022-225</span>
                     </p>
-                    <p class="flex items-center space-x-2 text-gray-900 text-sm mt-2">
+                    <p class="flex items-center space-x-2 text-white text-sm mt-2">
                         <span class="text-pink-500"><i class="ri-mail-line"></i></span>
                         <span>Email: <a href="mailto:info@futurecloud.id"
-                                class="hover:underline">info@futurecloud.id</a></span>
+                                class="hover:underline text-gray-400 hover:text-white transition">info@futurecloud.id</a></span>
                     </p>
                     <div class="flex space-x-3 mt-6">
                         <a href="https://www.instagram.com/futurecloud.id/"
-                            class="w-8 h-8 flex items-center justify-center border rounded-full text-gray-500 hover:text-blue-600 hover:border-blue-600 transition"><i
+                            class="w-8 h-8 flex items-center justify-center border border-gray-700 rounded-full text-gray-400 hover:text-blue-400 hover:border-blue-400 transition"><i
                                 class="ri-instagram-fill"></i></a>
                     </div>
                 </div>
                 <div class="md:col-span-1">
-                    <h4 class="font-bold text-gray-900 mb-4">Perusahaan</h4>
-                    <ul class="space-y-3 text-sm text-gray-600">
-                        <li><a href="{{ url('about-us') }}" class="hover:text-blue-600">Tentang Kami</a></li>
-                        <li><a href="{{ url('contact') }}" class="hover:text-blue-600">Kontak</a></li>
+                    <h4 class="font-bold text-white mb-4">Perusahaan</h4>
+                    <ul class="space-y-3 text-sm text-gray-400">
+                        <li><a href="{{ url('about-us') }}" class="hover:text-blue-400 transition">Tentang Kami</a></li>
+                        <li><a href="{{ url('contact') }}" class="hover:text-blue-400 transition">Kontak</a></li>
                     </ul>
                 </div>
                 <div class="md:col-span-1">
-                    <h4 class="font-bold text-gray-900 mb-4">Layanan</h4>
-                    <ul class="space-y-3 text-sm text-gray-600">
-                        <li><a href="{{ url('/service') }}" class="hover:text-blue-600">Layanan Cloud</a></li>
-                        <li><a href="{{ url('/service') }}" class="hover:text-blue-600">Pengembangan Kustom</a></li>
-                        <li><a href="{{ url('/service') }}" class="hover:text-blue-600">Konsultasi TI</a></li>
+                    <h4 class="font-bold text-white mb-4">Layanan</h4>
+                    <ul class="space-y-3 text-sm text-gray-400">
+                        <li><a href="{{ url('/service') }}" class="hover:text-blue-400 transition">Layanan Cloud</a></li>
+                        <li><a href="{{ url('/service') }}" class="hover:text-blue-400 transition">Pengembangan Kustom</a></li>
+                        <li><a href="{{ url('/service') }}" class="hover:text-blue-400 transition">Konsultasi TI</a></li>
                     </ul>
                 </div>
                 <div class="md:col-span-1">
-                    <h4 class="font-bold text-gray-900 mb-4">Sumber Daya</h4>
-                    <ul class="space-y-3 text-sm text-gray-600">
-                        <li><a href="{{ url('/portfolio') }}" class="hover:text-blue-600">Dokumentasi</a></li>
-                        <li><a href="{{ url('/contact') }}" class="hover:text-blue-600">Pusat Bantuan</a></li>
-                        <li><a href="{{ url('/faq') }}" class="hover:text-blue-600">FAQ</a></li>
+                    <h4 class="font-bold text-white mb-4">Sumber Daya</h4>
+                    <ul class="space-y-3 text-sm text-gray-400">
+                        <li><a href="{{ url('/portfolio') }}" class="hover:text-blue-400 transition">Dokumentasi</a></li>
+                        <li><a href="{{ url('/contact') }}" class="hover:text-blue-400 transition">Pusat Bantuan</a></li>
+                        <li><a href="{{ url('/faq') }}" class="hover:text-blue-400 transition">FAQ</a></li>
                     </ul>
                 </div>
             </div>
             <div
-                class="border-t mt-16 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-600">
+                class="border-t border-gray-800 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
                 <p>© 2025 FutureCloud.id. Hak cipta dilindungi undang-undang.</p>
                 <div class="flex space-x-6 mt-4 md:mt-0">
-                    <a href="{{ url('/refund-policy') }}" class="hover:text-blue-600">Kebijakan Pengembalian</a>
-                    <a href="{{ url('/terms') }}" class="hover:text-blue-600">Syarat Layanan</a>
+                    <a href="{{ url('/refund-policy') }}" class="hover:text-blue-400 transition">Kebijakan Pengembalian</a>
+                    <a href="{{ url('/terms') }}" class="hover:text-blue-400 transition">Syarat Layanan</a>
                 </div>
             </div>
         </div>
