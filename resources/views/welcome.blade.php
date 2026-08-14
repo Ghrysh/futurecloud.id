@@ -39,6 +39,17 @@
                 opacity: .5;
             }
         }
+        
+        /* Scroll Reveal Animation */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .scroll-reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 @endsection
@@ -159,7 +170,7 @@
     </section>
 
     <!-- TENTANG FUTURECLOUD -->
-    <section class="w-full py-16 md:py-24 bg-white px-4">
+    <section class="scroll-reveal w-full py-16 md:py-24 bg-white px-4">
         <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12">
             <div class="w-full md:w-1/2">
                 <div class="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-sm font-bold mb-4">
@@ -190,7 +201,7 @@
         </div>
     </section>
 
-    <section class="w-full py-12 md:py-20 bg-gray-50 px-0 md:px-4">
+    <section class="scroll-reveal w-full py-12 md:py-20 bg-gray-50 px-0 md:px-4">
         <h2 class="text-center text-3xl md:text-4xl font-bold text-gray-900 px-4">Layanan <span
                 class="text-blue-600">Cloud</span></h2>
         <p class="text-center text-gray-600 mt-3 max-w-2xl mx-auto px-4">
@@ -640,7 +651,7 @@
     </section>
 
     <!-- MENGAPA MEMILIH KAMI (EXPANDED) -->
-    <section id="why-choose-us" class="w-full py-20 bg-gray-900 text-white px-4 relative overflow-hidden">
+    <section id="why-choose-us" class="scroll-reveal w-full py-20 bg-gray-900 text-white px-4 relative overflow-hidden">
         <!-- Dekorasi Background -->
         <div class="absolute top-0 right-0 -mt-20 -mr-20 w-80 h-80 bg-blue-600 rounded-full blur-[100px] opacity-20"></div>
         <div class="absolute bottom-0 left-0 -mb-20 -ml-20 w-80 h-80 bg-purple-600 rounded-full blur-[100px] opacity-20"></div>
@@ -704,7 +715,7 @@
     </section>
 
     <!-- TESTIMONIALS -->
-    <section class="w-full py-20 bg-gray-50 px-4">
+    <section class="scroll-reveal w-full py-20 bg-gray-50 px-4">
         <div class="max-w-6xl mx-auto">
             <div class="text-center mb-16">
                 <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Dipercaya oleh <span class="text-blue-600">Ribuan Pelanggan</span></h2>
@@ -762,7 +773,7 @@
     </section>
 
     <!-- FAQ (Frequently Asked Questions) -->
-    <section class="w-full py-20 bg-white px-4">
+    <section class="scroll-reveal w-full py-20 bg-white px-4">
         <div class="max-w-4xl mx-auto">
             <div class="text-center mb-12">
                 <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Pertanyaan yang Sering <span class="text-blue-600">Diajukan (FAQ)</span></h2>
@@ -823,7 +834,7 @@
     </section>
 
     <!-- PRE-FOOTER SEO TEXT -->
-    <section class="w-full py-12 bg-gray-50 border-t border-gray-200 px-4">
+    <section class="scroll-reveal w-full py-12 bg-gray-50 border-t border-gray-200 px-4">
         <div class="max-w-6xl mx-auto">
             <h2 class="text-sm font-bold text-gray-800 uppercase tracking-widest mb-4">Layanan Cloud Hosting & VPS Terbaik Indonesia</h2>
             <div class="text-xs text-gray-500 leading-relaxed space-y-3 text-justify">
@@ -840,7 +851,7 @@
         </div>
     </section>
 
-    <section id="contact" class="w-full py-16 px-4">
+    <section id="contact" class="scroll-reveal w-full py-16 px-4">
         <div
             class="max-w-4xl mx-auto bg-white p-6 md:p-10 rounded-2xl shadow border text-center hover:shadow-xl transition">
             <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Siap untuk Memulai?</h2>
@@ -1055,6 +1066,24 @@
                 const selected = tab.getAttribute('data-tab');
                 contents.forEach(c => c.classList.add('hidden'));
                 document.querySelector(`[data-content="${selected}"]`).classList.remove('hidden');
+            });
+        });
+
+        // SCROLL REVEAL OBSERVER
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, {
+                threshold: 0.15,
+                rootMargin: "0px 0px -50px 0px"
+            });
+
+            document.querySelectorAll('.scroll-reveal').forEach(el => {
+                observer.observe(el);
             });
         });
     </script>
