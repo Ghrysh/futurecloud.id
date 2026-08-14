@@ -134,7 +134,7 @@
                 <button class="billing-btn px-6 py-2 rounded-full border border-gray-300 text-gray-600 font-semibold text-sm md:text-base hover:bg-gray-100" data-cycle="biennially" onclick="updateCatalogPricing('hosting', 'biennially')">2 Tahun</button>
             </div>
 
-            <div class="flex flex-nowrap overflow-x-auto snap-x snap-mandatory gap-6 px-6 pb-12 scrollbar-hide md:grid md:grid-cols-3 md:gap-8 md:px-4 md:pb-0 md:overflow-visible items-start">
+            <div class="flex flex-nowrap overflow-x-auto snap-x snap-mandatory gap-6 px-6 pt-6 pb-12 scrollbar-hide md:grid md:grid-cols-3 md:gap-8 md:px-4 md:pt-0 md:pb-0 md:overflow-visible items-start">
                 @foreach ($hostings as $plan)
                     @php
                         // Default Monthly PHP Render
@@ -241,7 +241,7 @@
                 <button class="billing-btn px-6 py-2 rounded-full border border-gray-300 text-gray-600 font-semibold text-sm md:text-base hover:bg-gray-100" data-cycle="annually" onclick="updateCatalogPricing('vps', 'annually')">1 Tahun</button>
             </div>
 
-            <div class="flex flex-nowrap overflow-x-auto snap-x snap-mandatory gap-6 px-6 pb-12 scrollbar-hide md:grid md:grid-cols-3 md:gap-8 md:px-4 md:pb-0 md:overflow-visible items-start">
+            <div class="flex flex-nowrap overflow-x-auto snap-x snap-mandatory gap-6 px-6 pt-6 pb-12 scrollbar-hide md:grid md:grid-cols-3 md:gap-8 md:px-4 md:pt-0 md:pb-0 md:overflow-visible items-start">
                 @foreach ($vps as $plan)
                     @php
                         // PHP Logic Default Monthly
