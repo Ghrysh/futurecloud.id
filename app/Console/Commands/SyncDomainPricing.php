@@ -72,7 +72,7 @@ class SyncDomainPricing extends Command
                 $finalDiscountPrice = null;
                 $discountConfig = null;
 
-                if ($promoUsd) {
+                if ($promoUsd && $promoUsd < $priceUsd) {
                     $promoIdr = $promoUsd * $exchangeRate;
                     $promoWithMargin = $promoIdr * 1.10; // +10%
                     $finalDiscountPrice = ceil($promoWithMargin / 1000) * 1000;
