@@ -38,7 +38,7 @@
             <div class="absolute bottom-10 right-10 w-64 h-64 bg-cyan-500 rounded-full blur-3xl"></div>
         </div>
 
-        <div class="max-w-5xl mx-auto relative z-10">
+        <div class="max-w-5xl mx-auto relative z-10 scroll-reveal">
             <span class="inline-block py-1 px-3 rounded-full bg-blue-900/50 border border-blue-500/30 text-blue-300 text-xs font-semibold tracking-wider mb-4 uppercase">One Stop Solution</span>
             
             <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6">
