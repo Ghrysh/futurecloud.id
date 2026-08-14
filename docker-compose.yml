@@ -45,9 +45,21 @@ services:
     networks:
       - futurecloud
 
+  ollama:
+    image: ollama/ollama:latest
+    container_name: futurecloud-ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - futurecloud
+
 networks:
   futurecloud:
     driver: bridge
 
 volumes:
   dbdata:
+  ollama_data:
