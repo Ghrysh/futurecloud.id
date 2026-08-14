@@ -157,13 +157,12 @@ class NamecheapService
     public function getDomainPricing()
     {
         $params = [
-            'ApiUser'      => $this->apiUser,
-            'ApiKey'       => $this->apiKey,
-            'UserName'     => $this->apiUser,
-            'Command'      => 'namecheap.users.getPricing',
-            'ClientIp'     => $this->clientIp,
-            'ProductType'  => 'DOMAIN',
-            'ProductCategory' => 'REGISTER',
+            'ApiUser' => $this->apiUser,
+            'ApiKey' => $this->apiKey,
+            'UserName' => $this->apiUser,
+            'Command' => 'namecheap.users.getPricing',
+            'ClientIp' => $this->clientIp,
+            'ProductType' => 'DOMAIN'
         ];
 
         try {
@@ -173,42 +172,64 @@ class NamecheapService
                 throw new Exception("HTTP Error saat getPricing.");
             }
 
-            $body = $response->body();
-            $xml = simplexml_load_string($body);
+            $xml = simplexml_load_string($response->body());
 
             if (isset($xml->Errors->Error)) {
                 throw new Exception("Namecheap API Error (getPricing): " . (string)$xml->Errors->Error);
             }
 
             $pricingList = [];
-
-            // XML Structure: UserGetPricingResult -> ProductType -> ProductCategory -> Product
-            $products = $xml->CommandResponse->UserGetPricingResult->ProductType->ProductCategory->Product;
             
-            if ($products) {
-                foreach ($products as $product) {
-                    $tld = (string)$product['Name'];
-                    $priceElements = $product->Price;
-                    
-                    foreach ($priceElements as $priceData) {
-                        // Kita ambil harga untuk 1 Tahun (Duration="1")
-                        if ((string)$priceData['Duration'] === '1' && (string)$priceData['DurationType'] === 'YEAR') {
-                            $promoPrice = isset($priceData['PromotionPrice']) ? (float)$priceData['PromotionPrice'] : null;
-                            if ($promoPrice === 0.0) $promoPrice = null;
+            // Iterate over all ProductCategories
+            foreach ($xml->CommandResponse->UserGetPricingResult->ProductType->ProductCategory as $category) {
+                $categoryName = strtoupper((string)$category['Name']);
+                
+                if (!in_array($categoryName, ['REGISTER', 'RENEW', 'TRANSFER'])) {
+                    continue;
+                }
 
-                            $pricingList[] = [
-                                'tld' => '.' . strtolower($tld),
-                                'price_usd' => (float)$priceData['Price'],
-                                'promo_usd' => $promoPrice,
-                                'currency' => (string)$priceData['Currency']
-                            ];
-                            break;
+                $products = $category->Product;
+                
+                if ($products) {
+                    foreach ($products as $product) {
+                        $tld = (string)$product['Name'];
+                        $priceElements = $product->Price;
+                        
+                        foreach ($priceElements as $priceData) {
+                            // Kita ambil harga untuk 1 Tahun (Duration="1")
+                            if ((string)$priceData['Duration'] === '1' && (string)$priceData['DurationType'] === 'YEAR') {
+                                $promoPrice = isset($priceData['PromotionPrice']) ? (float)$priceData['PromotionPrice'] : null;
+                                if ($promoPrice === 0.0) $promoPrice = null;
+
+                                $tldKey = '.' . strtolower($tld);
+                                
+                                if (!isset($pricingList[$tldKey])) {
+                                    $pricingList[$tldKey] = [
+                                        'tld' => $tldKey,
+                                        'price_usd' => null,
+                                        'promo_usd' => null,
+                                        'renew_usd' => null,
+                                        'transfer_usd' => null,
+                                        'currency' => (string)$priceData['Currency']
+                                    ];
+                                }
+                                
+                                if ($categoryName === 'REGISTER') {
+                                    $pricingList[$tldKey]['price_usd'] = (float)$priceData['Price'];
+                                    $pricingList[$tldKey]['promo_usd'] = $promoPrice;
+                                } elseif ($categoryName === 'RENEW') {
+                                    $pricingList[$tldKey]['renew_usd'] = (float)$priceData['Price'];
+                                } elseif ($categoryName === 'TRANSFER') {
+                                    $pricingList[$tldKey]['transfer_usd'] = (float)$priceData['Price'];
+                                }
+                                break;
+                            }
                         }
                     }
                 }
             }
 
-            return $pricingList;
+            return array_values($pricingList);
 
         } catch (Exception $e) {
             Log::error("Namecheap GetPricing Error: " . $e->getMessage());

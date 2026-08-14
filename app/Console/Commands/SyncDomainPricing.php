@@ -51,13 +51,23 @@ class SyncDomainPricing extends Command
             // 3. Proses dan Simpan ke Database
             foreach ($pricingList as $item) {
                 $tld = strtoupper($item['tld']); // e.g. .COM
-                $priceUsd = $item['price_usd'];
+                $priceUsd = $item['price_usd'] ?? 0;
                 $promoUsd = $item['promo_usd'] ?? null;
+                $renewUsd = $item['renew_usd'] ?? 0;
+                $transferUsd = $item['transfer_usd'] ?? 0;
 
                 // Konversi dan Markup
                 $priceIdr = $priceUsd * $exchangeRate;
                 $priceWithMargin = $priceIdr * 1.10; // +10%
                 $finalPrice = ceil($priceWithMargin / 1000) * 1000;
+
+                $renewIdr = $renewUsd * $exchangeRate;
+                $renewWithMargin = $renewIdr * 1.10;
+                $finalRenewPrice = ceil($renewWithMargin / 1000) * 1000;
+
+                $transferIdr = $transferUsd * $exchangeRate;
+                $transferWithMargin = $transferIdr * 1.10;
+                $finalTransferPrice = ceil($transferWithMargin / 1000) * 1000;
 
                 $finalDiscountPrice = null;
                 $discountConfig = null;
@@ -86,6 +96,8 @@ class SyncDomainPricing extends Command
                     ],
                     [
                         'price' => $finalPrice,
+                        'renew_price' => $finalRenewPrice,
+                        'transfer_price' => $finalTransferPrice,
                         'discount_price' => $finalDiscountPrice,
                         'discount_config' => $discountConfig,
                         'slug' => 'tld-' . strtolower(str_replace('.', '', $tld)),
