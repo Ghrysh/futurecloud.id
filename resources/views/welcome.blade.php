@@ -39,17 +39,7 @@
                 opacity: .5;
             }
         }
-        
-        /* Scroll Reveal Animation */
-        .scroll-reveal {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
-        }
-        .scroll-reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
+
     </style>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 @endsection
@@ -1101,22 +1091,6 @@
             });
         });
 
-        // SCROLL REVEAL OBSERVER
-        document.addEventListener('DOMContentLoaded', () => {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('active');
-                    }
-                });
-            }, {
-                threshold: 0.15,
-                rootMargin: "0px 0px -50px 0px"
-            });
 
-            document.querySelectorAll('.scroll-reveal').forEach(el => {
-                observer.observe(el);
-            });
-        });
     </script>
 @endsection

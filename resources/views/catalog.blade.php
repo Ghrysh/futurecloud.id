@@ -82,7 +82,7 @@
     </section>
 
     {{-- DOMAIN SECTION (Pricing Table Style) --}}
-    <section id="domain" class="py-20 px-4 bg-white scroll-mt-20">
+    <section id="domain" class="scroll-reveal py-20 px-4 bg-white scroll-mt-20">
         <div class="max-w-6xl mx-auto">
             <div class="text-center mb-12">
                 <h2 class="text-3xl font-extrabold text-gray-900 mb-4">Daftar Harga Domain</h2>
@@ -120,7 +120,7 @@
     </section>
 
     {{-- HOSTING SECTION --}}
-    <section id="hosting" class="w-full py-20 px-0 md:px-4 bg-gray-50 scroll-mt-16">
+    <section id="hosting" class="scroll-reveal w-full py-20 px-0 md:px-4 bg-gray-50 scroll-mt-16">
         <div class="max-w-6xl mx-auto">
             <div class="text-center mb-8 px-4">
                 <h2 class="text-3xl font-extrabold text-gray-900">Shared Hosting</h2>
@@ -227,7 +227,7 @@
     </section>
 
     {{-- VPS SECTION --}}
-    <section id="vps" class="w-full py-20 px-0 md:px-4 bg-white scroll-mt-16">
+    <section id="vps" class="scroll-reveal w-full py-20 px-0 md:px-4 bg-white scroll-mt-16">
         <div class="max-w-6xl mx-auto">
             <div class="text-center mb-8 px-4">
                 <h2 class="text-3xl font-extrabold text-gray-900">VPS Hosting</h2>
@@ -334,7 +334,7 @@
     </section>
 
     {{-- SAAS SECTION --}}
-    <section id="saas" class="w-full py-20 px-4 bg-gray-900 text-white scroll-mt-16">
+    <section id="saas" class="scroll-reveal w-full py-20 px-4 bg-gray-900 text-white scroll-mt-16">
         <div class="max-w-5xl mx-auto text-center">
             <span class="inline-block py-1 px-3 rounded-full bg-blue-900/50 border border-blue-500/30 text-blue-300 text-xs font-semibold tracking-wider mb-4 uppercase">Software Solutions</span>
             <h2 class="text-3xl md:text-4xl font-extrabold mb-6">SaaS Marketplace</h2>
@@ -349,7 +349,7 @@
     </section>
 
     {{-- SEO / INFORMATIVE SECTION --}}
-    <section class="w-full py-20 px-4 bg-white border-t border-gray-100">
+    <section class="scroll-reveal w-full py-20 px-4 bg-white border-t border-gray-100">
         <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
                 <h2 class="text-3xl font-extrabold text-gray-900 mb-6">Mengapa Memilih Layanan FutureCloud?</h2>
