@@ -215,7 +215,8 @@ class NamecheapService
                                 }
                                 
                                 if ($categoryName === 'REGISTER') {
-                                    $pricingList[$tldKey]['price_usd'] = (float)$priceData['Price'];
+                                    $regularPrice = isset($priceData['RegularPrice']) ? (float)$priceData['RegularPrice'] : (float)$priceData['Price'];
+                                    $pricingList[$tldKey]['price_usd'] = $regularPrice;
                                     $pricingList[$tldKey]['promo_usd'] = $promoPrice;
                                 } elseif ($categoryName === 'RENEW') {
                                     $pricingList[$tldKey]['renew_usd'] = (float)$priceData['Price'];
