@@ -141,7 +141,7 @@ class ChatbotController extends Controller
         }
 
         // Siapkan System Prompt
-        $systemContent = "Kamu adalah Asisten Virtual (Customer Service) dari Futurecloud yang ramah dan profesional. Selalu awali dengan sapaan 'Halo Kak'. Jawab dengan bahasa Indonesia yang santai tapi sopan. Jawablah secara singkat, maksimal 2 kalimat.\n\n";
+        $systemContent = "Kamu adalah Asisten Virtual (Customer Service) dari Futurecloud yang ramah dan profesional. Selalu awali dengan sapaan 'Halo Kak'. Jawab dengan bahasa Indonesia yang santai tapi sopan. Jawablah secara singkat, maksimal 2-3 kalimat. PENTING: Jangan pernah copy-paste teks mentah. Kamu harus menyusun ulang jawaban dengan gaya bahasamu sendiri yang natural dan ramah, seolah-olah kamu benar-benar seorang CS yang memahami topiknya.\n\n";
 
         if ($isPricingTopic) {
             $dataPaketContext = "";
@@ -159,7 +159,7 @@ class ChatbotController extends Controller
                 $dataPaketContext .= "- Plugin/SaaS {$sp->name}: Harga Rp" . number_format($sp->price, 0, ',', '.') . ", Fitur: {$featuresStr}.\n";
             }
             
-            $systemContent .= "Berikut adalah DATA PRODUK & HARGA FUTURECLOUD yang valid:\n{$dataPaketContext}\nJawab pertanyaan user HANYA berdasarkan data di atas. Jangan mengarang harga. Jika user bertanya di luar produk/paket tersebut, sarankan untuk klik tombol Live Chat CS.";
+            $systemContent .= "Berikut adalah DATA PRODUK & HARGA FUTURECLOUD sebagai referensi:\n{$dataPaketContext}\nGunakan data di atas sebagai acuan untuk menjawab. Jangan mengarang harga atau fitur yang tidak ada di daftar. Susun jawabanmu dengan gaya bahasa sendiri yang natural dan mudah dipahami. Jika user bertanya di luar produk/paket tersebut, sarankan untuk klik tombol Live Chat CS.";
         
         } else {
             // Pencarian Knowledge Base
@@ -193,7 +193,7 @@ class ChatbotController extends Controller
 
             // Jika ada Knowledge yang cocok (Threshold score > 0)
             if ($bestMatch && $highestScore > 2) {
-                $systemContent .= "Berikut adalah INFORMASI (SOP) untuk menjawab pertanyaan user:\n" . $bestMatch->response . "\n\nJawab HANYA berdasarkan informasi di atas. Jika informasi kurang jelas, beritahu user untuk klik tombol Live Chat CS.";
+                $systemContent .= "Berikut adalah REFERENSI/SOP untuk menjawab pertanyaan user:\n" . $bestMatch->response . "\n\nGunakan informasi di atas sebagai panduan/referensi. JANGAN copy-paste teks di atas secara mentah. Susun ulang jawabanmu dengan gaya bahasamu sendiri yang natural, ramah, dan mudah dipahami oleh user. Jika informasi kurang jelas atau user bertanya hal di luar referensi, beritahu user untuk klik tombol Live Chat CS.";
             } else {
                 // Jika tidak paham / Knowledge tidak ada
                 $systemContent .= "Kamu TIDAK TAHU jawaban dari pertanyaan user karena tidak ada di database kamu. Tugasmu adalah meminta maaf dengan sopan, dan wajib mengarahkan user untuk menekan tombol 'Live Chat CS' agar bisa dibantu oleh agen manusia.";
@@ -234,12 +234,12 @@ class ChatbotController extends Controller
         $reply = "";
         try {
             $llmResponse = Http::timeout(40)->post($ollamaUrl, [
-                'model' => 'gemma2:2b',
+                'model' => env('OLLAMA_MODEL', 'gemma2:2b'),
                 'messages' => $chatMessages,
                 'stream' => false,
                 'options' => [
-                    'temperature' => 0.1,
-                    'top_p' => 0.8,
+                    'temperature' => 0.3,
+                    'top_p' => 0.85,
                     'repeat_penalty' => 1.2
                 ]
             ]);
@@ -255,10 +255,16 @@ class ChatbotController extends Controller
                 throw new \Exception("LLM Error");
             }
         } catch (\Exception $e) {
+            \Log::error('Chatbot Ollama Error: ' . $e->getMessage());
             if ($isPricingTopic) {
-                $reply = "Halo Kak! AI kami sedang sibuk kak. Silakan cek detail produk langsung di halaman utama ya, atau hubungi Live Chat.";
+                $reply = "Halo Kak! 😊 AI kami sedang dalam proses restart. Silakan cek detail produk langsung di halaman utama ya, atau hubungi Live Chat untuk info lebih cepat!";
             } else {
-                $reply = isset($bestMatch) ? "Halo Kak! " . $bestMatch->response : "Halo Kak, koneksi AI sedang sibuk. Ada yang bisa dibantu oleh Tim Live Chat kami?";
+                // Fallback: tetap tampilkan knowledge mentah jika ada, tapi beri framing natural
+                if (isset($bestMatch) && $bestMatch) {
+                    $reply = "Halo Kak! 😊 " . $bestMatch->response;
+                } else {
+                    $reply = "Halo Kak, mohon maaf ya, AI kami sedang dalam proses restart. Apakah Kakak ingin terhubung dengan Tim Live Chat kami untuk dibantu langsung?";
+                }
             }
             $showLiveChatBtn = true;
         }
