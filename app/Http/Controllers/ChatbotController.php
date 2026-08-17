@@ -233,7 +233,8 @@ class ChatbotController extends Controller
         // =========================================================================
         $reply = "";
         try {
-            $llmResponse = Http::timeout(40)->post($ollamaUrl, [
+            // Naikkan timeout jadi 180 detik karena proses Ollama di CPU butuh waktu lama
+            $llmResponse = Http::timeout(180)->post($ollamaUrl, [
                 'model' => env('OLLAMA_MODEL', 'gemma2:2b'),
                 'messages' => $chatMessages,
                 'stream' => false,
