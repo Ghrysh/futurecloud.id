@@ -13,6 +13,9 @@ class ChatbotController extends Controller
 {
     public function processChat(Request $request)
     {
+        // Override batas maksimal eksekusi PHP karena generate teks dari Ollama di CPU bisa lama
+        ini_set('max_execution_time', 300);
+
         $topic = $request->topic ?? 'Umum'; 
         $rawMessage = strtolower(trim($request->message));
         $originalMessage = trim($request->message);
