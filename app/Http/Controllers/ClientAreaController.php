@@ -268,7 +268,48 @@ class ClientAreaController extends Controller implements HasMiddleware
                     'bot_name' => $config['bot_name'] ?? null,
                     'bot_color' => $config['bot_color'] ?? null,
                     'is_installed' => $config['is_installed'] ?? false,
+                    'whatsapp_number' => $config['whatsapp_number'] ?? null,
                 ];
+            }
+            
+            // Re-assign fixed config to array for view to use safely
+            $plugin->configuration = $config;
+
+            // Fetch remote tables if DB config exists
+            $plugin->available_tables = [];
+            $plugin->db_connection_error = null;
+            
+            if (!empty($config['db_host']) && !empty($config['db_database'])) {
+                try {
+                    $driver = str_contains(strtolower($config['db_port'] ?? ''), '5432') || str_contains(strtolower($config['db_port'] ?? ''), '6543') ? 'pgsql' : 'mysql';
+                    // Test connection to fetch tables
+                    config(['database.connections.client_remote_db' => [
+                        'driver' => $driver,
+                        'host' => $config['db_host'],
+                        'port' => $config['db_port'] ?? ($driver === 'pgsql' ? '5432' : '3306'),
+                        'database' => $config['db_database'],
+                        'username' => $config['db_username'],
+                        'password' => $config['db_password'],
+                        'charset' => $driver === 'pgsql' ? 'utf8' : 'utf8mb4',
+                        'collation' => $driver === 'pgsql' ? null : 'utf8mb4_unicode_ci',
+                    ]]);
+                    
+                    \Illuminate\Support\Facades\DB::purge('client_remote_db');
+                    
+                    if ($driver === 'pgsql') {
+                        $tables = \Illuminate\Support\Facades\DB::connection('client_remote_db')
+                            ->select("SELECT table_name FROM information_schema.tables WHERE table_schema='public'");
+                        $plugin->available_tables = array_map(function($t) { return $t->table_name; }, $tables);
+                    } else {
+                        $tables = \Illuminate\Support\Facades\DB::connection('client_remote_db')->select("SHOW TABLES");
+                        $plugin->available_tables = array_map(function($t) { 
+                            $vars = get_object_vars($t);
+                            return reset($vars);
+                        }, $tables);
+                    }
+                } catch (\Exception $e) {
+                    $plugin->db_connection_error = $e->getMessage();
+                }
             }
         }
 

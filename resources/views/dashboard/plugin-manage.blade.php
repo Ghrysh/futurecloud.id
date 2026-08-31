@@ -338,6 +338,46 @@
                                                         <input type="password" name="db_password" class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:border-blue-500" placeholder="***" value="{{ $config['db_password'] ?? '' }}">
                                                     </div>
                                                 </div>
+
+                                                <!-- Table Selection (If DB Connected) -->
+                                                @if(!empty($config['db_host']) && !empty($config['db_database']))
+                                                    <div class="mt-4 border-t border-gray-200 pt-5">
+                                                        @if($plugin->db_connection_error)
+                                                            <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-4 rounded">
+                                                                <div class="flex">
+                                                                    <div class="flex-shrink-0">
+                                                                        <i class="ri-error-warning-line text-red-500"></i>
+                                                                    </div>
+                                                                    <div class="ml-3">
+                                                                        <p class="text-sm text-red-700 font-bold">Gagal terhubung ke database!</p>
+                                                                        <p class="text-xs text-red-600 mt-1">{{ $plugin->db_connection_error }}</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        @elseif(!empty($plugin->available_tables))
+                                                            <h5 class="text-md font-bold text-gray-800 mb-2">Pilih Tabel yang Boleh Dibaca AI <span class="text-xs text-gray-500 font-normal ml-2">({{ count($plugin->available_tables) }} tabel ditemukan)</span></h5>
+                                                            <p class="text-xs text-gray-500 mb-4">Centang tabel yang berisi informasi produk, harga, faq, atau data lain yang relevan agar AI dapat menjawab berdasarkan data tersebut. Jangan centang tabel sensitif seperti users/passwords.</p>
+                                                            
+                                                            @php
+                                                                $allowedTables = $config['db_allowed_tables'] ?? [];
+                                                            @endphp
+                                                            <div class="grid grid-cols-2 md:grid-cols-3 gap-3 max-h-60 overflow-y-auto p-4 bg-white border border-gray-200 rounded-lg shadow-inner">
+                                                                @foreach($plugin->available_tables as $table)
+                                                                    <label class="flex items-center space-x-2 cursor-pointer hover:bg-gray-50 p-1.5 rounded transition">
+                                                                        <input type="checkbox" name="db_allowed_tables[]" value="{{ $table }}" 
+                                                                            class="form-checkbox h-4 w-4 text-blue-600 rounded border-gray-300"
+                                                                            {{ in_array($table, $allowedTables) ? 'checked' : '' }}>
+                                                                        <span class="text-sm text-gray-700 truncate" title="{{ $table }}">{{ $table }}</span>
+                                                                    </label>
+                                                                @endforeach
+                                                            </div>
+                                                        @else
+                                                            <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-4 rounded">
+                                                                <p class="text-sm text-yellow-700">Koneksi berhasil, tetapi tidak ditemukan tabel di dalam database tersebut.</p>
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                @endif
                                                 
                                                 <div class="mt-6 pt-5 border-t border-gray-200 flex justify-end">
                                                     <button type="submit" class="px-5 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition">
