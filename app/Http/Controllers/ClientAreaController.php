@@ -281,6 +281,13 @@ class ClientAreaController extends Controller implements HasMiddleware
             'bot_name' => 'required|string|max:255',
             'bot_color' => 'required|string|max:7',
             'whatsapp_number' => 'nullable|string|max:25',
+            'db_allow_read' => 'nullable|boolean',
+            'db_host' => 'nullable|string',
+            'db_port' => 'nullable|string',
+            'db_database' => 'nullable|string',
+            'db_username' => 'nullable|string',
+            'db_password' => 'nullable|string',
+            'db_allowed_tables' => 'nullable|array',
         ]);
 
         $plugin = OrderItem::whereHas('order', function($q) {
@@ -310,6 +317,13 @@ class ClientAreaController extends Controller implements HasMiddleware
                     'bot_name' => $request->bot_name,
                     'bot_color' => $request->bot_color,
                     'whatsapp_number' => $request->whatsapp_number,
+                    'db_allow_read' => $request->boolean('db_allow_read'),
+                    'db_host' => $request->db_host,
+                    'db_port' => $request->db_port,
+                    'db_database' => $request->db_database,
+                    'db_username' => $request->db_username,
+                    'db_password' => $request->db_password,
+                    'db_allowed_tables' => $request->db_allowed_tables ?? [],
                 ]);
             } catch (\Exception $e) {
                 \Illuminate\Support\Facades\Log::error("Gagal sinkronisasi config chatbot {$licenseKey}: " . $e->getMessage());
@@ -320,10 +334,18 @@ class ClientAreaController extends Controller implements HasMiddleware
             $config['bot_name'] = $request->bot_name;
             $config['bot_color'] = $request->bot_color;
             $config['whatsapp_number'] = $request->whatsapp_number;
+            $config['db_allow_read'] = $request->boolean('db_allow_read');
+            $config['db_host'] = $request->db_host;
+            $config['db_port'] = $request->db_port;
+            $config['db_database'] = $request->db_database;
+            $config['db_username'] = $request->db_username;
+            $config['db_password'] = $request->db_password;
+            $config['db_allowed_tables'] = $request->db_allowed_tables ?? [];
+            
             $plugin->configuration = $config;
             $plugin->save();
             
-            return back()->with('success', 'Pengaturan Chatbot berhasil disimpan.');
+            return back()->with('success', 'Pengaturan Chatbot & Database berhasil disimpan.');
         }
 
         return back()->with('error', 'Lisensi tidak ditemukan.');

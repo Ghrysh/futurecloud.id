@@ -137,6 +137,9 @@
                                             <button @click="tab = 'helpdesk'" class="px-5 py-3.5 text-sm font-medium border-b-2 whitespace-nowrap transition-colors" :class="tab === 'helpdesk' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'">
                                                 <i class="ri-user-add-line mr-1.5"></i> Helpdesk Users
                                             </button>
+                                            <button @click="tab = 'database'" class="px-5 py-3.5 text-sm font-medium border-b-2 whitespace-nowrap transition-colors" :class="tab === 'database' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'">
+                                                <i class="ri-database-2-line mr-1.5"></i> Integrasi Database
+                                            </button>
                                         @else
                                             <button @click="tab = 'dashboard'" class="px-5 py-3.5 text-sm font-medium border-b-2 whitespace-nowrap transition-colors" :class="tab === 'dashboard' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-200'">
                                                 <i class="ri-dashboard-line mr-1.5"></i> Dashboard Analytics
@@ -163,6 +166,15 @@
                                                 @csrf
                                                 @method('PUT')
                                                 <h4 class="text-lg font-bold text-gray-800 mb-4">Penyesuaian Widget</h4>
+                                                
+                                                <!-- Hidden fields to preserve Database settings -->
+                                                <input type="hidden" name="db_allow_read" value="{{ $config['db_allow_read'] ?? 0 }}">
+                                                <input type="hidden" name="db_host" value="{{ $config['db_host'] ?? '' }}">
+                                                <input type="hidden" name="db_port" value="{{ $config['db_port'] ?? '' }}">
+                                                <input type="hidden" name="db_database" value="{{ $config['db_database'] ?? '' }}">
+                                                <input type="hidden" name="db_username" value="{{ $config['db_username'] ?? '' }}">
+                                                <input type="hidden" name="db_password" value="{{ $config['db_password'] ?? '' }}">
+                                                
                                                 <div class="space-y-5">
                                                     <div>
                                                         <label class="block text-sm font-medium text-gray-700 mb-1.5">Nama Bot / Header Widget</label>
@@ -282,6 +294,57 @@
                                         </div>
                                         <div x-show="tab === 'helpdesk'" style="display: none;" class="p-6">
                                             @include('dashboard.partials.helpdesk-manage', ['licenseKey' => $licenseKey])
+                                        </div>
+                                        
+                                        <!-- DATABASE INTEGRATION TAB -->
+                                        <div x-show="tab === 'database'" style="display: none;" class="p-8">
+                                            <form action="{{ route('client.plugin.chatbot.update', $plugin->id) }}" method="POST" class="max-w-2xl bg-gray-50 p-6 rounded-xl border border-gray-100">
+                                                @csrf
+                                                @method('PUT')
+                                                <!-- Hidden fields for other settings so they don't get erased -->
+                                                <input type="hidden" name="bot_name" value="{{ $plugin->plugin_data->bot_name ?? 'Chatbot Ai' }}">
+                                                <input type="hidden" name="bot_color" value="{{ $plugin->plugin_data->bot_color ?? '#2563eb' }}">
+                                                <input type="hidden" name="whatsapp_number" value="{{ $plugin->plugin_data->whatsapp_number ?? '' }}">
+                                                
+                                                <h4 class="text-lg font-bold text-gray-800 mb-4">Integrasi Database Klien</h4>
+                                                <p class="text-sm text-gray-600 mb-6">Hubungkan database proyek Anda agar AI dapat membaca dan menjawab pertanyaan berdasarkan data real-time bisnis Anda.</p>
+                                                
+                                                <div class="mb-5 bg-blue-50 border border-blue-100 p-4 rounded-lg">
+                                                    <label class="flex items-center space-x-3 cursor-pointer">
+                                                        <input type="checkbox" name="db_allow_read" value="1" class="form-checkbox h-5 w-5 text-blue-600 rounded border-gray-300" {{ (isset($config['db_allow_read']) && $config['db_allow_read']) ? 'checked' : '' }}>
+                                                        <span class="text-gray-800 font-bold">Izinkan Chatbot AI membaca Database ini</span>
+                                                    </label>
+                                                </div>
+
+                                                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Database Host</label>
+                                                        <input type="text" name="db_host" class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:border-blue-500" placeholder="127.0.0.1" value="{{ $config['db_host'] ?? '127.0.0.1' }}">
+                                                    </div>
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Port</label>
+                                                        <input type="text" name="db_port" class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:border-blue-500" placeholder="3306" value="{{ $config['db_port'] ?? '3306' }}">
+                                                    </div>
+                                                    <div class="md:col-span-2">
+                                                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Nama Database</label>
+                                                        <input type="text" name="db_database" class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:border-blue-500" placeholder="nama_db" value="{{ $config['db_database'] ?? '' }}">
+                                                    </div>
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Username Database</label>
+                                                        <input type="text" name="db_username" class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:border-blue-500" placeholder="root" value="{{ $config['db_username'] ?? '' }}">
+                                                    </div>
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Password Database</label>
+                                                        <input type="password" name="db_password" class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:border-blue-500" placeholder="***" value="{{ $config['db_password'] ?? '' }}">
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="mt-6 pt-5 border-t border-gray-200 flex justify-end">
+                                                    <button type="submit" class="px-5 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition">
+                                                        <i class="ri-save-line mr-1"></i> Simpan Konfigurasi
+                                                    </button>
+                                                </div>
+                                            </form>
                                         </div>
                                     @else
                                         <!-- MONITORING TAB -->
