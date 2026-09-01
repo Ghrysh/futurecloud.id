@@ -95,11 +95,11 @@
                         $pluginData = $plugin->plugin_data ?? null;
                         $isInstalled = $pluginData && $pluginData->is_installed;
                         $isActive = $pluginData && $pluginData->status === 'active';
+                        $integrationType = $config['integration_type'] ?? 'mysql';
                     @endphp
 
                     <div x-show="activePlugin === {{ $plugin->id }}" x-transition.opacity.duration.300ms style="display: none;">
                         <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden" x-data="{ tab: '{{ $isChatbot ? 'settings' : 'dashboard' }}' }">
-
 
                             @if(!$isActive)
                                 <div class="p-10 text-center bg-white">
@@ -168,12 +168,15 @@
                                                 <h4 class="text-lg font-bold text-gray-800 mb-4">Penyesuaian Widget</h4>
                                                 
                                                 <!-- Hidden fields to preserve Database settings -->
+                                                <input type="hidden" name="integration_type" value="{{ $integrationType }}">
                                                 <input type="hidden" name="db_allow_read" value="{{ $config['db_allow_read'] ?? 0 }}">
                                                 <input type="hidden" name="db_host" value="{{ $config['db_host'] ?? '' }}">
                                                 <input type="hidden" name="db_port" value="{{ $config['db_port'] ?? '' }}">
                                                 <input type="hidden" name="db_database" value="{{ $config['db_database'] ?? '' }}">
                                                 <input type="hidden" name="db_username" value="{{ $config['db_username'] ?? '' }}">
                                                 <input type="hidden" name="db_password" value="{{ $config['db_password'] ?? '' }}">
+                                                <input type="hidden" name="spreadsheet_id" value="{{ $config['spreadsheet_id'] ?? '' }}">
+                                                <input type="hidden" name="sheet_name_range" value="{{ $config['sheet_name_range'] ?? '' }}">
                                                 
                                                 <div class="space-y-5">
                                                     <div>
@@ -298,7 +301,7 @@
                                         
                                         <!-- DATABASE INTEGRATION TAB -->
                                         <div x-show="tab === 'database'" style="display: none;" class="p-8">
-                                            <form action="{{ route('client.plugin.chatbot.update', $plugin->id) }}" method="POST" class="max-w-2xl bg-gray-50 p-6 rounded-xl border border-gray-100">
+                                            <form action="{{ route('client.plugin.chatbot.update', $plugin->id) }}" method="POST" class="max-w-2xl bg-gray-50 p-6 rounded-xl border border-gray-100" x-data="{ integrationType: '{{ $integrationType }}' }">
                                                 @csrf
                                                 @method('PUT')
                                                 <!-- Hidden fields for other settings so they don't get erased -->
@@ -316,68 +319,93 @@
                                                     </label>
                                                 </div>
 
-                                                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                                                <!-- Pilihan Tipe Integrasi -->
+                                                <div class="mb-5">
+                                                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Tipe Integrasi</label>
+                                                    <select name="integration_type" x-model="integrationType" class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none transition">
+                                                        <option value="mysql">MySQL / PostgreSQL Database</option>
+                                                        <option value="google_sheet">Google Sheet</option>
+                                                    </select>
+                                                </div>
+
+                                                <!-- Form Khusus MySQL -->
+                                                <div x-show="integrationType === 'mysql'" class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5" style="display: none;">
                                                     <div>
                                                         <label class="block text-sm font-medium text-gray-700 mb-1.5">Database Host</label>
-                                                        <input type="text" name="db_host" class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:border-blue-500" placeholder="127.0.0.1" value="{{ $config['db_host'] ?? '127.0.0.1' }}">
+                                                        <input type="text" name="db_host" class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none transition" placeholder="127.0.0.1" value="{{ $config['db_host'] ?? '127.0.0.1' }}">
                                                     </div>
                                                     <div>
                                                         <label class="block text-sm font-medium text-gray-700 mb-1.5">Port</label>
-                                                        <input type="text" name="db_port" class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:border-blue-500" placeholder="3306" value="{{ $config['db_port'] ?? '3306' }}">
+                                                        <input type="text" name="db_port" class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none transition" placeholder="3306" value="{{ $config['db_port'] ?? '3306' }}">
                                                     </div>
                                                     <div class="md:col-span-2">
                                                         <label class="block text-sm font-medium text-gray-700 mb-1.5">Nama Database</label>
-                                                        <input type="text" name="db_database" class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:border-blue-500" placeholder="nama_db" value="{{ $config['db_database'] ?? '' }}">
+                                                        <input type="text" name="db_database" class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none transition" placeholder="nama_db" value="{{ $config['db_database'] ?? '' }}">
                                                     </div>
                                                     <div>
                                                         <label class="block text-sm font-medium text-gray-700 mb-1.5">Username Database</label>
-                                                        <input type="text" name="db_username" class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:border-blue-500" placeholder="root" value="{{ $config['db_username'] ?? '' }}">
+                                                        <input type="text" name="db_username" class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none transition" placeholder="root" value="{{ $config['db_username'] ?? '' }}">
                                                     </div>
                                                     <div>
                                                         <label class="block text-sm font-medium text-gray-700 mb-1.5">Password Database</label>
-                                                        <input type="password" name="db_password" class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:border-blue-500" placeholder="***" value="{{ $config['db_password'] ?? '' }}">
+                                                        <input type="password" name="db_password" class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none transition" placeholder="***" value="{{ $config['db_password'] ?? '' }}">
                                                     </div>
-                                                </div>
 
-                                                <!-- Table Selection (If DB Connected) -->
-                                                @if(!empty($config['db_host']) && !empty($config['db_database']))
-                                                    <div class="mt-4 border-t border-gray-200 pt-5">
-                                                        @if($plugin->db_connection_error)
-                                                            <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-4 rounded">
-                                                                <div class="flex">
-                                                                    <div class="flex-shrink-0">
-                                                                        <i class="ri-error-warning-line text-red-500"></i>
+                                                    <!-- Table Selection (If DB Connected) -->
+                                                    <div class="md:col-span-2">
+                                                        @if(!empty($config['db_host']) && !empty($config['db_database']))
+                                                            <div class="mt-4 border-t border-gray-200 pt-5">
+                                                                @if($plugin->db_connection_error)
+                                                                    <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-4 rounded">
+                                                                        <div class="flex">
+                                                                            <div class="flex-shrink-0">
+                                                                                <i class="ri-error-warning-line text-red-500"></i>
+                                                                            </div>
+                                                                            <div class="ml-3">
+                                                                                <p class="text-sm text-red-700 font-bold">Gagal terhubung ke database!</p>
+                                                                                <p class="text-xs text-red-600 mt-1">{{ $plugin->db_connection_error }}</p>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
-                                                                    <div class="ml-3">
-                                                                        <p class="text-sm text-red-700 font-bold">Gagal terhubung ke database!</p>
-                                                                        <p class="text-xs text-red-600 mt-1">{{ $plugin->db_connection_error }}</p>
+                                                                @elseif(!empty($plugin->available_tables))
+                                                                    <h5 class="text-md font-bold text-gray-800 mb-2">Pilih Tabel yang Boleh Dibaca AI <span class="text-xs text-gray-500 font-normal ml-2">({{ count($plugin->available_tables) }} tabel ditemukan)</span></h5>
+                                                                    <p class="text-xs text-gray-500 mb-4">Centang tabel yang berisi informasi produk, harga, faq, atau data lain yang relevan agar AI dapat menjawab berdasarkan data tersebut. Jangan centang tabel sensitif seperti users/passwords.</p>
+                                                                    
+                                                                    @php
+                                                                        $allowedTables = $config['db_allowed_tables'] ?? [];
+                                                                    @endphp
+                                                                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3 max-h-60 overflow-y-auto p-4 bg-white border border-gray-200 rounded-lg shadow-inner">
+                                                                        @foreach($plugin->available_tables as $table)
+                                                                            <label class="flex items-center space-x-2 cursor-pointer hover:bg-gray-50 p-1.5 rounded transition">
+                                                                                <input type="checkbox" name="db_allowed_tables[]" value="{{ $table }}" 
+                                                                                    class="form-checkbox h-4 w-4 text-blue-600 rounded border-gray-300"
+                                                                                    {{ in_array($table, $allowedTables) ? 'checked' : '' }}>
+                                                                                <span class="text-sm text-gray-700 truncate" title="{{ $table }}">{{ $table }}</span>
+                                                                            </label>
+                                                                        @endforeach
                                                                     </div>
-                                                                </div>
-                                                            </div>
-                                                        @elseif(!empty($plugin->available_tables))
-                                                            <h5 class="text-md font-bold text-gray-800 mb-2">Pilih Tabel yang Boleh Dibaca AI <span class="text-xs text-gray-500 font-normal ml-2">({{ count($plugin->available_tables) }} tabel ditemukan)</span></h5>
-                                                            <p class="text-xs text-gray-500 mb-4">Centang tabel yang berisi informasi produk, harga, faq, atau data lain yang relevan agar AI dapat menjawab berdasarkan data tersebut. Jangan centang tabel sensitif seperti users/passwords.</p>
-                                                            
-                                                            @php
-                                                                $allowedTables = $config['db_allowed_tables'] ?? [];
-                                                            @endphp
-                                                            <div class="grid grid-cols-2 md:grid-cols-3 gap-3 max-h-60 overflow-y-auto p-4 bg-white border border-gray-200 rounded-lg shadow-inner">
-                                                                @foreach($plugin->available_tables as $table)
-                                                                    <label class="flex items-center space-x-2 cursor-pointer hover:bg-gray-50 p-1.5 rounded transition">
-                                                                        <input type="checkbox" name="db_allowed_tables[]" value="{{ $table }}" 
-                                                                            class="form-checkbox h-4 w-4 text-blue-600 rounded border-gray-300"
-                                                                            {{ in_array($table, $allowedTables) ? 'checked' : '' }}>
-                                                                        <span class="text-sm text-gray-700 truncate" title="{{ $table }}">{{ $table }}</span>
-                                                                    </label>
-                                                                @endforeach
-                                                            </div>
-                                                        @else
-                                                            <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-4 rounded">
-                                                                <p class="text-sm text-yellow-700">Koneksi berhasil, tetapi tidak ditemukan tabel di dalam database tersebut.</p>
+                                                                @else
+                                                                    <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-4 rounded">
+                                                                        <p class="text-sm text-yellow-700">Koneksi berhasil, tetapi tidak ditemukan tabel di dalam database tersebut.</p>
+                                                                    </div>
+                                                                @endif
                                                             </div>
                                                         @endif
                                                     </div>
-                                                @endif
+                                                </div>
+
+                                                <!-- Form Khusus Google Sheet -->
+                                                <div x-show="integrationType === 'google_sheet'" class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5" style="display: none;">
+                                                    <div class="md:col-span-2">
+                                                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Spreadsheet ID</label>
+                                                        <input type="text" name="spreadsheet_id" class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none transition" placeholder="Contoh: 1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms" value="{{ $config['spreadsheet_id'] ?? '' }}">
+                                                        <p class="text-xs text-gray-500 mt-2">Ambil dari URL Sheet Anda. Jangan lupa <b>Share</b> sheet Anda ke email AI kami: <strong class="text-blue-600 select-all">futurecloud-chatbot-sheet@futurecloud-chatbot-sheet.iam.gserviceaccount.com</strong> dengan akses <b>Viewer</b>.</p>
+                                                    </div>
+                                                    <div class="md:col-span-2">
+                                                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Sheet Name & Range (Opsional)</label>
+                                                        <input type="text" name="sheet_name_range" class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none transition" placeholder="Contoh: DataProduk!A1:E1000" value="{{ $config['sheet_name_range'] ?? '' }}">
+                                                    </div>
+                                                </div>
                                                 
                                                 <div class="mt-6 pt-5 border-t border-gray-200 flex justify-end">
                                                     <button type="submit" class="px-5 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition">
