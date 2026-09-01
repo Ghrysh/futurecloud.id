@@ -319,13 +319,21 @@ function chatbot() {
             this.scrollToBottom();
             this.isTyping = true;
 
+            // 1. TAMBAHKAN ABORT CONTROLLER UNTUK TIMEOUT JAVASCRIPT (180 DETIK)
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 180000); 
+
             try {
                 let isLive = (this.liveChatStatus === 'pending' || this.liveChatStatus === 'active');
                 let endpoint = isLive ? '/chatbot/live/send' : '/chatbot/send';
                 
                 let res = await fetch(endpoint, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content },
+                    headers: { 
+                        'Content-Type': 'application/json', 
+                        'Accept': 'application/json', // Pastikan request meminta JSON
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content 
+                    },
                     body: JSON.stringify({ 
                         message: msgText, 
                         topic: this.selectedTopic, 
@@ -333,8 +341,17 @@ function chatbot() {
                         last_chat: this.lastUserMessage,
                         chat_history: this.messages,
                         lead_id: this.leadId
-                    })
+                    }),
+                    signal: controller.signal // Tautkan signal timeout ke fetch
                 });
+
+                clearTimeout(timeoutId); // Hentikan timer jika server sudah membalas
+
+                // 2. CEK JIKA SERVER MENGEMBALIKAN ERROR 500 / 504 (BUKAN JSON)
+                if (!res.ok) {
+                    throw new Error(`HTTP Error! Status: ${res.status}`);
+                }
+
                 let data = await res.json();
 
                 if(data.lead_id) this.leadId = data.lead_id;
@@ -355,8 +372,20 @@ function chatbot() {
                 }, 400);
 
             } catch (e) {
+                clearTimeout(timeoutId);
                 this.isTyping = false;
-                this.messages.push({ sender: 'bot', text: 'Maaf, sedang gangguan jaringan. Coba lagi ya.' });
+                
+                // 3. LOG ERROR KE CONSOLE BROWSER AGAR BISA DILACAK
+                console.error("Chatbot Fetch Error Detail:", e); 
+                
+                let errorMsg = 'Maaf, sedang gangguan jaringan. Coba lagi ya.';
+                
+                // Pesan khusus jika timeout 180 detik terlampaui
+                if (e.name === 'AbortError') {
+                    errorMsg = 'Maaf Kak, AI kami butuh waktu terlalu lama untuk berpikir. Boleh coba tanyakan lagi?';
+                }
+
+                this.messages.push({ sender: 'bot', text: errorMsg });
                 this.saveState(); this.scrollToBottom();
             }
         },
