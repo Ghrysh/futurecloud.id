@@ -146,15 +146,20 @@ class ChatbotController extends Controller
         // Siapkan System Prompt
         $systemContent = "Kamu adalah Asisten Virtual (Customer Service) dari Futurecloud yang ramah dan profesional. Selalu awali dengan sapaan 'Halo Kak'. Jawab dengan bahasa Indonesia yang santai tapi sopan. Jawablah secara singkat, maksimal 2-3 kalimat. PENTING: Jangan pernah copy-paste teks mentah. Kamu harus menyusun ulang jawaban dengan gaya bahasamu sendiri yang natural dan ramah, seolah-olah kamu benar-benar seorang CS yang memahami topiknya.\n\n";
 
-        // ==== BARU: Cek Database Dulu ====
-        $allowedTables = ['products', 'saas_products', 'chatbot_knowledges', 'users']; // Hardcoded for testing
-        
-        $dbDataJson = $this->queryDatabaseWithAi($allowedTables, $originalMessage);
-        
+        // ==== BARU: Cek Database Dulu (Aman, jika gagal lanjut ke alur biasa) ====
         $dbContextForUser = false;
-        if (!empty($dbDataJson) && strpos($dbDataJson, 'ERROR') === false && $dbDataJson !== '[]') {
-            $dbContextForUser = true;
-            \Illuminate\Support\Facades\Log::info("DEBUG DB DATA JSON: " . $dbDataJson);
+        $dbDataJson = '';
+        try {
+            $allowedTables = ['products', 'saas_products', 'chatbot_knowledges', 'users']; // Hardcoded for testing
+            $dbDataJson = $this->queryDatabaseWithAi($allowedTables, $originalMessage);
+            
+            if (!empty($dbDataJson) && strpos($dbDataJson, 'ERROR') === false && $dbDataJson !== '[]') {
+                $dbContextForUser = true;
+                \Illuminate\Support\Facades\Log::info("DEBUG DB DATA JSON: " . $dbDataJson);
+            }
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::warning("DB Query skipped: " . $e->getMessage());
+            $dbContextForUser = false;
         }
         // ==== AKHIR BARU ====
 
@@ -399,7 +404,7 @@ class ChatbotController extends Controller
 
         $sqlQuery = "";
         try {
-            $req = \Illuminate\Support\Facades\Http::timeout(300);
+            $req = \Illuminate\Support\Facades\Http::timeout(30); // Timeout pendek agar tidak menggantung
             $response = $req->post($apiUrl, [
                 'model' => $model,
                 'messages' => [['role' => 'user', 'content' => $promptSql]],
