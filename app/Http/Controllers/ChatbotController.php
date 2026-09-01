@@ -146,7 +146,22 @@ class ChatbotController extends Controller
         // Siapkan System Prompt
         $systemContent = "Kamu adalah Asisten Virtual (Customer Service) dari Futurecloud yang ramah dan profesional. Selalu awali dengan sapaan 'Halo Kak'. Jawab dengan bahasa Indonesia yang santai tapi sopan. Jawablah secara singkat, maksimal 2-3 kalimat. PENTING: Jangan pernah copy-paste teks mentah. Kamu harus menyusun ulang jawaban dengan gaya bahasamu sendiri yang natural dan ramah, seolah-olah kamu benar-benar seorang CS yang memahami topiknya.\n\n";
 
-        if ($isPricingTopic) {
+        // ==== BARU: Cek Database Dulu ====
+        $allowedTables = ['products', 'saas_products', 'chatbot_knowledges', 'users']; // Hardcoded for testing
+        
+        $dbDataJson = $this->queryDatabaseWithAi($allowedTables, $originalMessage);
+        
+        $dbContextForUser = false;
+        if (!empty($dbDataJson) && strpos($dbDataJson, 'ERROR') === false && $dbDataJson !== '[]') {
+            $dbContextForUser = true;
+            \Illuminate\Support\Facades\Log::info("DEBUG DB DATA JSON: " . $dbDataJson);
+        }
+        // ==== AKHIR BARU ====
+
+        if ($dbContextForUser) {
+            $systemContent .= "Berikut adalah DATA DATABASE FUTURECLOUD sebagai referensi:\n" . $dbDataJson . "\n\nGunakan data di atas sebagai acuan untuk menjawab pertanyaan user secara spesifik. JANGAN ditambah/dikurang dan JANGAN diubah (misal 50000 jangan diubah jadi 500.000). Jika user meminta daftar seluruh item, sebutkan semua data di atas secara ringkas.";
+        }
+        else if ($isPricingTopic) {
             $dataPaketContext = "";
             
             // Loop Products (Domain, Hosting, VPS, etc.)
@@ -238,11 +253,12 @@ class ChatbotController extends Controller
         try {
             // Naikkan timeout jadi 180 detik karena proses Ollama di CPU butuh waktu lama
             $llmResponse = Http::timeout(180)->post($ollamaUrl, [
-                'model' => env('OLLAMA_MODEL', 'gemma2:2b'),
+                'model' => env('OLLAMA_MODEL', 'qwen2.5:1.5b'),
                 'messages' => $chatMessages,
                 'stream' => false,
+                'max_tokens' => 300,
                 'options' => [
-                    'temperature' => 0.3,
+                    'temperature' => 0.1,
                     'top_p' => 0.85,
                     'repeat_penalty' => 1.2
                 ]
@@ -342,5 +358,90 @@ class ChatbotController extends Controller
             'success' => true,
             'lead_id' => $lead->id
         ]);
+    }
+
+    private function queryDatabaseWithAi(array $allowedTables, string $message)
+    {
+        $driver = config('database.default');
+        
+        // 2. Fetch schema for allowed tables
+        $schemaText = "";
+        try {
+            foreach ($allowedTables as $table) {
+                $columns = \Illuminate\Support\Facades\Schema::getColumns($table);
+                
+                $colDetails = [];
+                foreach ($columns as $col) {
+                    $colDetails[] = $col['name'] . " (" . $col['type_name'] . ")";
+                }
+                $schemaText .= "Table: $table\nColumns: " . implode(", ", $colDetails) . "\n\n";
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Schema Error: " . $e->getMessage());
+            return "ERROR: Gagal membaca struktur database.";
+        }
+
+        // 3. Ask AI to generate SQL
+        $apiUrl = env('AI_API_URL', env('OLLAMA_URL', 'http://ollama:11434/api/chat'));
+        $model = env('AI_MODEL', env('OLLAMA_MODEL', 'qwen2.5:1.5b'));
+
+        $promptSql = "You are a strict SQL generator. Based on this database schema:\n\n$schemaText\n\nUser Question: '$message'\n\nWrite ONLY a valid $driver SELECT query. \nYOU MUST OBEY THESE RULES OR THE SYSTEM WILL CRASH:\n1. Output ONLY the raw SQL. No markdown, no ```sql.\n2. YOU MUST USE `SELECT *`. DO NOT select specific columns like `SELECT price`.\n3. If the user asks for ALL items, DO NOT use a WHERE clause. If they ask for a specific item, use `LOWER(column) LIKE '%keyword%'`. NEVER use `=` for strings.\n\nEXAMPLES (Adapt to the provided schema!):\nUser: 'what items do you have / list all items / ada apa saja' -> SELECT * FROM [your_table_name];\nUser: 'how much is [specific_item]' -> SELECT * FROM [your_table_name] WHERE LOWER([item_column]) LIKE '%[specific_item]%';";
+
+        $sqlQuery = "";
+        try {
+            $req = \Illuminate\Support\Facades\Http::timeout(300);
+            $response = $req->post($apiUrl, [
+                'model' => $model,
+                'messages' => [['role' => 'user', 'content' => $promptSql]],
+                'stream' => false,
+                'max_tokens' => 100, // Cegah halusinasi kepanjangan
+                'options' => [
+                    'temperature' => 0.0, // Sangat deterministik
+                ]
+            ]);
+            
+            if ($response->successful()) {
+                $sqlQuery = trim($response->json('message.content', ''));
+                $sqlQuery = str_replace(['```sql', '```mysql', '```pgsql', '```'], '', $sqlQuery);
+                $sqlQuery = trim($sqlQuery);
+                \Illuminate\Support\Facades\Log::info("RAW SQL GENERATED: " . $sqlQuery);
+            } else {
+                return "ERROR: LLM API gagal (" . $response->status() . ").";
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("LLM Error: " . $e->getMessage());
+            return "ERROR: Gagal menghubungi AI untuk generate SQL.";
+        }
+
+        // 4. Validasi minimal
+        if (empty($sqlQuery) || stripos($sqlQuery, 'SELECT') !== 0) {
+            return "ERROR: Query bukan SELECT yang valid.";
+        }
+        
+        // 5. Execute SQL
+        try {
+            $results = \Illuminate\Support\Facades\DB::select($sqlQuery);
+            $resultsArray = array_map(function($row) { return (array)$row; }, $results);
+            
+            if (empty($resultsArray)) {
+                return "[]";
+            }
+            
+            $textOutput = "";
+            foreach ($resultsArray as $idx => $row) {
+                if ($idx >= 5) {
+                    $textOutput .= "... dan data lainnya.\n";
+                    break;
+                }
+                $rowStrings = [];
+                foreach ($row as $key => $val) {
+                    $rowStrings[] = "$key: $val";
+                }
+                $textOutput .= "- " . implode(', ', $rowStrings) . "\n";
+            }
+            return trim($textOutput);
+        } catch (\Exception $e) {
+            return "ERROR: Gagal menjalankan query database.";
+        }
     }
 }
