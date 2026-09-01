@@ -379,7 +379,7 @@ class ChatbotController extends Controller
     {
         $driver = config('database.default');
         
-        // 2. Fetch schema for allowed tables
+        // 2. Fetch schema + sample data for allowed tables
         $schemaText = "";
         try {
             foreach ($allowedTables as $table) {
@@ -389,7 +389,24 @@ class ChatbotController extends Controller
                 foreach ($columns as $col) {
                     $colDetails[] = $col['name'] . " (" . $col['type_name'] . ")";
                 }
-                $schemaText .= "Table: $table\nColumns: " . implode(", ", $colDetails) . "\n\n";
+                $schemaText .= "Table: $table\nColumns: " . implode(", ", $colDetails) . "\n";
+                
+                // Ambil 2 baris sample agar AI tahu isi tabel
+                $sampleRows = \Illuminate\Support\Facades\DB::table($table)->limit(2)->get();
+                if ($sampleRows->count() > 0) {
+                    $schemaText .= "Sample data:\n";
+                    foreach ($sampleRows as $row) {
+                        $rowArr = (array)$row;
+                        // Hapus kolom sensitif & terlalu panjang
+                        unset($rowArr['password'], $rowArr['remember_token'], $rowArr['two_factor_secret'], $rowArr['two_factor_recovery_codes'], $rowArr['response']);
+                        $parts = [];
+                        foreach ($rowArr as $k => $v) {
+                            if ($v !== null && $v !== '') $parts[] = "$k=$v";
+                        }
+                        $schemaText .= "  " . implode(", ", $parts) . "\n";
+                    }
+                }
+                $schemaText .= "\n";
             }
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error("Schema Error: " . $e->getMessage());
