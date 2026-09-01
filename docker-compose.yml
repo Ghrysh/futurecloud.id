@@ -51,10 +51,19 @@ services:
     image: ollama/ollama:latest
     container_name: futurecloud-ollama
     restart: unless-stopped
+    environment:
+      - OLLAMA_KEEP_ALIVE=-1
+      - OLLAMA_HOST=0.0.0.0:11434
     volumes:
       - ollama-data:/root/.ollama
     networks:
       - futurecloud
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
 
 networks:
   futurecloud:

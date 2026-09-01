@@ -252,17 +252,19 @@ class ChatbotController extends Controller
         $reply = "";
         try {
             // Naikkan timeout jadi 180 detik karena proses Ollama di CPU butuh waktu lama
-            $llmResponse = Http::timeout(180)->post($ollamaUrl, [
-                'model' => env('OLLAMA_MODEL', 'qwen2.5:1.5b'),
-                'messages' => $chatMessages,
-                'stream' => false,
-                'max_tokens' => 300,
-                'options' => [
-                    'temperature' => 0.1,
-                    'top_p' => 0.85,
-                    'repeat_penalty' => 1.2
-                ]
-            ]);
+            $llmResponse = Http::timeout(180)
+                ->retry(1, 1000, fn ($exception, $request) => $exception instanceof \Illuminate\Http\Client\ConnectionException)
+                ->post($ollamaUrl, [
+                    'model' => env('OLLAMA_MODEL', 'qwen2.5:1.5b'),
+                    'messages' => $chatMessages,
+                    'stream' => false,
+                    'max_tokens' => 300,
+                    'options' => [
+                        'temperature' => 0.1,
+                        'top_p' => 0.85,
+                        'repeat_penalty' => 1.2
+                    ]
+                ]);
 
             if ($llmResponse->successful()) {
                 $aiText = trim($llmResponse->json('message.content'));
@@ -272,18 +274,26 @@ class ChatbotController extends Controller
                     $reply = nl2br($aiText);
                 }
             } else {
-                throw new \Exception("LLM Error");
+                \Log::warning('Chatbot Ollama Non-Success Response: ' . $llmResponse->status() . ' - ' . $llmResponse->body());
+                throw new \Exception("LLM Error: HTTP {$llmResponse->status()}");
             }
+        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+            \Log::error('Chatbot Ollama Connection Error: ' . $e->getMessage());
+            $reply = "Halo Kak! 😊 Sepertinya layanan AI kami sedang tidak tersedia saat ini. Apakah Kakak ingin terhubung dengan Tim Live Chat kami untuk dibantu langsung?";
+            $showLiveChatBtn = true;
+        } catch (\Illuminate\Http\Client\ConnectionTimeoutException $e) {
+            \Log::error('Chatbot Ollama Timeout: ' . $e->getMessage());
+            $reply = "Halo Kak! 😊 AI kami butuh waktu terlalu lama untuk merespons. Boleh coba tanyakan lagi sebentar, atau hubungi Live Chat untuk bantuan cepat?";
+            $showLiveChatBtn = true;
         } catch (\Exception $e) {
             \Log::error('Chatbot Ollama Error: ' . $e->getMessage());
             if ($isPricingTopic) {
                 $reply = "Halo Kak! 😊 AI kami sedang dalam proses restart. Silakan cek detail produk langsung di halaman utama ya, atau hubungi Live Chat untuk info lebih cepat!";
             } else {
-                // Fallback: tetap tampilkan knowledge mentah jika ada, tapi beri framing natural
                 if (isset($bestMatch) && $bestMatch) {
                     $reply = "Halo Kak! 😊 " . $bestMatch->response;
                 } else {
-                    $reply = "Halo Kak, mohon maaf ya, AI kami sedang dalam proses restart. Apakah Kakak ingin terhubung dengan Tim Live Chat kami untuk dibantu langsung?";
+                    $reply = "Halo Kak, mohon maaf ya, AI kami sedang mengalami gangguan. Apakah Kakak ingin terhubung dengan Tim Live Chat kami untuk dibantu langsung?";
                 }
             }
             $showLiveChatBtn = true;

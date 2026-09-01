@@ -384,6 +384,10 @@ function chatbot() {
                 if (e.name === 'AbortError') {
                     errorMsg = 'Maaf Kak, AI kami butuh waktu terlalu lama untuk berpikir. Boleh coba tanyakan lagi?';
                 }
+                // Pesan khusus jika response bukan JSON (misal 500 HTML page)
+                else if (e instanceof SyntaxError) {
+                    errorMsg = 'Maaf Kak, terjadi kesalahan pada server. Tim kami sudah diberitahu. Silakan coba lagi atau hubungi Live Chat.';
+                }
 
                 this.messages.push({ sender: 'bot', text: errorMsg });
                 this.saveState(); this.scrollToBottom();
