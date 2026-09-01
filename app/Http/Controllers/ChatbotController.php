@@ -404,7 +404,7 @@ class ChatbotController extends Controller
 
         $sqlQuery = "";
         try {
-            $req = \Illuminate\Support\Facades\Http::timeout(30); // Timeout pendek agar tidak menggantung
+            $req = \Illuminate\Support\Facades\Http::timeout(120); // Ollama butuh waktu load model di panggilan pertama
             $response = $req->post($apiUrl, [
                 'model' => $model,
                 'messages' => [['role' => 'user', 'content' => $promptSql]],
