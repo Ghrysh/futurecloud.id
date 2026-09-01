@@ -322,6 +322,9 @@ class ClientAreaController extends Controller implements HasMiddleware
             'bot_name' => 'required|string|max:255',
             'bot_color' => 'required|string|max:7',
             'whatsapp_number' => 'nullable|string|max:25',
+            'integration_type' => 'nullable|string|in:mysql,google_sheet', // Tambahan validasi
+            'spreadsheet_id' => 'nullable|string', // Tambahan validasi
+            'sheet_name_range' => 'nullable|string', // Tambahan validasi
             'db_allow_read' => 'nullable|boolean',
             'db_host' => 'nullable|string',
             'db_port' => 'nullable|string',
@@ -352,12 +355,15 @@ class ClientAreaController extends Controller implements HasMiddleware
             $apiUrl = env('CHATBOT_API_URL', 'http://localhost:8081');
 
             try {
-                // Sinkronisasi ke Chatbot API
+                // Sinkronisasi ke Chatbot API (Menambahkan 3 field Google Sheet agar dikirim ke server AI)
                 \Illuminate\Support\Facades\Http::post($apiUrl . '/api/v1/license/config', [
                     'license_key' => $licenseKey,
                     'bot_name' => $request->bot_name,
                     'bot_color' => $request->bot_color,
                     'whatsapp_number' => $request->whatsapp_number,
+                    'integration_type' => $request->integration_type ?? 'mysql',
+                    'spreadsheet_id' => $request->spreadsheet_id,
+                    'sheet_name_range' => $request->sheet_name_range,
                     'db_allow_read' => $request->boolean('db_allow_read'),
                     'db_host' => $request->db_host,
                     'db_port' => $request->db_port,
@@ -371,10 +377,13 @@ class ClientAreaController extends Controller implements HasMiddleware
                 // Lanjut saja agar lokal tersimpan
             }
             
-            // Simpan lokal di configuration
+            // Simpan lokal di configuration (Menambahkan 3 field Google Sheet)
             $config['bot_name'] = $request->bot_name;
             $config['bot_color'] = $request->bot_color;
             $config['whatsapp_number'] = $request->whatsapp_number;
+            $config['integration_type'] = $request->integration_type ?? 'mysql';
+            $config['spreadsheet_id'] = $request->spreadsheet_id;
+            $config['sheet_name_range'] = $request->sheet_name_range;
             $config['db_allow_read'] = $request->boolean('db_allow_read');
             $config['db_host'] = $request->db_host;
             $config['db_port'] = $request->db_port;
