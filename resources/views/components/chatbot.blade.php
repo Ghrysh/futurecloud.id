@@ -225,7 +225,7 @@ function chatbot() {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
                         },
                         body: JSON.stringify({ 
                             is_autoclose: true,
@@ -332,7 +332,7 @@ function chatbot() {
                     headers: { 
                         'Content-Type': 'application/json', 
                         'Accept': 'application/json', // Pastikan request meminta JSON
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content 
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
                     },
                     body: JSON.stringify({ 
                         message: msgText, 
@@ -408,7 +408,7 @@ function chatbot() {
                     method: 'POST', 
                     headers: { 
                         'Content-Type': 'application/json', 
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content 
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
                     },
                     body: JSON.stringify({ lead_id: this.leadId })
                 });
