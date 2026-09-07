@@ -117,6 +117,7 @@
                         </div>
                         <div class="w-full md:w-auto shrink-0 mt-4 md:mt-0">
                             <a href="https://clientzone.futurecloud.id" target="_blank" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg shadow-blue-500/30 transition">
+                            <a href="{{ env('CLIENTZONE_URL', 'https://clientzone.futurecloud.id') }}/login" target="_blank" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg shadow-blue-500/30 transition">
                                 <i class="ri-login-box-line mr-1"></i> Login ke Clientzone
                             </a>
                         </div>
