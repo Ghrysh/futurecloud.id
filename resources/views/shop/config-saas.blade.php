@@ -277,7 +277,7 @@
             },
 
             calculateTotal() {
-                return this.saasPrice + this.domainPrice;
+                return Number(this.saasPrice) + Number(this.domainPrice);
             },
 
             formatRupiah(number) {
