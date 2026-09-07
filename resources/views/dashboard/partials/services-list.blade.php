@@ -72,12 +72,21 @@
                             @if($service->type == 'domain')
                                 <span class="font-mono text-blue-600 font-semibold">{{ $service->product_name }}</span>
                             @elseif($service->type == 'saas' || $service->type == 'plugin')
-                                <div class="flex flex-col">
-                                    <span class="text-xs text-gray-500 mb-1">Lisensi:</span>
-                                    <span class="font-mono font-medium {{ isset($config['license_key']) ? 'text-blue-600 font-bold' : 'text-yellow-600 italic' }}">
-                                        {{ $config['license_key'] ?? 'Menunggu Pemrosesan' }}
-                                    </span>
-                                </div>
+                                @if(stripos($service->product_name, 'Email Corporate') !== false)
+                                    <div class="flex flex-col">
+                                        <span class="text-xs text-gray-500 mb-1">Domain:</span>
+                                        <span class="font-mono font-medium {{ isset($config['domain_connection']) ? 'text-blue-600 font-bold' : 'text-yellow-600 italic' }}">
+                                            {{ $config['domain_connection'] ?? 'Menunggu Pemrosesan' }}
+                                        </span>
+                                    </div>
+                                @else
+                                    <div class="flex flex-col">
+                                        <span class="text-xs text-gray-500 mb-1">Lisensi:</span>
+                                        <span class="font-mono font-medium {{ isset($config['license_key']) ? 'text-blue-600 font-bold' : 'text-yellow-600 italic' }}">
+                                            {{ $config['license_key'] ?? 'Menunggu Pemrosesan' }}
+                                        </span>
+                                    </div>
+                                @endif
                             @else
                                 <div class="flex flex-col">
                                     <span class="text-xs text-gray-500 mb-1">IP:</span>
