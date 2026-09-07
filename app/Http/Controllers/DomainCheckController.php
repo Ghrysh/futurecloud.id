@@ -62,7 +62,10 @@ class DomainCheckController extends Controller
             $errorMsg = $e->getMessage();
             
             // Jika pesan error mengandung TLD
-            if (str_contains(strtolower($errorMsg), 'unsupported tld') || str_contains(strtolower($errorMsg), 'invalid tld')) {
+            if (str_contains(strtolower($errorMsg), 'unsupported tld') || 
+                str_contains(strtolower($errorMsg), 'invalid tld') ||
+                (str_contains(strtolower($errorMsg), 'tld for') && str_contains(strtolower($errorMsg), 'is not found'))
+            ) {
                 return response()->json(['error' => true, 'message' => 'Maaf, ekstensi domain ini belum didukung oleh sistem kami.'], 200);
             }
             
