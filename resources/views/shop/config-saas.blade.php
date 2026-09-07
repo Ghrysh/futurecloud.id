@@ -26,7 +26,7 @@
         .summary-sticky { position: sticky; top: 6rem; }
         .summary-card { background: white; border: 1px solid #E5E7EB; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); overflow: hidden; }
         
-        .loader { border: 3px solid #f3f3f3; border-top: 3px solid #2563EB; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; }
+        .loader { border: 3px solid #f3f3f3; border-top: 3px solid #2563EB; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: inline-block; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 @endsection
@@ -126,7 +126,9 @@
                     <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2"><i class="ri-earth-line text-blue-600"></i> Gunakan Domain Eksternal</h3>
                     <div class="flex gap-2">
                         <input type="text" x-model="searchQuery" class="flex-1 border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="google.com">
-                        <button @click="useExternalDomain()" class="bg-gray-800 text-white px-6 py-3 rounded-xl font-bold hover:bg-gray-900 transition">Gunakan</button>
+                        <button @click="useExternalDomain()" class="bg-gray-800 text-white px-6 py-3 rounded-xl font-bold hover:bg-gray-900 transition disabled:opacity-50" :disabled="isLoading">
+                            <span x-show="!isLoading">Gunakan</span><span x-show="isLoading" class="loader border-t-white inline-block"></span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -230,13 +232,14 @@
                     });
                     const data = await res.json();
                     
-                    if (data.main) {
+                    if (data.error) {
+                        Swal.fire({ icon: 'error', title: 'Gagal', text: data.message || 'Terjadi kesalahan sistem saat mengecek domain.' });
+                    } else if (data.main) {
                         this.domainResult = data.main.domain;
                         this.isAvailable = data.main.available;
-                        // Simpan harga integer dari backend
-                        this.tempPrice = data.main.price_final; 
+                        this.domainPrice = data.main.price_final;
                     }
-                } catch(e) { console.error(e); } 
+                } catch(e) { console.error(e); Swal.fire({ icon: 'error', title: 'Error', text: 'Terjadi kesalahan jaringan.' }); } 
                 finally { this.isLoading = false; }
             },
 
@@ -245,10 +248,32 @@
                 this.domainPrice = price; // Update harga domain
             },
 
-            useExternalDomain() {
+            async useExternalDomain() {
                 let dom = this.searchQuery.trim().toLowerCase();
-                if (!dom.match(/^[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,10}$/)) { customAlert('Format domain salah') return; }
-                this.selectDomain(dom, 0); // Domain luar = Gratis (karena sudah punya)
+                if (!dom.match(/^[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,10}$/)) { Swal.fire({ icon: 'warning', title: 'Format Salah', text: 'Format domain tidak valid.' }); return; }
+                
+                // Cek ketersediaan via API
+                this.isLoading = true;
+                try {
+                    const csrf = document.querySelector('input[name="_token"]').value;
+                    const res = await fetch('/check-domain-availability', {
+                        method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrf },
+                        body: JSON.stringify({ domain: dom })
+                    });
+                    const data = await res.json();
+                    
+                    if (data.error) {
+                        Swal.fire({ icon: 'error', title: 'Gagal', text: data.message || 'Sistem sedang sibuk. Pastikan IP Whitelisted di Namecheap.' });
+                    } else if (data.main) {
+                        if (data.main.available) {
+                            Swal.fire({ icon: 'warning', title: 'Belum Terdaftar', text: 'Domain ' + dom + ' belum terdaftar (tersedia untuk dibeli). Anda hanya bisa menghubungkan domain yang sudah terdaftar sebagai domain luar.' });
+                        } else {
+                            this.selectDomain(dom, 0); // Domain luar = Gratis (karena sudah punya)
+                            Swal.fire({ icon: 'success', title: 'Berhasil', text: 'Domain eksternal berhasil dihubungkan!', timer: 2000, showConfirmButton: false });
+                        }
+                    }
+                } catch(e) { console.error(e); Swal.fire({ icon: 'error', title: 'Error', text: 'Terjadi kesalahan jaringan.' }); }
+                finally { this.isLoading = false; }
             },
 
             calculateTotal() {

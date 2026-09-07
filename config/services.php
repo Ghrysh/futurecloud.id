@@ -45,4 +45,9 @@ return [
         ],
     ],
 
+    'mailcow' => [
+        'url' => env('MAILCOW_API_URL'),
+        'key' => env('MAILCOW_API_KEY'),
+    ],
+
 ];

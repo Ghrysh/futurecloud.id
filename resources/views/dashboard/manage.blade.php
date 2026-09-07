@@ -76,11 +76,54 @@
 
                 @if($service->type == 'saas' || $service->type == 'plugin')
                 @php
-                    $licenseKey = $config['license_key'] ?? 'Belum Dibuat (Hubungi Admin)';
+                    $isEmailCorporate = str_contains(strtolower($service->product_name), 'email corporate');
                     $isChatbot = str_contains(strtolower($service->product_name), 'chatbot');
+                    $licenseKey = $config['license_key'] ?? 'Belum Dibuat (Hubungi Admin)';
                     $cliCommand = $isChatbot ? 'chatbot' : 'monitoring';
-                    $cliShort = $isChatbot ? 'cb' : 'm';
                 @endphp
+                
+                @if($isEmailCorporate)
+                <div class="p-6 bg-white border-t border-gray-100" x-data="{ showPass: false }">
+                    <div class="bg-blue-50 border border-blue-100 rounded-xl p-5 flex flex-col md:flex-row gap-5 items-start md:items-center">
+                        <div class="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+                            <i class="ri-mail-star-line text-2xl"></i>
+                        </div>
+                        <div class="flex-1 space-y-3 w-full">
+                            <h4 class="font-bold text-blue-900">Akses Superadmin Email</h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="text-xs text-blue-600 font-semibold uppercase block mb-1">Email</label>
+                                    <div class="bg-white border border-blue-200 px-3 py-2 rounded text-sm text-gray-800 font-medium">
+                                        {{ $config['superadmin_email'] ?? 'Menunggu Provisioning' }}
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="text-xs text-blue-600 font-semibold uppercase block mb-1">Password</label>
+                                    <div class="bg-white border border-blue-200 px-3 py-2 rounded text-sm font-mono text-gray-800 flex justify-between items-center">
+                                        <span x-show="!showPass" class="blur-sm select-none">••••••••••</span>
+                                        <span x-show="showPass" class="text-gray-900 font-medium">{{ $config['superadmin_password'] ?? '-' }}</span>
+                                        <div class="flex gap-2">
+                                            <button @click="showPass = !showPass" class="text-gray-400 hover:text-blue-600">
+                                                <i class="ri-eye-line" x-show="!showPass"></i>
+                                                <i class="ri-eye-off-line" x-show="showPass"></i>
+                                            </button>
+                                            <button class="text-gray-400 hover:text-blue-600" onclick="copyToClipboard('{{ $config['superadmin_password'] ?? '' }}')" title="Copy">
+                                                <i class="ri-file-copy-line"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-full md:w-auto shrink-0 mt-4 md:mt-0">
+                            <a href="https://clientzone.futurecloud.id" target="_blank" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg shadow-blue-500/30 transition">
+                                <i class="ri-login-box-line mr-1"></i> Login ke Clientzone
+                            </a>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-4"><i class="ri-information-line"></i> Gunakan akun superadmin di atas untuk login ke <b>Clientzone</b> dan mengelola (membuat/menghapus) email tim Anda.</p>
+                </div>
+                @else
                 <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x border-gray-100 border-t">
                     <!-- License Info -->
                     <div class="p-6 bg-white">
@@ -127,6 +170,8 @@
                         @endif
                     </div>
                 </div>
+                @endif
+
                 @else
                 <div class="p-6">
                     <div class="space-y-4">

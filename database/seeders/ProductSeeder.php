@@ -139,6 +139,41 @@ class ProductSeeder extends Seeder
         }
 
         // ==========================================
+        // C.2 EMAIL CORPORATE
+        // ==========================================
+        $emails = [
+            [
+                'name' => 'Email Corporate Monthly',
+                'slug' => 'email-corporate-mo',
+                'price' => 50000, 
+                'cycle' => 'mo',
+                'features' => ['Admin Email Account', 'Manage Team Emails', 'Premium Webmail', 'Anti-Spam & Virus Protection']
+            ],
+            [
+                'name' => 'Email Corporate Yearly',
+                'slug' => 'email-corporate-yr',
+                'price' => 500000, 
+                'cycle' => 'yr',
+                'features' => ['Admin Email Account', 'Manage Team Emails', 'Premium Webmail', 'Anti-Spam & Virus Protection']
+            ]
+        ];
+
+        foreach ($emails as $e) {
+            $prod = Product::create([
+                'name' => $e['name'],
+                'slug' => $e['slug'],
+                'type' => 'email',
+                'price' => $e['price'],
+                'cycle' => $e['cycle'],
+                'tag' => ($e['cycle'] == 'yr') ? 'Save 16%' : null,
+                'category' => 'General'
+            ]);
+            foreach ($e['features'] as $f) {
+                ProductFeature::create(['product_id' => $prod->id, 'feature_text' => $f]);
+            }
+        }
+
+        // ==========================================
         // D. DATA DOMAIN LENGKAP (EXCEL)
         // Format: [TLD, Reg, Renew, Transfer]
         // ==========================================

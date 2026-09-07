@@ -164,6 +164,60 @@ public function store(Request $request)
                     Log::error("Gagal sinkronisasi lisensi {$licenseKey} ke {$syncUrl}: " . $e->getMessage());
                 }
             }
+            // --- HANDLE EMAIL CORPORATE ---
+            elseif ($item->type === 'saas' && stripos($item->product_name, 'Email Corporate') !== false) {
+                try {
+                    $mailcow = new \App\Services\MailcowService();
+                    
+                    // Domain could be in domain_connection (from SaaS config)
+                    $domainName = $config['domain_connection'] ?? null;
+                    
+                    if ($domainName) {
+                        // 1. Create Domain in Mailcow
+                        $mailcow->createDomain([
+                            'domain' => $domainName,
+                            'description' => 'Email Corporate for ' . $order->user->name,
+                        ]);
+                        
+                        // 2. Create Superadmin Mailbox
+                        $password = \Illuminate\Support\Str::random(10);
+                        $adminEmail = 'admin@' . $domainName;
+                        
+                        $mailcow->createMailbox([
+                            'username' => $adminEmail,
+                            'name' => 'Superadmin',
+                            'password' => $password,
+                            'quota' => '10240' // 10GB default
+                        ]);
+                        
+                        Log::info("Email Corporate provisioned for domain {$domainName}. Admin: {$adminEmail}");
+                        
+                        // 3. Provision Admin di Clientzone
+                        try {
+                            $clientzoneUrl = env('CLIENTZONE_URL', 'http://127.0.0.1:8001');
+                            \Illuminate\Support\Facades\Http::post($clientzoneUrl . '/api/provision-admin', [
+                                'email' => $adminEmail,
+                                'password' => $password,
+                                'name' => $order->user->name,
+                                'domain' => $domainName
+                            ]);
+                            Log::info("User provisioned in Clientzone for domain {$domainName}");
+                        } catch (\Exception $e) {
+                            Log::error("Failed to provision user in Clientzone: " . $e->getMessage());
+                        }
+
+                        // Save credentials to config
+                        $config['superadmin_email'] = $adminEmail;
+                        $config['superadmin_password'] = $password;
+                        $item->configuration = json_encode($config);
+                        $item->save();
+                    } else {
+                        Log::error("Gagal provision Email Corporate: Domain tidak ditemukan di konfigurasi.");
+                    }
+                } catch (\Exception $e) {
+                    Log::error("Gagal provision Email Corporate: " . $e->getMessage());
+                }
+            }
         }
     }
 
