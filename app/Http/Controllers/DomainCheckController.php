@@ -59,7 +59,14 @@ class DomainCheckController extends Controller
 
         } catch (Throwable $e) {
             Log::error("Domain API Error: " . $e->getMessage());
-            return response()->json(['error' => true, 'message' => 'Sistem sedang sibuk.'], 200); 
+            $errorMsg = $e->getMessage();
+            
+            // Jika pesan error mengandung TLD
+            if (str_contains(strtolower($errorMsg), 'unsupported tld') || str_contains(strtolower($errorMsg), 'invalid tld')) {
+                return response()->json(['error' => true, 'message' => 'Maaf, ekstensi domain ini belum didukung oleh sistem kami.'], 200);
+            }
+            
+            return response()->json(['error' => true, 'message' => 'Gagal memeriksa domain: ' . $errorMsg], 200); 
         }
     }
 
