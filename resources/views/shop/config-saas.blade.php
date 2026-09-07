@@ -256,7 +256,7 @@
                 this.isLoading = true;
                 try {
                     const csrf = document.querySelector('input[name="_token"]').value;
-                    const res = await fetch('/check-domain-availability', {
+                    const res = await fetch('/check-external-domain', {
                         method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrf },
                         body: JSON.stringify({ domain: dom })
                     });

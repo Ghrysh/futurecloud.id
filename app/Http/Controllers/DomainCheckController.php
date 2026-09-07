@@ -117,4 +117,32 @@ class DomainCheckController extends Controller
             'formatted_original' => number_format($price, 0, ',', '.')
         ];
     }
+
+    public function checkExternal(Request $request)
+    {
+        $rawDomain = $request->input('domain');
+        $cleanDomain = strtolower(trim(preg_replace('#^https?://#', '', $rawDomain)));
+        $cleanDomain = preg_replace('#^www\.#', '', $cleanDomain);
+
+        if (empty($cleanDomain) || !str_contains($cleanDomain, '.')) {
+            return response()->json(['error' => true, 'message' => 'Format domain tidak valid.']);
+        }
+
+        // Cek DNS record untuk memastikan domain sudah aktif (terdaftar)
+        // Kita cek ANY record, jika mengembalikan data berarti domain eksis
+        $exists = checkdnsrr($cleanDomain, 'ANY') || checkdnsrr($cleanDomain, 'A') || checkdnsrr($cleanDomain, 'NS');
+
+        if (!$exists) {
+            // DNS tidak merespons, bisa jadi memang belum terdaftar atau parkir tanpa DNS
+            // Kita kembalikan available: true (mengartikan belum terdaftar) sehingga di UI akan ditolak (harus sudah terdaftar)
+            return response()->json([
+                'main' => ['domain' => $cleanDomain, 'available' => true]
+            ]);
+        }
+
+        // Jika terdaftar/eksis di internet
+        return response()->json([
+            'main' => ['domain' => $cleanDomain, 'available' => false]
+        ]);
+    }
 }

@@ -124,6 +124,7 @@ Route::post('/chatbot/live/send', [ChatbotController::class, 'sendLiveChatMessag
 // --- DOMAIN & HOSTING (UPDATED) ---
 Route::post('/domain-check', [DomainCheckController::class, 'check'])->name('domain.check');
 Route::post('/check-domain-availability', [DomainCheckController::class, 'check'])->name('domain.check.availability');
+Route::post('/check-external-domain', [DomainCheckController::class, 'checkExternal'])->name('domain.check.external');
 
 // UPDATED: Menggunakan ProductController
 Route::get('/domain-registration', [ProductController::class, 'domainDetail'])->name('domain.registration.detail');
