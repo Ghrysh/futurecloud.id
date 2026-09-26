@@ -19,15 +19,15 @@
         </div>
 
         <div class="max-w-4xl mx-auto relative z-10 scroll-reveal">
-            <span class="inline-block py-1 px-4 rounded-full bg-blue-900/40 border border-blue-500/30 text-blue-300 text-xs font-bold tracking-wider mb-6 uppercase backdrop-blur-sm">Kenali Kami Lebih Dekat</span>
+            <span class="inline-block py-1 px-4 rounded-full bg-blue-900/40 border border-blue-500/30 text-blue-300 text-xs font-bold tracking-wider mb-6 uppercase backdrop-blur-sm">PT Berkah Teknologi Terdepan</span>
             
             <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6">
                 Mempercepat <br>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Masa Depan Digital</span> Indonesia
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Transformasi Digital</span> Indonesia
             </h1>
 
             <p class="text-blue-100 text-lg md:text-xl font-light max-w-2xl mx-auto leading-relaxed px-4">
-                Kami adalah mitra teknologi terpercaya yang berdedikasi untuk memberikan solusi infrastruktur cloud dan pengembangan perangkat lunak terbaik untuk kesuksesan bisnis Anda.
+                Kami adalah mitra teknologi terpercaya yang hadir untuk mewujudkan masyarakat yang lebih berbudi luhur, inovatif, dan sejahtera melalui ekosistem teknologi digital.
             </p>
         </div>
     </section>
@@ -41,24 +41,24 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div class="space-y-4">
                             <div class="bg-blue-600 text-white p-6 rounded-2xl shadow-lg">
-                                <i class="ri-rocket-2-line text-4xl mb-4 block text-blue-200"></i>
-                                <h4 class="font-bold text-xl mb-1">Misi Kami</h4>
-                                <p class="text-sm text-blue-100">Memberdayakan bisnis melalui teknologi mutakhir.</p>
+                                <i class="ri-lightbulb-flash-line text-4xl mb-4 block text-blue-200"></i>
+                                <h4 class="font-bold text-xl mb-1">Inovasi Terpadu</h4>
+                                <p class="text-sm text-blue-100">Menghadirkan teknologi yang berfokus menciptakan nilai nyata (Value).</p>
                             </div>
                             <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                                <h3 class="text-3xl font-bold text-gray-900 mb-1">98%</h3>
-                                <p class="text-sm text-gray-500">Klien Bertahan</p>
+                                <h3 class="text-xl font-bold text-gray-900 mb-2">Our Purpose</h3>
+                                <p class="text-sm text-gray-500 italic leading-relaxed">"Mewujudkan masyarakat yang lebih berbudi luhur, inovatif dan sejahtera melalui teknologi."</p>
                             </div>
                         </div>
                         <div class="space-y-4 translate-y-8">
                             <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                                <h3 class="text-3xl font-bold text-gray-900 mb-1">24/7</h3>
-                                <p class="text-sm text-gray-500">Dukungan Penuh</p>
+                                <h3 class="text-3xl font-bold text-gray-900 mb-1">2023</h3>
+                                <p class="text-sm text-gray-500">Founded In Jakarta</p>
                             </div>
                             <div class="bg-gray-900 text-white p-6 rounded-2xl shadow-lg">
-                                <i class="ri-eye-line text-4xl mb-4 block text-gray-400"></i>
-                                <h4 class="font-bold text-xl mb-1">Visi Kami</h4>
-                                <p class="text-sm text-gray-400">Menjadi penyedia cloud No.1 di Asia Tenggara.</p>
+                                <i class="ri-leaf-line text-4xl mb-4 block text-gray-400"></i>
+                                <h4 class="font-bold text-xl mb-1">ESG Framework</h4>
+                                <p class="text-sm text-gray-400">Berkontribusi positif pada lingkungan hidup dan masyarakat.</p>
                             </div>
                         </div>
                     </div>
@@ -68,29 +68,82 @@
             <div>
                 <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-6 leading-tight">Siapa <span class="text-blue-600">FutureCloud?</span></h2>
                 <p class="text-gray-600 text-lg mb-6 leading-relaxed">
-                    <strong>PT Berkah Teknologi Terdepan (FutureCloud.id)</strong> adalah penyedia terkemuka di Indonesia untuk infrastruktur cloud generasi mendatang, pengembangan aplikasi kustom, dan layanan konsultasi TI strategis.
+                    <strong>PT Berkah Teknologi Terdepan (FutureCloud.id)</strong> adalah perusahaan teknologi yang berfokus pada pengembangan solusi digital, konsultasi teknologi, SaaS, enterprise system, serta transformasi proses bisnis. Didirikan pada tahun 2023 di Jakarta, Indonesia.
                 </p>
                 <p class="text-gray-600 text-lg leading-relaxed">
-                    Misi utama kami adalah memberdayakan bisnis dengan teknologi cloud mutakhir dan solusi inovatif yang mendorong transformasi digital, meningkatkan efisiensi operasional, serta mempercepat pertumbuhan perusahaan Anda.
+                    Kami percaya bahwa teknologi bukan sekadar alat untuk mengotomatisasi pekerjaan, tetapi mampu menciptakan value, membuka peluang baru, meningkatkan produktivitas, serta memberikan dampak yang positif dan nyata bagi pelestarian lingkungan serta masyarakat kita.
                 </p>
             </div>
         </div>
     </section>
 
-    {{-- 3. CORE VALUES --}}
+    {{-- 3. VISI & MISI (NEW DEDICATED LAYOUT) --}}
+    <section class="scroll-reveal w-full py-24 px-4 bg-gray-900 text-white relative overflow-hidden">
+        {{-- Dekorasi Latar Belakang --}}
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600 rounded-full blur-[150px] opacity-20 -translate-y-1/2 translate-x-1/3"></div>
+        <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-cyan-600 rounded-full blur-[150px] opacity-20 translate-y-1/2 -translate-x-1/3"></div>
+
+        <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
+            
+            {{-- Visi Section (1 Column) --}}
+            <div class="col-span-1 bg-gray-800/50 backdrop-blur-md border border-gray-700 p-8 md:p-10 rounded-[32px]">
+                <div class="w-16 h-16 bg-blue-500/20 text-blue-400 rounded-2xl flex items-center justify-center text-3xl mb-8">
+                    <i class="ri-eye-2-line"></i>
+                </div>
+                <h3 class="text-3xl font-bold mb-6">Visi Kami</h3>
+                <p class="text-gray-300 leading-relaxed text-lg font-light">
+                    Menjadi digital partner pilihan utama untuk memajukan ekonomi dan pendidikan serta meningkatkan kualitas lingkungan hidup.
+                </p>
+            </div>
+
+            {{-- Misi Section (2 Columns) --}}
+            <div class="col-span-1 lg:col-span-2 bg-gradient-to-br from-blue-700 to-blue-900 p-8 md:p-10 rounded-[32px] shadow-2xl border border-blue-600/30">
+                <div class="flex items-center gap-5 mb-8">
+                    <div class="w-16 h-16 bg-white/10 backdrop-blur text-white rounded-2xl flex items-center justify-center text-3xl shadow-inner">
+                        <i class="ri-rocket-2-line"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold text-white">Misi Kami</h3>
+                </div>
+                
+                <ul class="space-y-5">
+                    <li class="flex items-start gap-4 bg-white/5 hover:bg-white/10 transition duration-300 p-5 rounded-2xl border border-white/10">
+                        <div class="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold shrink-0 mt-0.5 shadow-lg">a</div>
+                        <p class="text-blue-50 leading-relaxed text-base md:text-lg font-light">
+                            Mengembangkan platform digital bagi para talenta digital agar bisa memberikan kontribusi positif terhadap pengembangan konsep Value as a Service (VaaS).
+                        </p>
+                    </li>
+                    <li class="flex items-start gap-4 bg-white/5 hover:bg-white/10 transition duration-300 p-5 rounded-2xl border border-white/10">
+                        <div class="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold shrink-0 mt-0.5 shadow-lg">b</div>
+                        <p class="text-blue-50 leading-relaxed text-base md:text-lg font-light">
+                            Melakukan orkestrasi ekosistem digital agar mempermudah pengguna dalam menentukan value of money dari produk digital yang ada.
+                        </p>
+                    </li>
+                    <li class="flex items-start gap-4 bg-white/5 hover:bg-white/10 transition duration-300 p-5 rounded-2xl border border-white/10">
+                        <div class="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold shrink-0 mt-0.5 shadow-lg">c</div>
+                        <p class="text-blue-50 leading-relaxed text-base md:text-lg font-light">
+                            Menjadi perusahaan yang mendukung penuh framework ESG (Environment, Social and Governance) agar memberikan kontribusi positif pada lingkungan dan masyarakat.
+                        </p>
+                    </li>
+                </ul>
+            </div>
+            
+        </div>
+    </section>
+
+    {{-- 4. CORE VALUES --}}
     <section class="scroll-reveal w-full py-24 px-4 bg-gray-50 border-y border-gray-100">
         <div class="max-w-6xl mx-auto text-center mb-16">
-            <span class="inline-block py-1 px-3 rounded-full bg-blue-100 text-blue-700 text-xs font-bold tracking-wider mb-4 uppercase">Budaya Perusahaan</span>
-            <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900">Nilai Inti Kami</h2>
+            <span class="inline-block py-1 px-3 rounded-full bg-blue-100 text-blue-700 text-xs font-bold tracking-wider mb-4 uppercase">Digital Value Chain</span>
+            <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900">Nilai & Pendekatan Kami</h2>
         </div>
 
         <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             @php
                 $values = [
-                    ['icon' => 'ri-compasses-line', 'title' => 'Inovasi Tanpa Henti', 'detail' => 'Kami tidak pernah berhenti bereksplorasi. Melampaui batas untuk memberikan solusi teknologi paling mutakhir.'],
-                    ['icon' => 'ri-shield-check-line', 'title' => 'Keamanan Ekstra', 'detail' => 'Data Anda adalah nyawa bisnis Anda. Perlindungan tingkat perusahaan adalah prioritas utama kami.'],
-                    ['icon' => 'ri-heart-pulse-line', 'title' => 'Fokus Klien', 'detail' => 'Dedikasi penuh pada kesuksesan Anda. Jika Anda bertumbuh, kami pun ikut bertumbuh.'],
-                    ['icon' => 'ri-medal-line', 'title' => 'Keunggulan Mutu', 'detail' => 'Kami mempertahankan standar tertinggi dalam kualitas layanan, kode, maupun infrastruktur perangkat keras.'],
+                    ['icon' => 'ri-compasses-line', 'title' => 'Strategy & Design', 'detail' => 'Memahami secara mendalam proses bisnis Anda untuk menciptakan pengalaman pengguna (UI/UX) yang bermakna.'],
+                    ['icon' => 'ri-shield-check-line', 'title' => 'Reliable Technology', 'detail' => 'Membangun produk digital berskala tinggi dengan tingkat keamanan enterprise yang dapat diandalkan.'],
+                    ['icon' => 'ri-heart-pulse-line', 'title' => 'System Integration', 'detail' => 'Menghubungkan orang, data, dan berbagai platform operasional menjadi satu ekosistem yang kohesif.'],
+                    ['icon' => 'ri-medal-line', 'title' => 'Measurable Value', 'detail' => 'Mengoptimalkan performa secara berkelanjutan untuk menghasilkan dampak bisnis positif (Value) yang terukur.'],
                 ];
             @endphp
 
@@ -106,20 +159,20 @@
         </div>
     </section>
 
-    {{-- 4. TIMELINE --}}
+    {{-- 5. TIMELINE --}}
     <section class="scroll-reveal w-full py-24 px-4 bg-white">
         <div class="max-w-4xl mx-auto text-center mb-16">
             <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900">Perjalanan Kami</h2>
-            <p class="text-gray-600 text-lg mt-4 max-w-2xl mx-auto">Dari mimpi kecil hingga menjadi pelopor penyedia infrastruktur terkemuka.</p>
+            <p class="text-gray-600 text-lg mt-4 max-w-2xl mx-auto">Tumbuh secara berkesinambungan sebagai rekan kolaboratif terpercaya inovasi digital.</p>
         </div>
 
         @php
             $milestones = [
-                ['year' => 2018, 'title' => 'Langkah Pertama', 'detail' => 'Didirikan dengan visi untuk merevolusi ekosistem cloud lokal di Indonesia, bermula dari satu rak server.'],
-                ['year' => 2019, 'title' => 'Kemitraan Global', 'detail' => 'Mengamankan kemitraan strategis dengan penyedia hardware global terkemuka untuk infrastruktur.'],
-                ['year' => 2021, 'title' => 'Keamanan & Kepatuhan', 'detail' => 'Meraih sertifikasi standar internasional ISO 27001 untuk manajemen keamanan informasi.'],
-                ['year' => 2023, 'title' => 'Ekspansi Internasional', 'detail' => 'Memperluas operasi dan zona ketersediaan data center di seluruh Asia Tenggara.'],
-                ['year' => 2024, 'title' => 'Inovasi AI', 'detail' => 'Meluncurkan divisi R&D khusus yang berfokus pada solusi integrasi Kecerdasan Buatan (AI) di cloud.'],
+                ['year' => 2023, 'title' => 'Pendirian Perusahaan', 'detail' => 'PT Berkah Teknologi Terdepan (FutureCloud.id) didirikan di Jakarta, Indonesia, membawa semangat untuk mencerdaskan ekonomi digital.'],
+                ['year' => '2023 Q4', 'title' => 'Fokus Ekosistem Digital', 'detail' => 'Memantapkan landasan bisnis ke dalam empat pilar solusi: Custom Software, SaaS, Consulting, dan Enterprise System (ERP).'],
+                ['year' => 2024, 'title' => 'Inovasi SaaS Dirilis', 'detail' => 'Meluncurkan layanan Smartrack.id untuk pengelolaan bisnis yang praktis, serta Scanyuk.com sebagai platform alat kreatif bagi banyak kalangan.'],
+                ['year' => '2024 Q3', 'title' => 'Ekspansi Konsultasi Manajemen', 'detail' => 'Mulai mendampingi korporasi dalam implementasi proses Project Management, pemodelan OKR, dan digitalisasi kecerdasan buatan (AI).'],
+                ['year' => 'Future', 'title' => 'Dampak ESG', 'detail' => 'Berkomitmen berkelanjutan untuk mengembangkan solusi yang mengimplementasikan aspek Environment, Social, & Governance demi kemajuan Indonesia.'],
             ];
         @endphp
 
@@ -140,7 +193,7 @@
 
                         {{-- Node --}}
                         <div class="absolute left-0 md:left-1/2 md:-translate-x-1/2 w-16 h-16 rounded-full bg-white border-4 border-blue-100 flex items-center justify-center shadow-lg group-hover:border-blue-500 group-hover:bg-blue-50 transition-colors z-10">
-                            <span class="font-bold text-blue-600">{{ $milestone['year'] }}</span>
+                            <span class="font-bold text-[10px] uppercase text-blue-600">{{ $milestone['year'] }}</span>
                         </div>
 
                         {{-- Right Side (Desktop) / Main Mobile --}}
@@ -161,7 +214,7 @@
         </div>
     </section>
 
-    {{-- 5. OFFICE & CONTACT --}}
+    {{-- 6. OFFICE & CONTACT --}}
     <section class="scroll-reveal w-full py-24 px-4 bg-gray-50 border-t border-gray-100">
         <div class="max-w-5xl mx-auto">
             <div class="bg-white rounded-[32px] shadow-2xl border border-gray-100 overflow-hidden flex flex-col md:flex-row">
@@ -171,7 +224,7 @@
                     <div class="absolute top-0 right-0 w-64 h-64 bg-blue-500/20 rounded-full blur-[80px]"></div>
                     <div class="relative z-10">
                         <h2 class="text-3xl font-bold mb-2">Kantor Pusat Kami</h2>
-                        <p class="text-gray-400 mb-10">Kunjungi kami untuk berdiskusi sambil menikmati secangkir kopi hangat.</p>
+                        <p class="text-gray-400 mb-10">Kunjungi kami untuk berdiskusi sambil menikmati secangkir kopi hangat terkait kolaborasi IT Anda.</p>
                         
                         <div class="space-y-6">
                             <div>
